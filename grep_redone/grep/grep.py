@@ -44,7 +44,7 @@ class Searcher(object):
         with open(f) as f:
             for index, line in enumerate(f):
                 if self.string_to_search_for in line:
-                    matched_line_dict[index] = line
+                    matched_line_dict[index+1] = line
 
         return matched_line_dict
                     
