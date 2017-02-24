@@ -1,6 +1,7 @@
 import os
 import sys
 
+from docopt import docopt
 from grep import grep as grep_
 
 def run_grep(string_to_search_for):
