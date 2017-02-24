@@ -36,7 +36,7 @@ class Searcher(object):
 
         for f in file_paths:
             if self.is_regex_pattern:
-                self.search_file_for_regex(f)
+                matched_line_dict = self.search_file_for_regex(f)
 
             else:
                 matched_line_dict = self.search_file_for_string(f)
@@ -62,7 +62,6 @@ class Searcher(object):
         """Search a single file for a regex pattern."""
 
         regexp = re.compile(self.search_term)
-        print self.search_term
         matched_lines = {}
 
         with open(file_path, 'r') as f:

@@ -44,7 +44,7 @@ def test_search_files():
 def test_search_file_for_string():
     temp = tempfile.NamedTemporaryFile()
     try:
-        temp.write('sdf\na\nrghsf')
+        temp.write('sdf\na\nrghsfz')
         # Rewind to read data back from file.
         temp.seek(0)
 
@@ -55,6 +55,24 @@ def test_search_file_for_string():
         )
 
         assert matched_lines[2] == "a\n"
+
+    finally:
+        temp.close()
+
+def test_search_file_for_regex():
+    temp = tempfile.NamedTemporaryFile()
+    try:
+        temp.write('sdf\na\nrghsfz')
+        # Rewind to read data back from file.
+        temp.seek(0)
+
+        # Directory and recursive option are irrelevant for the test.
+        matched_lines = Searcher.search_file_for_regex(
+            Searcher(caller_dir=os.curdir, search_term="^[d-s]{1,}$", is_recursive=False, is_abs_path=False, is_regex_pattern=False),
+            temp.name
+        )
+
+        assert matched_lines[1] == "sdf\n"
 
     finally:
         temp.close()
