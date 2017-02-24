@@ -1,3 +1,5 @@
+"""Print matched items for grep_redone."""
+
 import os
 from clint.textui import colored
 
@@ -12,7 +14,7 @@ def print_matched_files_full_path(matched_lines):
 def print_matched_files_relative_path(matched_lines):
 
     for file, lines in matched_lines.iteritems():
+        # TODO highlight SEARCH TERM
         for line_num, line in lines.iteritems():
             print (colored.magenta("./" + os.path.relpath(file) + ':', True, False) +
                    str(line_num) + ':' + line),
-
