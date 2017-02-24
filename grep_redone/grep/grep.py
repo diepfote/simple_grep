@@ -21,10 +21,10 @@ class Searcher(object):
 
         # TODO add flag for full path
         if True:
-            print_helper.print_matched_files_relative_path(matched_files)
+            print_helper.print_matched_files_relative_path(matched_files, self.search_term)
 
         else:
-            print_helper.print_matched_files_full_path(matched_files)
+            print_helper.print_matched_files_full_path(matched_files, self.search_term)
 
         return matched_files
 

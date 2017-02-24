@@ -3,8 +3,7 @@
 import os
 from clint.textui import colored
 
-# TODO decorator coloring matched string red
-def print_matched_files_full_path(matched_lines):
+def print_matched_files_full_path(matched_lines, search_term):
 
     output = []
     for file, lines in matched_lines.iteritems():
@@ -14,27 +13,34 @@ def print_matched_files_full_path(matched_lines):
 
     # Remove last occurrence of new line
     output = [rreplace(f, '\n', '', 1) for f in output]
+
+    # Color search term yellow.
+    if search_term:
+        output = [f.replace(search_term, colored.red(search_term, True, False).__str__()) for f in output]
+
     for f in output:
         print f
 
     return output
 
-def print_matched_files_relative_path(matched_lines):
+def print_matched_files_relative_path(matched_lines, search_term):
 
     output = []
     for file, lines in matched_lines.iteritems():
-        # TODO highlight SEARCH TERM
             output = [(colored.magenta("./" + os.path.relpath(file) + ':', True, False) +
                       str(line_num) + ':' + line) for line_num, line in lines.iteritems()
                      ]
 
     # Remove last occurrence of new line
     output = [rreplace(f, '\n', '', 1) for f in output]
-    print output
+
+    # Color search term yellow.
+    if search_term:
+        output = [f.replace(search_term, colored.yellow(search_term, True, False).__str__()) for f in output]
+
     for f in output:
         print f
 
-    print output
     return output
 
 def rreplace(string, old, new, num_occurrences):
