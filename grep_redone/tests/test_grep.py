@@ -13,10 +13,11 @@ def test_dunder_init():
            searcher.is_recursive == is_recursive
 
 def test_run():
-    print os.curdir
     matched_files = Searcher.run(
         Searcher(caller_dir=os.curdir, search_term="docopt", is_recursive=False)
     )
+
+    print matched_files
 
     assert matched_files['./setup.py'] == {6: "    packages=['grep_redone', 'docopt'],\n"}
 
