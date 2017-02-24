@@ -5,7 +5,6 @@ import os
 def get_all_files(caller_dir, is_recursive):
     file_paths = []
 
-    print caller_dir
     for root, dirs, files in os.walk(caller_dir):
 
         # Prepend root to every file path

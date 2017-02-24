@@ -1,7 +1,7 @@
 """Search functionality for grep_redone."""
 
 import file_helper
-import print_helper
+from grep_redone.grep import print_helper
 
 
 class Searcher(object):
@@ -29,7 +29,6 @@ class Searcher(object):
         return matched_files
 
     def search_files(self, file_paths):
-        print file_paths
         matched_files = {}
 
         for f in file_paths:
