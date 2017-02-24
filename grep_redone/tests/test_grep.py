@@ -17,8 +17,6 @@ def test_run():
         Searcher(caller_dir=os.curdir, search_term="docopt", is_recursive=False)
     )
 
-    print matched_files
-
     assert matched_files['./setup.py'] == {6: "    packages=['grep_redone', 'docopt'],\n"}
 
 def test_search_files():
@@ -56,6 +54,3 @@ def test_search_file_for_string():
 
     finally:
         temp.close()
-
-
-# test_run()
