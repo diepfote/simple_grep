@@ -7,11 +7,12 @@ from grep_redone.grep import print_helper
 class Searcher(object):
     """Searches files in dirs for specified string."""
 
-    def __init__(self, caller_dir, search_term, is_recursive):
+    def __init__(self, caller_dir, search_term, is_recursive, is_abs_path):
 
         self.caller_dir = caller_dir
         self.search_term = search_term
         self.is_recursive = is_recursive
+        self.is_abs_path = is_abs_path
 
     def run(self):
 
@@ -20,11 +21,11 @@ class Searcher(object):
         )
 
         # TODO add flag for full path
-        if True:
-            print_helper.print_matched_files_relative_path(matched_files, self.search_term)
+        if self.is_abs_path:
+            print_helper.print_matched_files_full_path(matched_files, self.search_term)
 
         else:
-            print_helper.print_matched_files_full_path(matched_files, self.search_term)
+            print_helper.print_matched_files_relative_path(matched_files, self.search_term)
 
         return matched_files
 
@@ -50,6 +51,8 @@ class Searcher(object):
 
         return matched_lines
 
+    # TODO add flag for regex
+    # TODO add functionality
     def search_file_for_regex(self, file_path):
         # import re
         # word = 'fubar'
