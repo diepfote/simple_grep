@@ -1,81 +1,53 @@
 import os
 import print_helper
 
+
 class Searcher(object):
     """Searches files in dirs for specified string."""
 
     isfirst = True
 
-    def __init__(self, caller_directory, string_to_search_for):
+    def __init__(self, caller_dir, string_to_search_for, is_recursive):
+        self.caller_dir = caller_dir
         self.string_to_search_for = string_to_search_for
 
-        # TODO refactor, ITERATOR should be used - eliminate overhead
-        self.dir_list = self.get_all_subdirectories_in_directory(caller_directory)
+        matched_files = self.search_files(self.get_all_files(is_recursive))
 
-        # TESTING
-        print self.dir_list
+        print_helper.print_matched_files_full_path(matched_files)
 
-        for i in range(self.dir_list.__len__() -1):
-            self.get_files_in_currentdir(self.dir_list[i])
+    def get_all_files(self, is_recursive):
+        full_file_paths = []
+        index = 0
 
+        for root, dirs, files in os.walk(self.caller_dir):
 
-    # TODO call recursively
-    def get_all_subdirectories_in_directory(self, curdir):
-        dir_list = [curdir]
-        for f in os.listdir(curdir):
-            if os.path.isdir(f):
-                dir_list.append(curdir + "/" + f)
+            # Prepend root to every file path
+            full_file_paths.extend(['{0}/{1}'.format(root, file) for file in files])
 
-        return dir_list
+            if is_recursive is False:
+                break
 
-    # Build list with files in current directory
-    def get_files_in_currentdir(self, curdir):
-        file_list = []
+        return full_file_paths
 
-        # TESTING
-        print curdir + "right here"
-
-        for f in os.listdir(curdir):
-            if not os.path.isdir(f):
-                file_list.append(f)
-
-        # If there is a string to search --> do function call
-        if self.string_to_search_for:
-            matched_file_dict = self.search_files(file_list, curdir)
-
-            # If there were any matches --> do print
-            if matched_file_dict:
-                print_helper.print_matched_files(matched_file_dict)
-
-        # stub
-        else:
-            for f in file_list:
-                print f
-
-    # Loop through files
-    def search_files(self, file_list, curdir):
-        matched_file_dict = {}
+    def search_files(self, file_list):
+        matched_files = {}
 
         for f in file_list:
-            matched_line_dict = self.search_file_for_string(f, curdir)
+            matched_line_dict = self.search_file_for_string(f)
 
             if matched_line_dict:
-                matched_file_dict[f] = matched_line_dict
+                matched_files[f] = matched_line_dict
 
-        return matched_file_dict
+        return matched_files
 
-    # Search a single file for occurrences of a string
-    def search_file_for_string(self, file_path, curdir):
-        matched_line_dict = {}
-        file = curdir + "/" + file_path
-        if not os.path.isdir(file):
-            with open(file) as f:
+    def search_file_for_string(self, file_path):
+        """Search a single file for occurrences of a string."""
+
+        matched_lines = {}
+        if not os.path.isdir(file_path):
+            with open(file_path, 'r') as f:
                 for index, line in enumerate(f):
                     if self.string_to_search_for in line:
+                        matched_lines[index + 1] = line
 
-                        matched_line_dict[index + 1] = line
-
-        return matched_line_dict
-
-
-
+        return matched_lines
