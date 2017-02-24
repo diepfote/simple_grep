@@ -25,9 +25,11 @@ def main(args=None):
 
     search_term = args['SEARCH_TERM'] if args['SEARCH_TERM'] else [""]
 
-    grep_.Searcher(
+    searcher = grep_.Searcher(
         os.path.abspath(os.path.curdir), search_term[0], args['-r']
     )
+
+    searcher.run()
 
 if __name__ == "__main__":
     main()

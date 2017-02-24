@@ -11,10 +11,14 @@ class Searcher(object):
 
     def __init__(self, caller_dir, search_term, is_recursive):
 
+        self.caller_dir = caller_dir
         self.search_term = search_term
+        self.is_recursive = is_recursive
+
+    def run(self):
 
         matched_files = self.search_files(
-            file_helper.get_all_files(caller_dir, is_recursive)
+            file_helper.get_all_files(self.caller_dir, self.is_recursive)
         )
 
         # TODO add flag for full path
@@ -23,7 +27,6 @@ class Searcher(object):
 
         else:
             print_helper.print_matched_files_full_path(matched_files)
-
 
     def search_files(self, file_list):
         matched_files = {}
@@ -46,3 +49,11 @@ class Searcher(object):
                     matched_lines[index + 1] = line
 
         return matched_lines
+
+    def search_file_for_regex(self, file_path):
+        # import re
+        # word = 'fubar'
+        # regexp = re.compile(r'ba[rzd]')
+        # if regexp.search(word):
+        #     print 'matched'
+        pass
