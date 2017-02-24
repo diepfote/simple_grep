@@ -6,15 +6,19 @@ def test_dunder_init():
     caller_dir = os.curdir
     search_term = "docopt"
     is_recursive = False
-    searcher = Searcher(caller_dir, search_term, is_recursive)
+    is_abs_path = False
+    is_regex_pattern = False
+    searcher = Searcher(caller_dir, search_term, is_recursive, is_abs_path, is_regex_pattern)
 
     assert searcher.caller_dir == caller_dir and \
            searcher.search_term == search_term and \
-           searcher.is_recursive == is_recursive
+           searcher.is_recursive == is_recursive and \
+           searcher.is_abs_path == is_abs_path and \
+           searcher.is_regex_pattern == is_regex_pattern
 
 def test_run():
     matched_files = Searcher.run(
-        Searcher(caller_dir=os.curdir, search_term="docopt", is_recursive=False)
+        Searcher(caller_dir=os.curdir, search_term="docopt", is_recursive=False, is_abs_path=False, is_regex_pattern=False)
     )
 
     assert matched_files['./setup.py'] == {6: "    packages=['grep_redone', 'docopt'],\n"}
@@ -28,7 +32,7 @@ def test_search_files():
 
         # Directory and recursive option are irrelevant for the test.
         matched_files = Searcher.search_files(
-            Searcher(caller_dir=os.curdir, search_term="a", is_recursive=False),
+            Searcher(caller_dir=os.curdir, search_term="a", is_recursive=False, is_abs_path=False, is_regex_pattern=False),
             [temp.name]
         )
 
@@ -46,7 +50,7 @@ def test_search_file_for_string():
 
         # Directory and recursive option are irrelevant for the test.
         matched_lines = Searcher.search_file_for_string(
-            Searcher(caller_dir=os.curdir, search_term="a", is_recursive=False),
+            Searcher(caller_dir=os.curdir, search_term="a", is_recursive=False, is_abs_path=False, is_regex_pattern=False),
             temp.name
         )
 

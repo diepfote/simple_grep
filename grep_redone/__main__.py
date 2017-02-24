@@ -2,7 +2,7 @@
 """
 grep_redone; grep re-implemented in python
 
-Usage: __main__.py [-rf] [SEARCH_TERM] ...
+Usage: __main__.py [-rfe] [SEARCH_TERM] ...
 
 Search for a string in files in a directory; optionally do this recursively.
 
@@ -13,6 +13,7 @@ Options:
   -h --help
   -r       recursive search
   -f       display full/absolute path
+  -e       search term is a regex pattern
 
 """
 
@@ -27,7 +28,11 @@ def main(args=None):
     search_term = args['SEARCH_TERM'] if args['SEARCH_TERM'] else [""]
 
     searcher = grep_.Searcher(
-        os.path.abspath(os.path.curdir), search_term[0], args['-r'], args['-f']
+        os.path.abspath(os.path.curdir),
+        search_term[0],
+        args['-r'],
+        args['-f'],
+        args['-e']
     )
 
     searcher.run()
