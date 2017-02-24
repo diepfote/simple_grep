@@ -9,9 +9,9 @@ class Searcher(object):
 
     isfirst = True
 
-    def __init__(self, caller_dir, string_to_search_for, is_recursive):
+    def __init__(self, caller_dir, search_term, is_recursive):
 
-        self.string_to_search_for = string_to_search_for
+        self.search_term = search_term
 
         matched_files = self.search_files(
             file_helper.get_all_files(caller_dir, is_recursive)
@@ -42,7 +42,7 @@ class Searcher(object):
         matched_lines = {}
         with open(file_path, 'r') as f:
             for index, line in enumerate(f):
-                if self.string_to_search_for in line:
+                if self.search_term in line:
                     matched_lines[index + 1] = line
 
         return matched_lines
