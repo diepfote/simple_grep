@@ -13,7 +13,12 @@ class Searcher(object):
 
         matched_files = self.search_files(self.get_all_files(is_recursive))
 
-        print_helper.print_matched_files_full_path(matched_files)
+        # TODO add flag for full path
+        if True:
+            print_helper.print_matched_files_relative_path(matched_files)
+
+        else:
+            print_helper.print_matched_files_full_path(matched_files)
 
     def get_all_files(self, is_recursive):
         full_file_paths = []
