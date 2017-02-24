@@ -7,8 +7,6 @@ import print_helper
 class Searcher(object):
     """Searches files in dirs for specified string."""
 
-    isfirst = True
-
     def __init__(self, caller_dir, search_term, is_recursive):
 
         self.caller_dir = caller_dir
@@ -28,10 +26,13 @@ class Searcher(object):
         else:
             print_helper.print_matched_files_full_path(matched_files)
 
-    def search_files(self, file_list):
+        return matched_files
+
+    def search_files(self, file_paths):
+        print file_paths
         matched_files = {}
 
-        for f in file_list:
+        for f in file_paths:
             matched_line_dict = self.search_file_for_string(f)
 
             if matched_line_dict:
