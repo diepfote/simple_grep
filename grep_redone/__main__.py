@@ -1,6 +1,9 @@
+"""Be able to execute grep_redone by pointing it at a working tree."""
+
 import os
 import sys
 
+# TODO refactor command line parsing
 from docopt import docopt
 from grep import grep as grep_
 
