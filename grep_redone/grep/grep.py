@@ -7,7 +7,7 @@ from grep_redone.grep import print_helper
 
 
 class Searcher(object):
-    """Searches files in dirs for specified string."""
+    """Search functionality implemented as a class."""
 
     def __init__(self, caller_dir, search_term, is_recursive, is_abs_path, is_regex_pattern):
 
@@ -31,8 +31,9 @@ class Searcher(object):
         return matched_files
 
     def search_files(self, file_paths):
+        """Look through all files supplied by the file_helper."""
+
         matched_files = {}
-        matched_line_dict = {}
 
         for f in file_paths:
             if self.is_regex_pattern:
@@ -50,23 +51,29 @@ class Searcher(object):
         """Search a single file for occurrences of a string."""
 
         matched_lines = {}
-        with open(file_path, 'r') as f:
-            for index, line in enumerate(f):
-                if self.search_term in line:
-                    matched_lines[index + 1] = line
+        try:
+            with open(file_path, 'r') as f:
+                for index, line in enumerate(f):
+                    if self.search_term in line:
+                        matched_lines[index + 1] = line
+
+        except IOError, ioerror:
+            print "Error while reading file: %s" % ioerror
 
         return matched_lines
 
-    # TODO fix
     def search_file_for_regex(self, file_path):
         """Search a single file for a regex pattern."""
 
         regexp = re.compile(self.search_term)
         matched_lines = {}
 
-        with open(file_path, 'r') as f:
-            for index, line in enumerate(f):
-                if regexp.search(line):
-                    matched_lines[index + 1] = line
+        try:
+            with open(file_path, 'r') as f:
+                for index, line in enumerate(f):
+                    if regexp.search(line):
+                        matched_lines[index + 1] = line
+        except IOError, ioerror:
+            print "Error while reading file: %s" % ioerror
 
         return matched_lines

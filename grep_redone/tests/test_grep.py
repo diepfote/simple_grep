@@ -17,11 +17,32 @@ def test_dunder_init():
            searcher.is_regex_pattern == is_regex_pattern
 
 def test_run():
-    matched_files = Searcher.run(
-        Searcher(caller_dir=os.curdir, search_term="docopt", is_recursive=False, is_abs_path=False, is_regex_pattern=False)
-    )
+    temp_dir = tempfile.mkdtemp()
+    temp = tempfile.NamedTemporaryFile(dir=temp_dir)
 
-    assert matched_files['./setup.py'] == {6: "    packages=['grep_redone', 'docopt'],\n"}
+    try:
+        temp.write('docopt')
+        # Rewind to read data back from file.
+        temp.seek(0)
+
+        caller_dir = temp_dir
+        search_term = "docopt"
+        is_abs_path = True
+
+        matched_files = Searcher.run(
+            Searcher(caller_dir=caller_dir,
+                     search_term=search_term,
+                     is_recursive=False,
+                     is_abs_path=is_abs_path,
+                     is_regex_pattern=False)
+        )
+
+        assert matched_files[temp.name] == {1: "docopt"}
+
+    finally:
+        temp.close()
+        os.removedirs(temp_dir)
+
 
 def test_search_files():
     temp = tempfile.NamedTemporaryFile()
@@ -76,3 +97,20 @@ def test_search_file_for_regex():
 
     finally:
         temp.close()
+
+def test_ioerror_restricted_file():
+    # TODO make setup
+    starting_dir = os.path.abspath(os.curdir)
+    os.chdir(os.path.abspath(os.curdir) + "/grep_redone/tests/testing_directory")
+
+    f = "test_restricted_file.txt"
+    # Directory and recursive option are irrelevant for the test.
+    matched_lines = Searcher.search_file_for_regex(
+        Searcher(caller_dir=os.curdir, search_term="^[d-s]{1,}$", is_recursive=False, is_abs_path=False,
+                 is_regex_pattern=False),
+        f
+    )
+
+
+    # TODO make teardown
+    os.chdir(starting_dir)

@@ -1,19 +1,16 @@
 import os
+import tempfile
 
 from grep_redone.grep import file_helper
 
 def test_get_all_files():
-    # TODO make setup
-    starting_dir = os.path.abspath(os.curdir)
-    os.chdir(os.path.abspath(os.curdir) + "/grep_redone/tests/testing_directory")
+    temp_dir = tempfile.mkdtemp()
+    temp = tempfile.NamedTemporaryFile(dir=temp_dir)
 
-    caller_dir = os.path.abspath(os.curdir)
-    is_recursive = False
-    files = file_helper.get_all_files(caller_dir, is_recursive)
+    try:
+        files = file_helper.get_all_files(temp_dir, is_recursive=False)
+        assert  files == [temp.name]
 
-    files = [os.path.relpath(f) for f in files]
-
-    # TODO make teardown
-    os.chdir(starting_dir)
-
-    assert files == ['test_file.txt']
+    finally:
+        temp.close()
+        os.removedirs(temp_dir)
