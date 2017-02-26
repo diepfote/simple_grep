@@ -35,7 +35,7 @@ class Searcher(object):
 
         matched_files = {}
 
-        for f in file_paths:
+        for count, f in enumerate(file_paths):
             if self.is_regex_pattern:
                 matched_line_dict = self.search_file_for_regex(f)
 
