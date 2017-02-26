@@ -1,5 +1,7 @@
 import os
 import tempfile
+import pytest
+
 from grep_redone.grep.grep import Searcher
 
 def test_dunder_init():
@@ -98,19 +100,38 @@ def test_search_file_for_regex():
     finally:
         temp.close()
 
-def test_ioerror_restricted_file():
-    # TODO make setup
-    starting_dir = os.path.abspath(os.curdir)
-    os.chdir(os.path.abspath(os.curdir) + "/grep_redone/tests/testing_directory")
+def test_ioerror_due_to_restricted_file_in_search_file_for_string():
+    caller_dir = os.path.abspath(os.curdir) + "/grep_redone/tests/testing_directory"
 
-    f = "test_restricted_file.txt"
+    print caller_dir
+    f = caller_dir + "/test_restricted_file.restricted"
+    print f
     # Directory and recursive option are irrelevant for the test.
-    matched_lines = Searcher.search_file_for_regex(
-        Searcher(caller_dir=os.curdir, search_term="^[d-s]{1,}$", is_recursive=False, is_abs_path=False,
-                 is_regex_pattern=False),
-        f
-    )
 
+    try:
+        Searcher.search_file_for_string(
+            Searcher(caller_dir=caller_dir, search_term="^[d-s]{1,}$", is_recursive=False, is_abs_path=False,
+                     is_regex_pattern=False),
+            f
+        )
 
-    # TODO make teardown
-    os.chdir(starting_dir)
+    except IOError:
+        pytest.fail("An IOError was raised.")
+
+def test_ioerror_due_to_restricted_file_in_search_file_for_regex():
+    caller_dir = os.path.abspath(os.curdir) + "/grep_redone/tests/testing_directory"
+
+    print caller_dir
+    f = caller_dir + "/test_restricted_file.restricted"
+    print f
+    # Directory and recursive option are irrelevant for the test.
+
+    try:
+        Searcher.search_file_for_regex(
+            Searcher(caller_dir=caller_dir, search_term="^[d-s]{1,}$", is_recursive=False, is_abs_path=False,
+                     is_regex_pattern=False),
+            f
+        )
+
+    except IOError:
+        pytest.fail("An IOError was raised.")

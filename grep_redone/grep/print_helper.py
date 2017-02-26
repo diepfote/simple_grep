@@ -14,9 +14,9 @@ def print_matched_files_full_path(matched_lines, search_term):
     # Remove last occurrence of new line
     output = [rreplace(f, '\n', '', 1) for f in output]
 
-    # Color search term yellow.
+    # Color search term.
     if search_term:
-        output = [f.replace(search_term, colored.green(search_term, True, False).__str__()) for f in output]
+        output = [rreplace(f, search_term, colored.green(search_term, True, False).__str__(), 1 ) for f in output]
 
     for f in output:
         print f
@@ -34,9 +34,9 @@ def print_matched_files_relative_path(matched_lines, search_term):
     # Remove last occurrence of new line
     output = [rreplace(f, '\n', '', 1) for f in output]
 
-    # Color search term yellow.
+    # Color search term.
     if search_term:
-        output = [f.replace(search_term, colored.green(search_term, True, False).__str__()) for f in output]
+        output = [rreplace(f, search_term, colored.green(search_term, True, False).__str__(), 1 ) for f in output]
 
     for f in output:
         print f
