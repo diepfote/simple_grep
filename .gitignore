@@ -1,4 +1,4 @@
-# Compiled python modules.
+w# Compiled python modules.
 *.pyc
 
 # Setuptools distribution folder.
@@ -27,3 +27,6 @@ venv/
 
 # Pycharm files
 .idea/
+
+# restricted files
+*.restricted
