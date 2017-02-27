@@ -1,6 +1,8 @@
 """Search functionality for grep_redone."""
 
+import time
 import re
+import sre_constants
 
 import file_helper
 from grep_redone.grep import print_helper
@@ -8,6 +10,11 @@ from grep_redone.grep import print_helper
 
 class Searcher(object):
     """Search functionality implemented as a class."""
+
+    #TESTING
+    global start_time
+    start_time = time.time()
+    # TESTING
 
     def __init__(self, caller_dir, search_term, is_recursive, is_abs_path, is_regex_pattern):
 
@@ -28,6 +35,10 @@ class Searcher(object):
         else:
             print_helper.print_matched_files_relative_path(matched_files, self.search_term)
 
+        # TESTING
+        print("--- %s seconds ---" % (time.time() - start_time))
+        # TESTING
+
         return matched_files
 
     def search_files(self, file_paths):
@@ -35,9 +46,16 @@ class Searcher(object):
 
         matched_files = {}
 
-        for count, f in enumerate(file_paths):
+        for f in file_paths:
+            matched_line_dict = {}
+
             if self.is_regex_pattern:
-                matched_line_dict = self.search_file_for_regex(f)
+                try:
+                    matched_line_dict = self.search_file_for_regex(f)
+
+                except sre_constants.error, error:
+                    print "Regex expression error:\n\t%s" % error
+                    break
 
             else:
                 matched_line_dict = self.search_file_for_string(f)
@@ -73,7 +91,9 @@ class Searcher(object):
                 for index, line in enumerate(f):
                     if regexp.search(line):
                         matched_lines[index + 1] = line
+
         except IOError, ioerror:
-            print "Error while reading file: %s" % ioerror
+            print "Error while reading file:\n\t%s" % ioerror
+
 
         return matched_lines
