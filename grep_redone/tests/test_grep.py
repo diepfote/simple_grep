@@ -54,14 +54,15 @@ def test_search_files():
         temp.seek(0)
 
         search_term = "a"
+        files = [temp.name]
         # Directory and recursive option are irrelevant for the test.
         matched_files = Searcher.search_files(
-            Searcher(caller_dir=os.curdir,
+            Searcher(caller_dir="",
                      search_term=search_term,
                      is_recursive=False,
                      is_abs_path=False,
                      is_regex_pattern=False),
-            [temp.name]
+            files
         )
 
         assert matched_files[temp.name] == {2: 'a\n'}
@@ -76,14 +77,16 @@ def test_search_file_for_string():
         # Rewind to read data back from file.
         temp.seek(0)
 
+        search_term = "a"
+        f = temp.name
         # Directory and recursive option are irrelevant for the test.
         matched_lines = Searcher.search_file_for_string(
-            Searcher(caller_dir=os.curdir,
-                     search_term="a",
+            Searcher(caller_dir="",
+                     search_term=search_term,
                      is_recursive=False,
                      is_abs_path=False,
                      is_regex_pattern=False),
-            temp.name
+            f
         )
 
         assert matched_lines[2] == "a\n"
@@ -98,14 +101,16 @@ def test_search_file_for_regex():
         # Rewind to read data back from file.
         temp.seek(0)
 
+        search_term = "^[d-s]{1,}$"
+        f = temp.name
         # Directory and recursive option are irrelevant for the test.
         matched_lines = Searcher.search_file_for_regex(
-            Searcher(caller_dir=os.curdir,
-                     search_term="^[d-s]{1,}$",
+            Searcher(caller_dir="",
+                     search_term=search_term,
                      is_recursive=False,
                      is_abs_path=False,
                      is_regex_pattern=False),
-            temp.name
+            f
         )
 
         assert matched_lines[1] == "sdf\n"
@@ -118,19 +123,17 @@ def test_ioerror_due_to_restricted_file_in_search_file_for_string():
     temp = tempfile.NamedTemporaryFile(dir=temp_dir)
 
     try:
-        # Change permissions
+        # Change permissions to rw root only
         os.chmod(temp.name, 600)
 
-        caller_dir = temp_dir
-        is_abs_path = True
-
+        f = temp.name
         Searcher.search_file_for_string(
-            Searcher(caller_dir=caller_dir,
-                     search_term="^[d-s]{1,}$",
+            Searcher(caller_dir="",
+                     search_term="",
                      is_recursive=False,
                      is_abs_path=False,
                      is_regex_pattern=False),
-            temp.name
+            f
         )
 
     except IOError, ioerror:
@@ -146,19 +149,17 @@ def test_ioerror_due_to_restricted_file_in_search_file_for_regex():
     temp = tempfile.NamedTemporaryFile(dir=temp_dir)
 
     try:
-        # Change permissions
+        # Change permissions to rw root only
         os.chmod(temp.name, 600)
 
-        caller_dir = temp_dir
-        is_abs_path = True
-
+        f = temp.name
         Searcher.search_file_for_regex(
-            Searcher(caller_dir=caller_dir,
-                     search_term="^[d-s]{1,}$",
+            Searcher(caller_dir="",
+                     search_term="",
                      is_recursive=False,
                      is_abs_path=False,
                      is_regex_pattern=False),
-            temp.name
+            f
         )
 
     except IOError, ioerror:
