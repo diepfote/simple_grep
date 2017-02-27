@@ -175,7 +175,7 @@ def test_regular_expression_error():
     try:
         search_term = "[\\]"
         is_regex_pattern = True
-        f = temp.name
+        files = [temp.name]
 
         Searcher.search_files(
             Searcher(caller_dir="",
@@ -183,7 +183,7 @@ def test_regular_expression_error():
                 is_recursive=False,
                 is_abs_path=False,
                 is_regex_pattern=is_regex_pattern),
-            f
+            files
         )
 
     finally:
