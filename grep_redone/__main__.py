@@ -28,11 +28,11 @@ def main(args=None):
     search_term = args['SEARCH_TERM'] if args['SEARCH_TERM'] else [""]
 
     searcher = grep_.Searcher(
-        os.path.abspath(os.path.curdir),
-        search_term[0],
-        args['-r'],
-        args['-f'],
-        args['-e']
+        caller_dir=os.path.abspath(os.path.curdir),
+        search_term=search_term[0],
+        is_recursive=args['-r'],
+        is_abs_path=args['-f'],
+        is_regex_pattern=args['-e']
     )
 
     searcher.run()

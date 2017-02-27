@@ -18,6 +18,10 @@ class Searcher(object):
 
     def __init__(self, caller_dir, search_term, is_recursive, is_abs_path, is_regex_pattern):
 
+        assert type(is_recursive) == bool
+        assert type(is_abs_path) == bool
+        assert type(is_regex_pattern) == bool
+
         self.caller_dir = caller_dir
         self.search_term = search_term
         self.is_recursive = is_recursive
@@ -52,7 +56,6 @@ class Searcher(object):
             if self.is_regex_pattern:
                 try:
                     matched_line_dict = self.search_file_for_regex(f)
-
                 except sre_constants.error, error:
                     print "Regex expression error:\n\t%s" % error
                     break
@@ -94,6 +97,5 @@ class Searcher(object):
 
         except IOError, ioerror:
             print "Error while reading file:\n\t%s" % ioerror
-
 
         return matched_lines

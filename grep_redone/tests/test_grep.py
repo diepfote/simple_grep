@@ -168,3 +168,23 @@ def test_ioerror_due_to_restricted_file_in_search_file_for_regex():
     finally:
         temp.close()
         os.removedirs(temp_dir)
+
+def test_regular_expression_error():
+    temp = tempfile.NamedTemporaryFile()
+
+    try:
+        search_term = "[\\]"
+        is_regex_pattern = True
+        f = temp.name
+
+        Searcher.search_files(
+            Searcher(caller_dir="",
+                search_term=search_term,
+                is_recursive=False,
+                is_abs_path=False,
+                is_regex_pattern=is_regex_pattern),
+            f
+        )
+
+    finally:
+        temp.close()
