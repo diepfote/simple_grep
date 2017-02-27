@@ -53,9 +53,14 @@ def test_search_files():
         # Rewind to read data back from file.
         temp.seek(0)
 
+        search_term = "a"
         # Directory and recursive option are irrelevant for the test.
         matched_files = Searcher.search_files(
-            Searcher(caller_dir=os.curdir, search_term="a", is_recursive=False, is_abs_path=False, is_regex_pattern=False),
+            Searcher(caller_dir=os.curdir,
+                     search_term=search_term,
+                     is_recursive=False,
+                     is_abs_path=False,
+                     is_regex_pattern=False),
             [temp.name]
         )
 
@@ -73,7 +78,11 @@ def test_search_file_for_string():
 
         # Directory and recursive option are irrelevant for the test.
         matched_lines = Searcher.search_file_for_string(
-            Searcher(caller_dir=os.curdir, search_term="a", is_recursive=False, is_abs_path=False, is_regex_pattern=False),
+            Searcher(caller_dir=os.curdir,
+                     search_term="a",
+                     is_recursive=False,
+                     is_abs_path=False,
+                     is_regex_pattern=False),
             temp.name
         )
 
@@ -91,7 +100,11 @@ def test_search_file_for_regex():
 
         # Directory and recursive option are irrelevant for the test.
         matched_lines = Searcher.search_file_for_regex(
-            Searcher(caller_dir=os.curdir, search_term="^[d-s]{1,}$", is_recursive=False, is_abs_path=False, is_regex_pattern=False),
+            Searcher(caller_dir=os.curdir,
+                     search_term="^[d-s]{1,}$",
+                     is_recursive=False,
+                     is_abs_path=False,
+                     is_regex_pattern=False),
             temp.name
         )
 
@@ -101,37 +114,56 @@ def test_search_file_for_regex():
         temp.close()
 
 def test_ioerror_due_to_restricted_file_in_search_file_for_string():
-    caller_dir = os.path.abspath(os.curdir) + "/grep_redone/tests/testing_directory"
-
-    print caller_dir
-    f = caller_dir + "/test_restricted_file.restricted"
-    print f
-    # Directory and recursive option are irrelevant for the test.
+    temp_dir = tempfile.mkdtemp()
+    temp = tempfile.NamedTemporaryFile(dir=temp_dir)
 
     try:
+        # Change permissions
+        os.chmod(temp.name, 600)
+
+        caller_dir = temp_dir
+        is_abs_path = True
+
         Searcher.search_file_for_string(
-            Searcher(caller_dir=caller_dir, search_term="^[d-s]{1,}$", is_recursive=False, is_abs_path=False,
+            Searcher(caller_dir=caller_dir,
+                     search_term="^[d-s]{1,}$",
+                     is_recursive=False,
+                     is_abs_path=False,
                      is_regex_pattern=False),
-            f
+            temp.name
         )
 
-    except IOError:
-        pytest.fail("An IOError was raised.")
+    except IOError, ioerror:
+        pytest.fail("An IOError was raised:\n\t" + ioerror.__str__())
+
+    finally:
+        temp.close()
+        os.removedirs(temp_dir)
+
 
 def test_ioerror_due_to_restricted_file_in_search_file_for_regex():
-    caller_dir = os.path.abspath(os.curdir) + "/grep_redone/tests/testing_directory"
-
-    print caller_dir
-    f = caller_dir + "/test_restricted_file.restricted"
-    print f
-    # Directory and recursive option are irrelevant for the test.
+    temp_dir = tempfile.mkdtemp()
+    temp = tempfile.NamedTemporaryFile(dir=temp_dir)
 
     try:
+        # Change permissions
+        os.chmod(temp.name, 600)
+
+        caller_dir = temp_dir
+        is_abs_path = True
+
         Searcher.search_file_for_regex(
-            Searcher(caller_dir=caller_dir, search_term="^[d-s]{1,}$", is_recursive=False, is_abs_path=False,
+            Searcher(caller_dir=caller_dir,
+                     search_term="^[d-s]{1,}$",
+                     is_recursive=False,
+                     is_abs_path=False,
                      is_regex_pattern=False),
-            f
+            temp.name
         )
 
-    except IOError:
-        pytest.fail("An IOError was raised.")
+    except IOError, ioerror:
+        pytest.fail("An IOError was raised:\n\t" + ioerror.__str__())
+
+    finally:
+        temp.close()
+        os.removedirs(temp_dir)
