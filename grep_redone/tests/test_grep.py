@@ -1,5 +1,7 @@
 import os
+import platform
 import tempfile
+import shutil
 import pytest
 
 from grep_redone.grep.grep import Searcher
@@ -7,12 +9,12 @@ from grep_redone.grep.grep import Searcher
 def setup_module(module):
     global temp_dir, fd, temp_path
     temp_dir = tempfile.mkdtemp()
-    fd, temp_path = tempfile.mkstemp(dir=temp_dir)
+    fd, temp_path = tempfile.mkstemp(dir=temp_dir, suffix='.txt', text=True)
 
 def teardown_module(module):
     os.close(fd)
     os.remove(temp_path)
-    os.removedirs(temp_dir)
+    shutil.rmtree(temp_dir)
 
 def test_dunder_init():
     caller_dir = os.curdir
@@ -29,29 +31,34 @@ def test_dunder_init():
            searcher.is_regex_pattern == is_regex_pattern
 
 def test_run():
-    with open(temp_path, 'wr') as f:
-            f.write('docopt')
-            # Rewind to read data back from file.
-            f.seek(0)
+    f = open(temp_path, 'w')
 
-            caller_dir = temp_dir
-            search_term = "docopt"
-            is_abs_path = True
+    try:
+        f.write('docopt')
+        # Rewind to read data back from file.
+        f.seek(0)
 
-            matched_files = Searcher.run(
-                Searcher(caller_dir=caller_dir,
-                         search_term=search_term,
-                         is_recursive=False,
-                         is_abs_path=is_abs_path,
-                         is_regex_pattern=False)
-            )
+        caller_dir = temp_dir
+        search_term = "docopt"
+        is_abs_path = True
 
-            assert matched_files[temp_path] == {1: "docopt"}
+        matched_files = Searcher.run(
+            Searcher(caller_dir=caller_dir,
+                     search_term=search_term,
+                     is_recursive=False,
+                     is_abs_path=is_abs_path,
+                     is_regex_pattern=False)
+        )
 
+        assert matched_files[temp_path] == {1: "docopt"}
 
+    finally:
+        f.close()
 
 def test_search_files():
-    with open(temp_path, 'wr') as f:
+    f = open(temp_path, 'w')
+
+    try:
         f.flush()
         f.write('sdf\na\nrghsf')
         # Rewind to read data back from file.
@@ -71,8 +78,13 @@ def test_search_files():
 
         assert matched_files[temp_path] == {2: 'a\n'}
 
+    finally:
+        f.close()
+
 def test_search_file_for_string():
-    with open(temp_path, 'wr') as f:
+    f = open(temp_path, 'w')
+
+    try:
         f.flush()
         f.write('sdf\na\nrghsfz')
         # Rewind to read data back from file.
@@ -91,8 +103,13 @@ def test_search_file_for_string():
 
         assert matched_lines[2] == "a\n"
 
+    finally:
+        f.close()
+
 def test_search_file_for_regex():
-    with open(temp_path, 'wr') as f:
+    f = open(temp_path, 'w')
+
+    try:
         f.flush()
         f.write('sdf\na\nrghsfz')
         # Rewind to read data back from file.
@@ -111,50 +128,61 @@ def test_search_file_for_regex():
 
         assert matched_lines[1] == "sdf\n"
 
+    finally:
+        f.close()
+
+@pytest.mark.skipif("platform.system() == 'Windows'")
 def test_ioerror_due_to_restricted_file_in_search_file_for_string():
-        try:
-            # Change permissions to rw root only
-            os.chmod(temp_path, 600)
+    f = open(temp_path, 'r')
 
-            Searcher.search_file_for_string(
-                Searcher(caller_dir="",
-                         search_term="",
-                         is_recursive=False,
-                         is_abs_path=False,
-                         is_regex_pattern=False),
-                temp_path
-            )
+    try:
+        # Change permissions to rw root only
+        os.chmod(f.name, 600)
 
-        except IOError, ioerror:
-            pytest.fail("An IOError was raised:\n\t" + ioerror.__str__())
+        Searcher.search_file_for_string(
+            Searcher(caller_dir="",
+                     search_term="",
+                     is_recursive=False,
+                     is_abs_path=False,
+                     is_regex_pattern=False),
+            f.name
+        )
 
-        finally:
-            os.chmod(temp_path, 777)
+    except IOError, ioerror:
+        pytest.fail("An IOError was raised:\n\t" + ioerror.__str__())
 
+    finally:
+        os.chmod(f.name, 777)
+        f.close()
 
+@pytest.mark.skipif("platform.system() == 'Windows'")
 def test_ioerror_due_to_restricted_file_in_search_file_for_regex():
-        try:
-            # Change permissions to rw root only
-            os.chmod(temp_path, 600)
+    f = open(temp_path, 'r')
 
-            Searcher.search_file_for_regex(
-                Searcher(caller_dir="",
-                         search_term="",
-                         is_recursive=False,
-                         is_abs_path=False,
-                         is_regex_pattern=False),
-                temp_path
-            )
+    try:
+        # Change permissions to rw root only
+        os.chmod(f.name, 600)
 
-        except IOError, ioerror:
-            pytest.fail("An IOError was raised:\n\t" + ioerror.__str__())
+        Searcher.search_file_for_regex(
+            Searcher(caller_dir="",
+                     search_term="",
+                     is_recursive=False,
+                     is_abs_path=False,
+                     is_regex_pattern=False),
+            f.name
+        )
 
-        finally:
-            os.chmod(temp_path, 777)
+    except IOError, ioerror:
+        pytest.fail("An IOError was raised:\n\t" + ioerror.__str__())
+
+    finally:
+        os.chmod(f.name, 777)
+        f.close()
 
 def test_regular_expression_error():
-    with open(temp_path, 'r') as f:
+    f = open(temp_path, 'r')
 
+    try:
         search_term = "[\\]"
         is_regex_pattern = True
         files = [temp_path]
@@ -167,3 +195,6 @@ def test_regular_expression_error():
                 is_regex_pattern=is_regex_pattern),
             files
         )
+
+    finally:
+        f.close()
