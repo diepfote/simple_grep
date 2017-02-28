@@ -66,6 +66,7 @@ def rreplace(string, old, new, num_occurrences):
     """Replace a term x times. Replacing is done from right to left."""
 
     li = string.rsplit(old, num_occurrences)
+    print li
     return new.join(li)
 
 def is_binary_file(file_path):
@@ -74,9 +75,9 @@ def is_binary_file(file_path):
     textchars = bytearray({7, 8, 9, 10, 12, 13, 27} | set(range(0x20, 0x100)) - {0x7f})
     is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
 
-    is_binary = False
+    is_binary = True
     try:
-        is_binary_string(open(file_path, 'rb').read(1024))
+        is_binary = is_binary_string(open(file_path, 'rb').read(1024))
 
     # For test cases
     except IOError:
