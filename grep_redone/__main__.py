@@ -1,8 +1,8 @@
 
 """
-grep_redone; grep re-implemented in python
+grep_redone  grep re-implemented in python
 
-Usage: __main__.py [-rfe] [SEARCH_TERM] ...
+Usage: grep_redone [-rfe] [SEARCH_TERM] ...
 
 Search for a string in files in a directory; optionally do this recursively.
 
@@ -23,6 +23,7 @@ from docopt import docopt
 from grep import grep as grep_
 
 def main(args=None):
+    """Entry point for grep_redone."""
     args = docopt(__doc__)
 
     search_term = args['SEARCH_TERM'] if args['SEARCH_TERM'] else [""]
