@@ -9,7 +9,7 @@ def test_get_all_files():
 
     try:
         files = file_helper.get_all_files(temp_dir, is_recursive=False)
-        assert  files == [temp.name]
+        assert files == [temp.name]
 
     finally:
         temp.close()
