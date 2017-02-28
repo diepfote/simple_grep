@@ -22,7 +22,7 @@ def print_matched_files_full_path(matched_lines, search_term):
 
     # Color search term.
     if search_term:
-        output = [rreplace(f, search_term, ('\033[1;31m' + search_term + '\033[0m'), 1 ) for f in output]
+        output = color_string(output, search_term, 'red')
 
     output.reverse()
     for f in output:
@@ -50,11 +50,9 @@ def print_matched_files_relative_path(matched_lines, search_term):
     # Remove last occurrence of new line
     output = [rreplace(f, '\n', '', 1) for f in output]
 
-    # print "\033[59m" + search_term
-    # print [colored.green(search_term, True, False).__str__()]
     # Color search term.
     if search_term:
-        output = [rreplace(f, search_term, ('\033[1;31m' + search_term + '\033[0m '), 1 ) for f in output]
+        output = color_string(output, search_term, 'red')
 
     output.reverse()
     for f in output:
@@ -62,10 +60,22 @@ def print_matched_files_relative_path(matched_lines, search_term):
 
     return output
 
-def rreplace(string, old, new, num_occurrences):
+def color_string(list, term, color):
+    """Colors a single term/word inside a list."""
+
+    lightish_red = '\033[1;31m'
+    no_color = '\033[0m'
+
+    list = [rreplace(f, term, (lightish_red + term + no_color), 1) for f in list]
+    if color == 'red':
+        return list
+
+    return None
+
+def rreplace(f, old, new, num_occurrences):
     """Replace a term x times. Replacing is done from right to left."""
 
-    li = string.rsplit(old, num_occurrences)
+    li = f.rsplit(old, num_occurrences)
     print li
     return new.join(li)
 
