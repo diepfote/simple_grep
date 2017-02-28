@@ -3,6 +3,7 @@
 import os
 
 def get_all_files(caller_dir, is_recursive):
+    """Creates a list containing all files to be searched."""
 
     assert type(caller_dir) is str
     assert type(is_recursive) is bool

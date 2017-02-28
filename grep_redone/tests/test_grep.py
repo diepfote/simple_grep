@@ -81,7 +81,7 @@ def test_search_files():
     finally:
         f.close()
 
-def test_search_file_for_string():
+def test_search_line_by_line_for_term():
     f = open(temp_path, 'w')
 
     try:
@@ -92,7 +92,7 @@ def test_search_file_for_string():
 
         search_term = "a"
         # Directory and recursive option are irrelevant for the test.
-        matched_lines = Searcher.search_file_for_string(
+        matched_lines = Searcher.search_line_by_line_for_term(
             Searcher(caller_dir="",
                      search_term=search_term,
                      is_recursive=False,
@@ -106,7 +106,7 @@ def test_search_file_for_string():
     finally:
         f.close()
 
-def test_search_file_for_regex():
+def test_search_line_by_line_for_regex():
     f = open(temp_path, 'w')
 
     try:
@@ -117,7 +117,7 @@ def test_search_file_for_regex():
 
         search_term = "^[d-s]{1,}$"
         # Directory and recursive option are irrelevant for the test.
-        matched_lines = Searcher.search_file_for_regex(
+        matched_lines = Searcher.search_line_by_line_for_regex(
             Searcher(caller_dir="",
                      search_term=search_term,
                      is_recursive=False,
@@ -132,14 +132,14 @@ def test_search_file_for_regex():
         f.close()
 
 @pytest.mark.skipif("platform.system() == 'Windows'")
-def test_ioerror_due_to_restricted_file_in_search_file_for_string():
+def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_term():
     f = open(temp_path, 'r')
 
     try:
         # Change permissions to rw root only
         os.chmod(f.name, 600)
 
-        Searcher.search_file_for_string(
+        Searcher.search_line_by_line_for_term(
             Searcher(caller_dir="",
                      search_term="",
                      is_recursive=False,
@@ -156,14 +156,14 @@ def test_ioerror_due_to_restricted_file_in_search_file_for_string():
         f.close()
 
 @pytest.mark.skipif("platform.system() == 'Windows'")
-def test_ioerror_due_to_restricted_file_in_search_file_for_regex():
+def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_regex():
     f = open(temp_path, 'r')
 
     try:
         # Change permissions to rw root only
         os.chmod(f.name, 600)
 
-        Searcher.search_file_for_regex(
+        Searcher.search_line_by_line_for_regex(
             Searcher(caller_dir="",
                      search_term="",
                      is_recursive=False,

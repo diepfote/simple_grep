@@ -32,6 +32,7 @@ class Searcher(object):
         self.is_regex_pattern = is_regex_pattern
 
     def run(self):
+        """Runs search and prints results."""
 
         files = file_helper.get_all_files(self.caller_dir, self.is_recursive)
         matched_files = self.search_files(files)
@@ -59,21 +60,21 @@ class Searcher(object):
 
             if self.is_regex_pattern:
                 try:
-                    matched_line_dict = self.search_file_for_regex(f)
+                    matched_line_dict = self.search_line_by_line_for_regex(f)
 
                 except sre_constants.error, error:
                     print "Regex expression error:\n\t%s" % error
                     break
 
             else:
-                matched_line_dict = self.search_file_for_string(f)
+                matched_line_dict = self.search_line_by_line_for_term(f)
 
             if matched_line_dict:
                 matched_files[f] = matched_line_dict
 
         return matched_files
 
-    def search_file_for_string(self, file_path):
+    def search_line_by_line_for_term(self, file_path):
         """Search a single file for occurrences of a string."""
 
         assert type(file_path) == str
@@ -90,7 +91,7 @@ class Searcher(object):
 
         return matched_lines
 
-    def search_file_for_regex(self, file_path):
+    def search_line_by_line_for_regex(self, file_path):
         """Search a single file for a regex pattern."""
 
         assert type(file_path) == str
