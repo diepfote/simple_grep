@@ -45,6 +45,6 @@ def test_color_string():
     # FYI \33 gets turned into \x1b
     test_output = ['Thebrown\033[1;31mfox\033[0mjumpsover.']
 
-    output = print_helper.color_string(list=test_list, term=term, color='red')
+    output = print_helper.color_string(list_to_edit=test_list, term=term, color='red')
 
     assert output == test_output

@@ -60,27 +60,39 @@ def print_matched_files_relative_path(matched_lines, search_term):
 
     return output
 
-def color_string(list, term, color):
+def color_string(list_to_edit, term, color):
     """Colors a single term/word inside a list."""
+
+    assert type(list_to_edit) == list
+    assert type(term) == str
+    assert type(color) == str
 
     lightish_red = '\033[1;31m'
     no_color = '\033[0m'
 
-    list = [rreplace(f, term, (lightish_red + term + no_color), 1) for f in list]
+    list_to_edit = [rreplace(f, term, (lightish_red + term + no_color), 1) for f in list_to_edit]
     if color == 'red':
-        return list
+        return list_to_edit
 
     return None
 
-def rreplace(f, old, new, num_occurrences):
+def rreplace(string_to_edit, old, new, num_occurrences):
     """Replace a term x times. Replacing is done from right to left."""
 
-    li = f.rsplit(old, num_occurrences)
+    assert type(string_to_edit) == str
+    assert type(old) == str
+    assert type(new) == str
+    assert type(num_occurrences) == int
+
+
+    li = string_to_edit.rsplit(old, num_occurrences)
     print li
     return new.join(li)
 
 def is_binary_file(file_path):
     """Test if a given file is binary."""
+
+    assert type(file_path)
 
     textchars = bytearray({7, 8, 9, 10, 12, 13, 27} | set(range(0x20, 0x100)) - {0x7f})
     is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
