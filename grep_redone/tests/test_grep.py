@@ -6,15 +6,18 @@ import pytest
 
 from grep_redone.grep.grep import Searcher
 
+
 def setup_module(module):
     global temp_dir, fd, temp_path
     temp_dir = tempfile.mkdtemp()
     fd, temp_path = tempfile.mkstemp(dir=temp_dir, suffix='.txt', text=True)
 
+
 def teardown_module(module):
     os.close(fd)
     os.remove(temp_path)
     shutil.rmtree(temp_dir)
+
 
 def test_dunder_init():
     caller_dir = os.curdir
@@ -29,6 +32,7 @@ def test_dunder_init():
            searcher.is_recursive == is_recursive and \
            searcher.is_abs_path == is_abs_path and \
            searcher.is_regex_pattern == is_regex_pattern
+
 
 def test_run():
     f = open(temp_path, 'w')
@@ -54,6 +58,7 @@ def test_run():
 
     finally:
         f.close()
+
 
 def test_search_files():
     f = open(temp_path, 'w')
@@ -81,6 +86,7 @@ def test_search_files():
     finally:
         f.close()
 
+
 def test_search_line_by_line_for_term():
     f = open(temp_path, 'w')
 
@@ -105,6 +111,7 @@ def test_search_line_by_line_for_term():
 
     finally:
         f.close()
+
 
 def test_search_line_by_line_for_regex():
     f = open(temp_path, 'w')
@@ -131,6 +138,7 @@ def test_search_line_by_line_for_regex():
     finally:
         f.close()
 
+
 @pytest.mark.skipif("platform.system() == 'Windows'")
 def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_term():
     f = open(temp_path, 'r')
@@ -155,6 +163,7 @@ def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_term():
         os.chmod(f.name, 777)
         f.close()
 
+
 @pytest.mark.skipif("platform.system() == 'Windows'")
 def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_regex():
     f = open(temp_path, 'r')
@@ -178,6 +187,7 @@ def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_regex():
     finally:
         os.chmod(f.name, 777)
         f.close()
+
 
 def test_regular_expression_error():
     f = open(temp_path, 'r')

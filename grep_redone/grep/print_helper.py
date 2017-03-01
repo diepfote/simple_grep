@@ -3,6 +3,7 @@
 import os
 from clint.textui import colored
 
+
 def print_matched_files_full_path(matched_lines, search_term):
     """Prints matched files in a dict using absolute paths."""
 
@@ -11,11 +12,11 @@ def print_matched_files_full_path(matched_lines, search_term):
 
     output = []
 
-    for file, lines in matched_lines.iteritems():
-        output.extend([(colored.magenta(os.path.normpath(file) + ':', True, False)
+    for f, lines in matched_lines.iteritems():
+        output.extend([(colored.magenta(os.path.normpath(f) + ':', True, False)
                         + colored.green(str(line_num)) + ':' + line)
                        for line_num, line in lines.iteritems()
-                 ])
+                       ])
 
     # Remove last occurrence of new line
     output = [rreplace(f, '\n', '', 1) for f in output]
@@ -29,6 +30,7 @@ def print_matched_files_full_path(matched_lines, search_term):
         print f
 
     return output
+
 
 def print_matched_files_relative_path(matched_lines, search_term):
     """Prints matched files in a dict using relative paths."""
@@ -37,15 +39,15 @@ def print_matched_files_relative_path(matched_lines, search_term):
     assert type(search_term) == str
 
     output = []
-    for file, lines in matched_lines.iteritems():
-        if is_binary_file(file):
-            output.extend(['Binary file ' + file + ' matches'])
+    for f, lines in matched_lines.iteritems():
+        if is_binary_file(f):
+            output.extend(['Binary file ' + f + ' matches'])
 
         else:
-            output.extend([(colored.magenta(os.path.normpath(os.path.relpath(file)) + ':', True, False)
-                        + colored.green(str(line_num)) + ':' + line)
-                       for line_num, line in lines.iteritems()
-                  ])
+            output.extend([(colored.magenta(os.path.normpath(os.path.relpath(f)) + ':', True, False)
+                            + colored.green(str(line_num)) + ':' + line)
+                           for line_num, line in lines.iteritems()
+                           ])
 
     # Remove last occurrence of new line
     output = [rreplace(f, '\n', '', 1) for f in output]
@@ -59,6 +61,7 @@ def print_matched_files_relative_path(matched_lines, search_term):
         print f
 
     return output
+
 
 def color_string(list_to_edit, term, color):
     """Colors a single term/word inside a list."""
@@ -76,6 +79,7 @@ def color_string(list_to_edit, term, color):
 
     return None
 
+
 def rreplace(string_to_edit, old, new, num_occurrences):
     """Replace a term x times. Replacing is done from right to left."""
 
@@ -84,10 +88,10 @@ def rreplace(string_to_edit, old, new, num_occurrences):
     assert type(new) == str
     assert type(num_occurrences) == int
 
-
     li = string_to_edit.rsplit(old, num_occurrences)
     print li
     return new.join(li)
+
 
 def is_binary_file(file_path):
     """Test if a given file is binary."""
@@ -95,7 +99,8 @@ def is_binary_file(file_path):
     assert type(file_path)
 
     textchars = bytearray({7, 8, 9, 10, 12, 13, 27} | set(range(0x20, 0x100)) - {0x7f})
-    is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
+    # TODO FIX PEP8
+    is_binary_string = lambda translate: bool(bytes.translate('', textchars))
 
     is_binary = True
     try:

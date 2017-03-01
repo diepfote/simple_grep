@@ -22,7 +22,8 @@ import os
 from docopt import docopt
 from grep import grep as grep_
 
-def main(args=None):
+
+def main():
     """Entry point for grep_redone."""
     args = docopt(__doc__)
 
