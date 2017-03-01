@@ -1,6 +1,5 @@
 """Search functionality for grep_redone."""
 
-import os
 import time
 import re
 import sre_constants
@@ -12,7 +11,7 @@ from grep_redone.grep import print_helper
 class Searcher(object):
     """Search functionality implemented as a class."""
 
-    #TESTING
+    # TESTING
     global start_time
     start_time = time.time()
     # TESTING
@@ -56,8 +55,6 @@ class Searcher(object):
         matched_files = {}
 
         for f in file_paths:
-            matched_line_dict = {}
-
             if self.is_regex_pattern:
                 try:
                     matched_line_dict = self.search_line_by_line_for_regex(f)
