@@ -94,20 +94,41 @@ def rreplace(string_to_edit, old, new, num_occurrences):
 
 
 def is_binary_file(file_path):
-    """Test if a given file is binary."""
+    """Wraps istextfile to accommodate for test cases."""
 
     assert type(file_path)
 
-    textchars = bytearray({7, 8, 9, 10, 12, 13, 27} | set(range(0x20, 0x100)) - {0x7f})
-    # TODO FIX PEP8
-    is_binary_string = lambda translate: bool(bytes.translate('', textchars))
-
     is_binary = True
     try:
-        is_binary = is_binary_string(open(file_path, 'rb').read(1024))
+        is_binary = not istextfile(open(file_path, 'rb'))
 
-    # For test cases
+    # For test cases where the file is not present
     except IOError:
         pass
 
     return is_binary
+
+
+def istextfile(fileobj, blocksize=512):
+    """ Uses heuristics to guess whether the given file is text or binary,
+        by reading a single block of bytes from the file.
+        If more than 30% of the chars in the block are non-text, or there
+        are NUL ('\x00') bytes in the block, assume this is a binary file.
+    """
+
+    character_table = (
+        b''.join(chr(i) for i in range(32, 127)) +
+        b'\n\r\t\f\b')
+
+    block = fileobj.read(blocksize)
+    if b'\x00' in block:
+        # Files with null bytes are binary
+        return False
+    elif not block:
+        # An empty file is considered a valid text file
+        return True
+
+    # Use translate's 'deletechars' argument to efficiently remove all
+    # occurrences of _text_characters from the block
+    nontext = block.translate(None, character_table)
+    return float(len(nontext)) / len(block) <= 0.30
