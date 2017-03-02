@@ -7,13 +7,13 @@ import pytest
 from grep_redone.grep.grep import Searcher
 
 
-def setup_module(module):
+def setup_module():
     global temp_dir, fd, temp_path
     temp_dir = tempfile.mkdtemp()
     fd, temp_path = tempfile.mkstemp(dir=temp_dir, suffix='.txt', text=True)
 
 
-def teardown_module(module):
+def teardown_module():
     os.close(fd)
     os.remove(temp_path)
     shutil.rmtree(temp_dir)
@@ -147,14 +147,12 @@ def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_term():
         # Change permissions to rw root only
         os.chmod(f.name, 600)
 
-        Searcher.search_line_by_line_for_term(
-            Searcher(caller_dir="",
-                     search_term="",
-                     is_recursive=False,
-                     is_abs_path=False,
-                     is_regex_pattern=False),
-            f.name
-        )
+        Searcher.search_line_by_line_for_term(Searcher(caller_dir="",
+                                                       search_term="",
+                                                       is_recursive=False,
+                                                       is_abs_path=False,
+                                                       is_regex_pattern=False), f.name
+                                              )
 
     except IOError, ioerror:
         pytest.fail("An IOError was raised:\n\t" + ioerror.__str__())
@@ -172,14 +170,12 @@ def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_regex():
         # Change permissions to rw root only
         os.chmod(f.name, 600)
 
-        Searcher.search_line_by_line_for_regex(
-            Searcher(caller_dir="",
-                     search_term="",
-                     is_recursive=False,
-                     is_abs_path=False,
-                     is_regex_pattern=False),
-            f.name
-        )
+        Searcher.search_line_by_line_for_regex(Searcher(caller_dir="",
+                                                        search_term="",
+                                                        is_recursive=False,
+                                                        is_abs_path=False,
+                                                        is_regex_pattern=False), f.name
+                                               )
 
     except IOError, ioerror:
         pytest.fail("An IOError was raised:\n\t" + ioerror.__str__())
@@ -197,13 +193,12 @@ def test_regular_expression_error():
         is_regex_pattern = True
         files = [temp_path]
 
-        Searcher.search_files(
-            Searcher(caller_dir="",
-                search_term=search_term,
-                is_recursive=False,
-                is_abs_path=False,
-                is_regex_pattern=is_regex_pattern),
-            files
+        Searcher.search_files(Searcher(
+            caller_dir="",
+            search_term=search_term,
+            is_recursive=False,
+            is_abs_path=False,
+            is_regex_pattern=is_regex_pattern), files
         )
 
     finally:

@@ -26,7 +26,7 @@ def print_matched_files_full_path(matched_lines, search_term):
         output = color_string(output, search_term, 'red')
 
     output.reverse()
-    for f in output:
+    for f in iter(output):
         print f
 
     return output
@@ -57,7 +57,7 @@ def print_matched_files_relative_path(matched_lines, search_term):
         output = color_string(output, search_term, 'red')
 
     output.reverse()
-    for f in output:
+    for f in iter(output):
         print f
 
     return output
