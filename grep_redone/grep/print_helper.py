@@ -40,7 +40,7 @@ def print_matched_files_relative_path(matched_lines, search_term):
 
     output = []
     for f, lines in matched_lines.iteritems():
-        if is_binary_file(f):
+        if is_f_binary_file(f):
             output.extend(['Binary file ' + f + ' matches'])
 
         else:
@@ -89,46 +89,43 @@ def rreplace(string_to_edit, old, new, num_occurrences):
     assert type(num_occurrences) == int
 
     li = string_to_edit.rsplit(old, num_occurrences)
-    print li
     return new.join(li)
 
 
-def is_binary_file(file_path):
-    """Wraps istextfile to accommodate for test cases."""
-
-    assert type(file_path)
-
-    is_binary = True
-    try:
-        is_binary = not istextfile(open(file_path, 'rb'))
-
-    # For test cases where the file is not present
-    except IOError:
-        pass
-
-    return is_binary
-
-
-def istextfile(fileobj, blocksize=512):
+def is_f_binary_file(file_path, blocksize=512):
     """ Uses heuristics to guess whether the given file is text or binary,
         by reading a single block of bytes from the file.
         If more than 30% of the chars in the block are non-text, or there
         are NUL ('\x00') bytes in the block, assume this is a binary file.
     """
 
+    assert type(file_path)
+
+    is_binary_file = True
+
     character_table = (
         b''.join(chr(i) for i in range(32, 127)) +
         b'\n\r\t\f\b')
 
-    block = fileobj.read(blocksize)
-    if b'\x00' in block:
-        # Files with null bytes are binary
-        return False
-    elif not block:
-        # An empty file is considered a valid text file
-        return True
+    f = open(file_path, 'rb')
 
-    # Use translate's 'deletechars' argument to efficiently remove all
-    # occurrences of _text_characters from the block
-    nontext = block.translate(None, character_table)
-    return float(len(nontext)) / len(block) <= 0.30
+    try:
+        block = f.read(blocksize)
+        if b'\x00' in block:
+            # Files with null bytes are binary
+            return False
+        elif not block:
+            # An empty file is considered a valid text file
+            return True
+
+        # Use translate's 'deletechars' argument to efficiently remove all
+        # occurrences of _text_characters from the block
+        nontext = block.translate(None, character_table)
+        # For test cases where the file is not present
+
+        is_binary_file = not float(len(nontext)) / len(block) <= 0.30
+
+    except IOError:
+        pass
+
+    return is_binary_file

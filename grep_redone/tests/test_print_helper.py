@@ -1,7 +1,20 @@
 import os
+import tempfile
 import platform
+import pytest
 
 from grep_redone.grep import print_helper
+
+def setup_module():
+    global temp_dir, fd, temp_path
+    temp_dir = tempfile.mkdtemp()
+    fd, temp_path = tempfile.mkstemp(dir=temp_dir, suffix='.txt', text=True)
+
+
+def teardown_module():
+    os.close(fd)
+    os.remove(temp_path)
+    os.removedirs(temp_dir)
 
 
 def test_print_matched_files_full_path():
@@ -37,10 +50,6 @@ def test_rreplace():
     assert test_string == string_to_test_against
 
 
-def test_is_binary_file():
-    pass
-
-
 def test_color_string():
     test_list = ['Thebrownfoxjumpsover.']
     term = 'fox'
@@ -50,3 +59,42 @@ def test_color_string():
     output = print_helper.color_string(list_to_edit=test_list, term=term, color='red')
 
     assert output == test_output
+
+
+def test_is_f_binary_file_with_binary_file():
+    f = open(temp_path, 'wb')
+
+    try:
+        f.flush()
+        f.write(b'\x07\x08\x07')
+        f.seek(0)
+        f.close()
+
+        f = open(temp_path, 'rb')
+        test_result = True
+        result = print_helper.is_f_binary_file(f.name)
+
+        assert result == test_result
+
+
+    finally:
+        f.close()
+
+def test_is_f_binary_file_with_text_file():
+    f = open(temp_path, 'w')
+
+    try:
+        f.flush()
+        f.write('asdadsf')
+        f.seek(0)
+        f.close()
+
+        f = open(temp_path, 'r')
+        test_result = False
+        result = print_helper.is_f_binary_file(f.name)
+
+        assert result == test_result
+
+
+    finally:
+        f.close()

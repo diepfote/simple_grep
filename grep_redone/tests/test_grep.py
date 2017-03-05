@@ -1,7 +1,6 @@
 import os
 import platform
 import tempfile
-import shutil
 import pytest
 
 from grep_redone.grep.grep import Searcher
@@ -16,7 +15,7 @@ def setup_module():
 def teardown_module():
     os.close(fd)
     os.remove(temp_path)
-    shutil.rmtree(temp_dir)
+    os.removedirs(temp_dir)
 
 
 def test_dunder_init():
