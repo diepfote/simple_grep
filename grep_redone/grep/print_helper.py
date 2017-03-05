@@ -101,15 +101,14 @@ def is_f_binary_file(file_path, blocksize=512):
 
     assert type(file_path)
 
-    is_binary_file = True
-
+    is_binary_file = False
     character_table = (
         b''.join(chr(i) for i in range(32, 127)) +
         b'\n\r\t\f\b')
 
-    f = open(file_path, 'rb')
-
     try:
+        f = open(file_path, 'rb')
+
         block = f.read(blocksize)
         if b'\x00' in block:
             # Files with null bytes are binary
@@ -121,7 +120,6 @@ def is_f_binary_file(file_path, blocksize=512):
         # Use translate's 'deletechars' argument to efficiently remove all
         # occurrences of _text_characters from the block
         nontext = block.translate(None, character_table)
-        # For test cases where the file is not present
 
         is_binary_file = not float(len(nontext)) / len(block) <= 0.30
 
