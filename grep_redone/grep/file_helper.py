@@ -2,7 +2,7 @@
 
 import os
 
-
+# TODO refactor into a generator
 def get_all_files(caller_dir, is_recursive):
     """Creates a list containing all files to be searched."""
 
