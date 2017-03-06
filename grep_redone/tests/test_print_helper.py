@@ -4,24 +4,7 @@ import platform
 import pytest
 
 from grep_redone.grep import print_helper
-
-# TODO
-global temp_dir, fd, temp_path
-temp_dir = tempfile.mkdtemp()
-fd, temp_path = tempfile.mkstemp(dir=temp_dir, suffix='.txt', text=True)
-
-
-def teardown_module():
-    os.close(fd)
-    os.remove(temp_path)
-    os.removedirs(temp_dir)
-
-
-@pytest.fixture(scope='function')
-def with_f_write():
-    f = open(temp_path, 'w')
-    yield f
-    f.close()
+from grep_redone.tests.test_helper import with_f_bwrite, with_f_write
 
 
 def test_print_matched_files_full_path():
@@ -69,41 +52,34 @@ def test_color_string():
     assert output == test_output
 
 
-def test_is_f_binary_file_with_binary_file():
-    f = open(temp_path, 'wb')
+def test_is_f_binary_file_with_binary_file(with_f_bwrite):
+    with_f_bwrite.flush()
+    with_f_bwrite.write(b'\x07\x08\x07')
+    with_f_bwrite.seek(0)
+    with_f_bwrite.close()
 
     try:
-        f.flush()
-        f.write(b'\x07\x08\x07')
-        f.seek(0)
-        f.close()
-
-        f = open(temp_path, 'rb')
+        with_f_bwrite = open(with_f_bwrite.name , 'rb')
         test_result = True
-        result = print_helper.is_f_binary_file(f.name)
+        result = print_helper.is_f_binary_file(with_f_bwrite.name)
 
         assert result == test_result
-
-
     finally:
-        f.close()
+        with_f_bwrite.close()
 
 
 def test_is_f_binary_file_with_text_file(with_f_write):
-    f = open(temp_path, 'w')
+    with_f_write.flush()
+    with_f_write.write('asdadsf')
+    with_f_write.seek(0)
+    with_f_write.close()
 
     try:
-        f.flush()
-        f.write('asdadsf')
-        f.seek(0)
-        f.close()
-
-        f = open(temp_path, 'r')
+        with_f_write = open(with_f_write.name, 'r')
         test_result = False
-        result = print_helper.is_f_binary_file(f.name)
+        result = print_helper.is_f_binary_file(with_f_write.name)
 
         assert result == test_result
 
-
     finally:
-        f.close()
+        with_f_write.close()
