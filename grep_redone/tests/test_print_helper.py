@@ -5,16 +5,23 @@ import pytest
 
 from grep_redone.grep import print_helper
 
-def setup_module():
-    global temp_dir, fd, temp_path
-    temp_dir = tempfile.mkdtemp()
-    fd, temp_path = tempfile.mkstemp(dir=temp_dir, suffix='.txt', text=True)
+# TODO
+global temp_dir, fd, temp_path
+temp_dir = tempfile.mkdtemp()
+fd, temp_path = tempfile.mkstemp(dir=temp_dir, suffix='.txt', text=True)
 
 
 def teardown_module():
     os.close(fd)
     os.remove(temp_path)
     os.removedirs(temp_dir)
+
+
+@pytest.fixture(scope='function')
+def with_f_write():
+    f = open(temp_path, 'w')
+    yield f
+    f.close()
 
 
 def test_print_matched_files_full_path():
@@ -81,7 +88,8 @@ def test_is_f_binary_file_with_binary_file():
     finally:
         f.close()
 
-def test_is_f_binary_file_with_text_file():
+
+def test_is_f_binary_file_with_text_file(with_f_write):
     f = open(temp_path, 'w')
 
     try:
