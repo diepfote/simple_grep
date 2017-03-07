@@ -59,5 +59,6 @@ def is_f_binary_file(file_path, blocksize=512):
 
     except IOError, ioerror:
         print "Error while reading file:\n\t%s" % ioerror
+        return False
 
     return is_binary_file
