@@ -7,9 +7,9 @@ from grep_redone.tests.helper_for_tests import with_f_bwrite, with_f_write, temp
 
 def test_get_next_file():
     caller_dir = os.path.dirname(temp_path)
-    file = file_helper.get_next_file(caller_dir, is_recursive=False).next()
+    f = file_helper.get_next_file(caller_dir, is_recursive=False).next()
 
-    assert file == [temp_path]
+    assert f == temp_path
 
 
 def test_is_f_binary_file_with_binary_file(with_f_bwrite):

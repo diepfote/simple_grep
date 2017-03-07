@@ -33,52 +33,52 @@ class Searcher(object):
     def run(self):
         """Runs search and prints results."""
 
-        matched_files = {}
-        for file in file_helper.get_next_file(self.caller_dir, self.is_recursive):
+        matched_file = {}
+        for f in file_helper.get_next_file(self.caller_dir, self.is_recursive):
 
-            matched_files = self.search_files(file)
+            matched_file = self.search_file(f)
             if self.is_abs_path:
-                print_helper.print_matched_files_full_path(matched_files, self.search_term)
+                print_helper.print_matched_files_full_path(matched_file, self.search_term)
 
             else:
-                print_helper.print_matched_files_relative_path(matched_files, self.search_term)
+                print_helper.print_matched_files_relative_path(matched_file, self.search_term)
 
         # TESTING
         print("--- %s seconds ---" % (time.time() - start_time))
         # TESTING
 
-        return matched_files
+        return matched_file
 
 # TODO overly complex; file_paths is now a list containing a single file
-    def search_files(self, file_paths):
+    def search_file(self, file_path):
         """Look through all files supplied by the file_helper."""
 
-        assert type(file_paths) == list or type(file_paths) == str
-        matched_files = {}
+        assert type(file_path) == str
 
-        for f in file_paths:
-            if self.is_regex_pattern:
-                try:
-                    matched_line_dict = self.search_line_by_line_for_regex(f)
+        matched_line_dict = {}
+        if self.is_regex_pattern:
+            try:
+                matched_line_dict = self.search_line_by_line_for_regex(file_path)
 
-                except sre_constants.error, error:
-                    print "Regex expression error:\n\t%s" % error
-                    break
+            except sre_constants.error, error:
+                print "Regex expression error:\n\t%s" % error
 
-            else:
-                matched_line_dict = self.search_line_by_line_for_term(f)
+        else:
+            matched_line_dict = self.search_line_by_line_for_term(file_path)
 
-            if matched_line_dict:
-                matched_files[f] = matched_line_dict
+        if matched_line_dict:
+            matched_file = {file_path: matched_line_dict}
+            return matched_file
 
-        return matched_files
+        else:
+            return {}
 
     def search_line_by_line_for_term(self, file_path):
         """Search a single file for occurrences of a string."""
 
         assert type(file_path) == str
-        matched_lines = {}
 
+        matched_lines = {}
         try:
             with open(file_path, 'r') as f:
                 for index, line in enumerate(f):
