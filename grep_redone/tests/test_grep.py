@@ -115,12 +115,13 @@ def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_term(with_res
 @pytest.mark.skipif("platform.system() == 'Windows'")
 def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_regex(with_restricted_file):
 
-    Searcher.search_line_by_line_for_regex(Searcher(caller_dir="",
-                                                    search_term="",
-                                                    is_recursive=False,
-                                                    is_abs_path=False,
-                                                    is_regex_pattern=False),
-                                               with_restricted_file)
+    Searcher.search_line_by_line_for_regex(
+        Searcher(caller_dir="",
+                 search_term="",
+                 is_recursive=False,
+                 is_abs_path=False,
+                 is_regex_pattern=False),
+        with_restricted_file)
 
 
 def test_regular_expression_error(with_f_read):
