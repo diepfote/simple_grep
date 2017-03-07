@@ -41,12 +41,12 @@ def test_rreplace():
     assert test_string == string_to_test_against
 
 
-def test_color_string():
+def test_color_term_in_string():
     test_list = ['Thebrownfoxjumpsover.']
     term = 'fox'
     # FYI \33 gets turned into \x1b
     test_output = ['Thebrown\033[1;31mfox\033[0mjumpsover.']
 
-    output = print_helper.color_string(list_to_edit=test_list, term=term, color='red')
+    output = print_helper.color_term_in_string(list_to_edit=test_list, term=term, color='red')
 
     assert output == test_output

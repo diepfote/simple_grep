@@ -13,9 +13,8 @@ def print_matched_files_full_path(matched_lines, search_term):
     assert type(search_term) == str
 
     output = []
-
     for f, lines in matched_lines.iteritems():
-        # TODO decorator
+        # TODO DRY
         output.extend([(colored.magenta(os.path.normpath(f) + ':', True, False)
                         + colored.green(str(line_num)) + ':' + line)
                        for line_num, line in lines.iteritems()
@@ -26,7 +25,7 @@ def print_matched_files_full_path(matched_lines, search_term):
 
     # Color search term.
     if search_term:
-        output = color_string(output, search_term, 'red')
+        output = color_term_in_string(output, search_term, 'red')
 
     output.reverse()
     for f in iter(output):
@@ -47,7 +46,7 @@ def print_matched_files_relative_path(matched_lines, search_term):
             output.extend(['Binary file ' + f + ' matches'])
 
         else:
-            # TODO decorator
+            # TODO DRY
             output.extend([(colored.magenta(os.path.normpath(os.path.relpath(f)) + ':', True, False)
                             + colored.green(str(line_num)) + ':' + line)
                            for line_num, line in lines.iteritems()
@@ -58,7 +57,7 @@ def print_matched_files_relative_path(matched_lines, search_term):
 
     # Color search term.
     if search_term:
-        output = color_string(output, search_term, 'red')
+        output = color_term_in_string(output, search_term, 'red')
 
     output.reverse()
     for f in iter(output):
@@ -67,7 +66,7 @@ def print_matched_files_relative_path(matched_lines, search_term):
     return output
 
 
-def color_string(list_to_edit, term, color):
+def color_term_in_string(list_to_edit, term, color):
     """Colors a single term/word inside a list."""
 
     assert type(list_to_edit) == list
