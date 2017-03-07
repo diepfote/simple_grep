@@ -3,8 +3,7 @@ import platform
 import pytest
 
 from grep_redone.grep.grep import Searcher
-from grep_redone.tests.test_helper import temp_dir, fd
-from grep_redone.tests.test_helper import with_f_write, with_f_read, with_permission_denied
+from grep_redone.tests.helper_for_tests import with_f_write, with_f_read, with_restricted_file
 
 
 def test_dunder_init():
@@ -27,7 +26,7 @@ def test_run(with_f_write):
     # Rewind to read data back from file.
     with_f_write.seek(0)
 
-    caller_dir = temp_dir
+    caller_dir = os.path.dirname(with_f_write.name)
     search_term = "docopt"
     is_abs_path = True
 
@@ -39,7 +38,7 @@ def test_run(with_f_write):
                  is_regex_pattern=False)
     )
 
-    assert matched_files[with_f_write.name] == {1: "docopt"}
+    assert matched_files[os.path.abspath(with_f_write.name)] == {1: "docopt"}
 
 
 def test_search_files(with_f_write):
@@ -103,25 +102,25 @@ def test_search_line_by_line_for_regex(with_f_write):
 
 
 @pytest.mark.skipif("platform.system() == 'Windows'")
-def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_term(with_permission_denied):
+def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_term(with_restricted_file):
 
     Searcher.search_line_by_line_for_term(Searcher(caller_dir="",
                                                    search_term="",
                                                    is_recursive=False,
                                                    is_abs_path=False,
                                                    is_regex_pattern=False),
-                                          with_permission_denied)
+                                          with_restricted_file)
 
 
 @pytest.mark.skipif("platform.system() == 'Windows'")
-def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_regex(with_permission_denied):
+def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_regex(with_restricted_file):
 
     Searcher.search_line_by_line_for_regex(Searcher(caller_dir="",
                                                     search_term="",
                                                     is_recursive=False,
                                                     is_abs_path=False,
                                                     is_regex_pattern=False),
-                                               with_permission_denied)
+                                               with_restricted_file)
 
 
 def test_regular_expression_error(with_f_read):
@@ -134,5 +133,5 @@ def test_regular_expression_error(with_f_read):
         search_term=search_term,
         is_recursive=False,
         is_abs_path=False,
-        is_regex_pattern=is_regex_pattern), files
-        )
+        is_regex_pattern=is_regex_pattern),
+        files)

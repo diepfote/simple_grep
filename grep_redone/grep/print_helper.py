@@ -3,6 +3,8 @@
 import os
 from clint.textui import colored
 
+from grep_redone.grep import file_helper
+
 
 def print_matched_files_full_path(matched_lines, search_term):
     """Prints matched files in a dict using absolute paths."""
@@ -13,6 +15,7 @@ def print_matched_files_full_path(matched_lines, search_term):
     output = []
 
     for f, lines in matched_lines.iteritems():
+        # TODO decorator
         output.extend([(colored.magenta(os.path.normpath(f) + ':', True, False)
                         + colored.green(str(line_num)) + ':' + line)
                        for line_num, line in lines.iteritems()
@@ -40,10 +43,11 @@ def print_matched_files_relative_path(matched_lines, search_term):
 
     output = []
     for f, lines in matched_lines.iteritems():
-        if is_f_binary_file(f):
+        if file_helper.is_f_binary_file(f):
             output.extend(['Binary file ' + f + ' matches'])
 
         else:
+            # TODO decorator
             output.extend([(colored.magenta(os.path.normpath(os.path.relpath(f)) + ':', True, False)
                             + colored.green(str(line_num)) + ':' + line)
                            for line_num, line in lines.iteritems()
@@ -90,40 +94,3 @@ def rreplace(string_to_edit, old, new, num_occurrences):
 
     li = string_to_edit.rsplit(old, num_occurrences)
     return new.join(li)
-
-
-def is_f_binary_file(file_path, blocksize=512):
-    """ Uses heuristics to guess whether the given file is text or binary,
-        by reading a single block of bytes from the file.
-        If more than 30% of the chars in the block are non-text, or there
-        are NUL ('\x00') bytes in the block, assume this is a binary file.
-    """
-
-    assert type(file_path)
-
-    is_binary_file = False
-    character_table = (
-        b''.join(chr(i) for i in range(32, 127)) +
-        b'\n\r\t\f\b')
-
-    try:
-        f = open(file_path, 'rb')
-
-        block = f.read(blocksize)
-        if b'\x00' in block:
-            # Files with null bytes are binary
-            return False
-        elif not block:
-            # An empty file is considered a valid text file
-            return True
-
-        # Use translate's 'deletechars' argument to efficiently remove all
-        # occurrences of _text_characters from the block
-        nontext = block.translate(None, character_table)
-
-        is_binary_file = not float(len(nontext)) / len(block) <= 0.30
-
-    except IOError:
-        pass
-
-    return is_binary_file
