@@ -2,20 +2,14 @@ import os
 import tempfile
 
 from grep_redone.grep import file_helper
-from grep_redone.tests.helper_for_tests import with_f_bwrite, with_f_write
+from grep_redone.tests.helper_for_tests import with_f_bwrite, with_f_write, temp_path
 
 
 def test_get_all_files():
-    temp_dir = tempfile.mkdtemp()
-    temp = tempfile.NamedTemporaryFile(dir=temp_dir)
+    caller_dir = os.path.dirname(temp_path)
+    files = file_helper.get_all_files(caller_dir, is_recursive=False)
 
-    try:
-        files = file_helper.get_all_files(temp_dir, is_recursive=False)
-        assert files == [temp.name]
-
-    finally:
-        temp.close()
-        os.removedirs(temp_dir)
+    assert files == [temp_path]
 
 
 def test_is_f_binary_file_with_binary_file(with_f_bwrite):
