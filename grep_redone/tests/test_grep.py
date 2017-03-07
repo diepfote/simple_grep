@@ -41,22 +41,22 @@ def test_run(with_f_write):
     assert matched_files[os.path.abspath(with_f_write.name)] == {1: "docopt"}
 
 
-def test_search_files(with_f_write):
+def test_search_file(with_f_write):
     with_f_write.flush()
     with_f_write.write('sdf\na\nrghsf')
     # Rewind to read data back from file.
     with_f_write.seek(0)
 
     search_term = "a"
-    files = [with_f_write.name]
+    f = with_f_write.name
     # Directory and recursive option are irrelevant for the test.
-    matched_files = Searcher.search_files(
+    matched_files = Searcher.search_file(
         Searcher(caller_dir="",
                  search_term=search_term,
                  is_recursive=False,
                  is_abs_path=False,
                  is_regex_pattern=False),
-        files
+        f
     )
 
     assert matched_files[with_f_write.name] == {2: 'a\n'}
@@ -126,12 +126,12 @@ def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_regex(with_re
 def test_regular_expression_error(with_f_read):
     search_term = "[\\]"
     is_regex_pattern = True
-    files = [with_f_read.name]
+    f = with_f_read.name
 
-    Searcher.search_files(Searcher(
+    Searcher.search_file(Searcher(
         caller_dir="",
         search_term=search_term,
         is_recursive=False,
         is_abs_path=False,
         is_regex_pattern=is_regex_pattern),
-        files)
+        f)

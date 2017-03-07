@@ -9,8 +9,6 @@ def get_next_file(caller_dir, is_recursive):
     assert type(caller_dir) is str
     assert type(is_recursive) is bool
 
-    file_paths = []
-
     for root, dirs, files in os.walk(caller_dir):
         for f in files:
 
@@ -19,7 +17,7 @@ def get_next_file(caller_dir, is_recursive):
 
             # Check if it is an actual file on disk.
             if os.path.isfile(file_path):
-                yield [file_path]
+                yield file_path
 
         if is_recursive is False:
             break

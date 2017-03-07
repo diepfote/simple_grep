@@ -6,15 +6,14 @@ from clint.textui import colored
 from grep_redone.grep import file_helper
 
 
-def print_matched_files_full_path(matched_lines, search_term):
+def print_matched_files_full_path(matched_files_and_lines, search_term):
     """Prints matched files in a dict using absolute paths."""
 
-    assert type(matched_lines) == dict
+    assert type(matched_files_and_lines) == dict
     assert type(search_term) == str
 
     output = []
-    for f, lines in matched_lines.iteritems():
-        # TODO DRY
+    for f, lines in matched_files_and_lines.iteritems():
         output.extend([(colored.magenta(os.path.normpath(f) + ':', True, False)
                         + colored.green(str(line_num)) + ':' + line)
                        for line_num, line in lines.iteritems()
@@ -34,19 +33,18 @@ def print_matched_files_full_path(matched_lines, search_term):
     return output
 
 
-def print_matched_files_relative_path(matched_lines, search_term):
+def print_matched_files_relative_path(matched_files_and_lines, search_term):
     """Prints matched files in a dict using relative paths."""
 
-    assert type(matched_lines) == dict
+    assert type(matched_files_and_lines) == dict
     assert type(search_term) == str
 
     output = []
-    for f, lines in matched_lines.iteritems():
+    for f, lines in matched_files_and_lines.iteritems():
         if file_helper.is_f_binary_file(f):
             output.extend(['Binary file ' + f + ' matches'])
 
         else:
-            # TODO DRY
             output.extend([(colored.magenta(os.path.normpath(os.path.relpath(f)) + ':', True, False)
                             + colored.green(str(line_num)) + ':' + line)
                            for line_num, line in lines.iteritems()
