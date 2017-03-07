@@ -9,18 +9,21 @@ fd, temp_path = tempfile.mkstemp(dir=temp_dir, suffix='.txt', text=True)
 
 
 @pytest.fixture(scope='session', autouse=True)
-def remove_tempdir():
-    yield None
-    os.close(fd)
-    os.remove(temp_path)
-    os.removedirs(temp_dir)
+def remove_tempdir(request):
 
+    raise ValueError
 
 @pytest.fixture(scope='function')
-def with_f_read():
+def with_f_read(request):
+    def fin():
+        os.close(fd)
+        os.remove(temp_path)
+        os.removedirs(temp_dir)
+
     f = open(temp_path, 'r')
     yield f
     f.close()
+    request.addfinalizer(fin)
 
 
 @pytest.fixture(scope='function')
@@ -45,7 +48,7 @@ def with_f_bwrite():
 
 
 @pytest.fixture(scope='function')
-def with_permission_denied():
+def with_restricted_file():
     f = open(temp_path, 'r')
     # Leading zero ensures int is treated as octal
     os.chmod(f.name, 0000)

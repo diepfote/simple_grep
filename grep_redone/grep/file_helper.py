@@ -25,3 +25,39 @@ def get_all_files(caller_dir, is_recursive):
             break
 
     return file_paths
+
+
+def is_f_binary_file(file_path, blocksize=512):
+    """ Uses heuristics to guess whether the given file is text or binary,
+        by reading a single block of bytes from the file.
+        If more than 30% of the chars in the block are non-text, or there
+        are NUL ('\x00') bytes in the block, assume this is a binary file.
+    """
+
+    assert type(file_path)
+
+    character_table = (
+        b''.join(chr(i) for i in range(32, 127)) +
+        b'\n\r\t\f\b')
+    is_binary_file = False
+
+    try:
+        with open(file_path, 'rb') as f:
+            block = f.read(blocksize)
+            if b'\x00' in block:
+                # Files with null bytes are binary
+                return False
+            elif not block:
+                # An empty file is considered a valid text file
+                return True
+
+            # Use translate's 'deletechars' argument to efficiently remove all
+            # occurrences of _text_characters from the block
+            nontext = block.translate(None, character_table)
+
+            is_binary_file = not float(len(nontext)) / len(block) <= 0.30
+
+    except IOError, ioerror:
+        print "Error while reading file:\n\t%s" % ioerror
+
+    return is_binary_file
