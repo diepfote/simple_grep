@@ -1,5 +1,4 @@
 import os
-import tempfile
 
 from grep_redone.grep import file_helper
 from grep_redone.tests.helper_for_tests import with_f_bwrite, with_f_write, temp_path
@@ -19,7 +18,7 @@ def test_is_f_binary_file_with_binary_file(with_f_bwrite):
     with_f_bwrite.close()
 
     try:
-        with_f_bwrite = open(with_f_bwrite.name , 'rb')
+        with_f_bwrite = open(with_f_bwrite.name, 'rb')
         test_result = True
         result = file_helper.is_f_binary_file(with_f_bwrite.name)
 

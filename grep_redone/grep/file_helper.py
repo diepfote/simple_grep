@@ -2,6 +2,7 @@
 
 import os
 
+
 # TODO refactor into a generator
 def get_next_file(caller_dir, is_recursive):
     """Creates a list containing all files to be searched."""
@@ -35,7 +36,6 @@ def is_f_binary_file(file_path, blocksize=512):
     character_table = (
         b''.join(chr(i) for i in range(32, 127)) +
         b'\n\r\t\f\b')
-    is_binary_file = False
 
     try:
         with open(file_path, 'rb') as f:
