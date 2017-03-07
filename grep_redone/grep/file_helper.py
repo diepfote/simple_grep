@@ -3,7 +3,7 @@
 import os
 
 # TODO refactor into a generator
-def get_all_files(caller_dir, is_recursive):
+def get_next_file(caller_dir, is_recursive):
     """Creates a list containing all files to be searched."""
 
     assert type(caller_dir) is str
@@ -19,12 +19,10 @@ def get_all_files(caller_dir, is_recursive):
 
             # Check if it is an actual file on disk.
             if os.path.isfile(file_path):
-                file_paths.extend([file_path])
+                yield [file_path]
 
         if is_recursive is False:
             break
-
-    return file_paths
 
 
 def is_f_binary_file(file_path, blocksize=512):

@@ -33,14 +33,15 @@ class Searcher(object):
     def run(self):
         """Runs search and prints results."""
 
-        files = file_helper.get_all_files(self.caller_dir, self.is_recursive)
-        matched_files = self.search_files(files)
+        matched_files = {}
+        for file in file_helper.get_next_file(self.caller_dir, self.is_recursive):
 
-        if self.is_abs_path:
-            print_helper.print_matched_files_full_path(matched_files, self.search_term)
+            matched_files = self.search_files(file)
+            if self.is_abs_path:
+                print_helper.print_matched_files_full_path(matched_files, self.search_term)
 
-        else:
-            print_helper.print_matched_files_relative_path(matched_files, self.search_term)
+            else:
+                print_helper.print_matched_files_relative_path(matched_files, self.search_term)
 
         # TESTING
         print("--- %s seconds ---" % (time.time() - start_time))
@@ -48,10 +49,11 @@ class Searcher(object):
 
         return matched_files
 
+# TODO overly complex; file_paths is now a list containing a single file
     def search_files(self, file_paths):
         """Look through all files supplied by the file_helper."""
 
-        assert type(file_paths) == list
+        assert type(file_paths) == list or type(file_paths) == str
         matched_files = {}
 
         for f in file_paths:
