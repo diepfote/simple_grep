@@ -3,7 +3,6 @@
 import os
 
 
-# TODO refactor into a generator
 def get_next_file(caller_dir, is_recursive):
     """Creates a list containing all files to be searched."""
 
@@ -40,21 +39,22 @@ def is_f_binary_file(file_path, blocksize=512):
     try:
         with open(file_path, 'rb') as f:
             block = f.read(blocksize)
+            assert block is not None
+
             if b'\x00' in block:
                 # Files with null bytes are binary
-                return False
+                return True
             elif not block:
                 # An empty file is considered a valid text file
-                return True
+                return False
 
             # Use translate's 'deletechars' argument to efficiently remove all
             # occurrences of _text_characters from the block
             nontext = block.translate(None, character_table)
+            assert nontext is not None
 
-            is_binary_file = not float(len(nontext)) / len(block) <= 0.30
+            return not float(len(nontext)) / len(block) <= 0
 
     except IOError, ioerror:
         print "Error while reading file:\n\t%s" % ioerror
         return False
-
-    return is_binary_file
