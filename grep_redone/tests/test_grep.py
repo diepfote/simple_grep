@@ -59,7 +59,7 @@ def test_search_file(with_f_write):
         f
     )
 
-    assert matched_files[with_f_write.name] == {2: 'a\n'}
+    assert matched_files[with_f_write.name] == {2: 'a'}
 
 
 def test_search_line_by_line_for_term(with_f_write):
@@ -79,7 +79,7 @@ def test_search_line_by_line_for_term(with_f_write):
         with_f_write.name
     )
 
-    assert matched_lines[2] == "a\n"
+    assert matched_lines[2] == "a"
 
 
 def test_search_line_by_line_for_regex(with_f_write):
@@ -98,7 +98,7 @@ def test_search_line_by_line_for_regex(with_f_write):
                  is_regex_pattern=False),
         with_f_write.name)
 
-    assert matched_lines[1] == "sdf\n"
+    assert matched_lines[1] == "sdf"
 
 
 @pytest.mark.skipif("platform.system() == 'Windows'")

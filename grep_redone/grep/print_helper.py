@@ -72,9 +72,9 @@ def color_term_in_string(list_to_edit, term, color):
     lightish_red = '\033[1;31m'
     no_color = '\033[0m'
 
-    list_to_edit = [rreplace(f, term, (lightish_red + term + no_color), 1) for f in list_to_edit]
     if color == 'red':
-        return list_to_edit
+        return [rreplace(f, term, (lightish_red + term + no_color), 1) for f in list_to_edit]
+
 
     return None
 
