@@ -80,8 +80,8 @@ class Searcher(object):
             with open(file_path, 'r') as f:
                 for index, line in enumerate(f):
                     if self.search_term in line:
-                        # TODO 49 characters before term and 49 after
-                        matched_lines[index + 1] = line[:-len(line)+100]
+                        splitted_str = line.split(self.search_term)
+                        matched_lines[index + 1] = splitted_str[0]+ self.search_term + splitted_str[1][:-len(splitted_str[1])+len(splitted_str[0]+ self.search_term)]
 
         except IOError, ioerror:
             print "Error while reading file: %s" % ioerror
@@ -100,8 +100,8 @@ class Searcher(object):
             with open(file_path, 'r') as f:
                 for index, line in enumerate(f):
                     if regexp.search(line):
-                        # TODO 49 characters before term and 49 after
-                        matched_lines[index + 1] = line[:-len(line)+100]
+                        splitted_str = line.split(self.search_term)
+                        matched_lines[index + 1] = splitted_str[0]+ self.search_term + splitted_str[1][:-len(splitted_str[1])+len(splitted_str[0])]
 
         except IOError, ioerror:
             print "Error while reading file:\n\t%s" % ioerror
