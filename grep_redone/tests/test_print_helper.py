@@ -10,8 +10,8 @@ from grep_redone.tests.helper_for_tests import with_f_bwrite, with_f_write
 def test_print_matched_files_full_path():
     test_dict = {'/home/flo/Untitled Document': {1: 'aware\n', 2: 'aware werwer\n'}}
 
-    test_output = ['\x1b[35m\x1b[22m' + os.path.normpath('/home/flo/Untitled Document') + ':\x1b[39m\x1b[22m2:\x1b[1;31maware\x1b[0m werwer',
-                   '\x1b[35m\x1b[22m' + os.path.normpath('/home/flo/Untitled Document') + ':\x1b[39m\x1b[22m1:\x1b[1;31maware\x1b[0m']
+    test_output = ['\x1b[35m\x1b[22m' + os.path.normpath('/home/flo/Untitled Document') + ':\x1b[39m\x1b[22m1:\x1b[1;31maware\x1b[0m',
+                   '\x1b[35m\x1b[22m' + os.path.normpath('/home/flo/Untitled Document') + ':\x1b[39m\x1b[22m2:\x1b[1;31maware\x1b[0m werwer']
     output = print_helper.print_matched_files_full_path(test_dict, search_term='aware')
 
     assert output == test_output
@@ -27,8 +27,8 @@ def test_print_matched_files_relative_path():
     else:
         raise ValueError('No system information found.')
 
-    test_output = ['\x1b[35m\x1b[22m' + os.path.normpath('../../../../Untitled Document') + ':\x1b[39m\x1b[22m2:\x1b[1;31maware\x1b[0m werwer',
-                   '\x1b[35m\x1b[22m' + os.path.normpath('../../../../Untitled Document') + ':\x1b[39m\x1b[22m1:\x1b[1;31maware\x1b[0m']
+    test_output = ['\x1b[35m\x1b[22m' + os.path.normpath('../../../../Untitled Document') + ':\x1b[39m\x1b[22m1:\x1b[1;31maware\x1b[0m',
+                   '\x1b[35m\x1b[22m' + os.path.normpath('../../../../Untitled Document') + ':\x1b[39m\x1b[22m2:\x1b[1;31maware\x1b[0m werwer']
     output = print_helper.print_matched_files_relative_path(test_dict, search_term='aware')
 
     assert output == test_output

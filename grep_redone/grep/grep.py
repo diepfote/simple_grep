@@ -43,7 +43,7 @@ class Searcher(object):
                 print_helper.print_matched_files_relative_path(matched_file, self.search_term)
 
         # TESTING
-        print("--- %s seconds ---" % (time.time() - start_time))
+        print ("--- %s seconds ---" % (time.time() - start_time))
         # TESTING
 
         return matched_file
@@ -81,7 +81,7 @@ class Searcher(object):
                 for index, line in enumerate(f):
                     if self.search_term in line:
                         # TODO 49 characters before term and 49 after
-                        matched_lines[index + 1] = line
+                        matched_lines[index + 1] = line[:-len(line)+100]
 
         except IOError, ioerror:
             print "Error while reading file: %s" % ioerror

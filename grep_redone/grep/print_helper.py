@@ -26,7 +26,6 @@ def print_matched_files_full_path(matched_files_and_lines, search_term):
     if search_term:
         output = color_term_in_string(output, search_term, 'red')
 
-    output.reverse()
     for f in iter(output):
         print f
 
