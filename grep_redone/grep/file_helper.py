@@ -26,19 +26,16 @@ def get_next_file(caller_dir, is_recursive):
 def is_f_binary_file(file_path, blocksize=512):
     """ Uses heuristics to guess whether the given file is text or binary,
         by reading a single block of bytes from the file.
-        If more than 30% of the chars in the block are non-text, or there
+        If more than 0% of the chars in the block are non-text, or there
         are NUL ('\x00') bytes in the block, assume this is a binary file.
     """
 
-    assert type(file_path)
-
-    character_table = (
-        b''.join(chr(i) for i in range(32, 127)) +
-        b'\n\r\t\f\b')
+    assert type(file_path) == str
 
     try:
         with open(file_path, 'rb') as f:
             block = f.read(blocksize)
+
             assert block is not None
 
             if b'\x00' in block:
@@ -50,7 +47,11 @@ def is_f_binary_file(file_path, blocksize=512):
 
             # Use translate's 'deletechars' argument to efficiently remove all
             # occurrences of _text_characters from the block
+            character_table = (
+                b''.join(chr(i) for i in range(32, 127)) +
+                b'\n\r\t\f\b')
             nontext = block.translate(None, character_table)
+
             assert nontext is not None
 
             return not float(len(nontext)) / len(block) <= 0

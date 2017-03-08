@@ -81,7 +81,13 @@ class Searcher(object):
                 for index, line in enumerate(f):
                     if self.search_term in line:
                         splitted_str = line.split(self.search_term)
-                        matched_lines[index + 1] = splitted_str[0]+ self.search_term + splitted_str[1][:-len(splitted_str[1])+len(splitted_str[0]+ self.search_term)]
+                        try:
+                            matched_lines[index + 1] = (splitted_str[0] + self.search_term
+                                                        + splitted_str[1][:-len(splitted_str[1])+len(splitted_str[0] + self.search_term)]
+                                                        ).strip()
+
+                        except IndexError:
+                            matched_lines[index + 1] = (splitted_str[0] + self.search_term).strip()
 
         except IOError, ioerror:
             print "Error while reading file: %s" % ioerror
@@ -100,8 +106,8 @@ class Searcher(object):
             with open(file_path, 'r') as f:
                 for index, line in enumerate(f):
                     if regexp.search(line):
-                        splitted_str = line.split(self.search_term)
-                        matched_lines[index + 1] = splitted_str[0]+ self.search_term + splitted_str[1][:-len(splitted_str[1])+len(splitted_str[0])]
+                        # TODO Implement same behavior as for normal string
+                        matched_lines[index + 1] = line[:-len(line)+50].strip()
 
         except IOError, ioerror:
             print "Error while reading file:\n\t%s" % ioerror
