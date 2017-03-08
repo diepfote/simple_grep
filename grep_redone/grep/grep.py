@@ -31,7 +31,6 @@ class Searcher(object):
         self.is_regex_pattern = is_regex_pattern
 
     def run(self):
-        """Runs search and prints results."""
 
         matched_file = {}
         for f in file_helper.get_next_file(self.caller_dir, self.is_recursive):
@@ -49,9 +48,7 @@ class Searcher(object):
 
         return matched_file
 
-# TODO overly complex; file_paths is now a list containing a single file
     def search_file(self, file_path):
-        """Look through all files supplied by the file_helper."""
 
         assert type(file_path) == str
 
@@ -83,6 +80,7 @@ class Searcher(object):
             with open(file_path, 'r') as f:
                 for index, line in enumerate(f):
                     if self.search_term in line:
+                        # TODO 49 characters before term and 49 after
                         matched_lines[index + 1] = line
 
         except IOError, ioerror:
@@ -102,7 +100,8 @@ class Searcher(object):
             with open(file_path, 'r') as f:
                 for index, line in enumerate(f):
                     if regexp.search(line):
-                        matched_lines[index + 1] = line
+                        # TODO 49 characters before term and 49 after
+                        matched_lines[index + 1] = line[:-len(line)+100]
 
         except IOError, ioerror:
             print "Error while reading file:\n\t%s" % ioerror
