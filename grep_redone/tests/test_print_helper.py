@@ -7,17 +7,17 @@ from grep_redone.grep import print_helper
 from grep_redone.tests.helper_for_tests import with_f_bwrite, with_f_write
 
 
-def test_print_matched_files_full_path():
+def test_generate_output_for_matched_files_full_path():
     test_dict = {'/home/flo/Untitled Document': {1: 'aware\n', 2: 'aware werwer\n'}}
 
-    test_output = ['\x1b[35m\x1b[22m' + os.path.normpath('/home/flo/Untitled Document') + ':\x1b[39m\x1b[22m1:\x1b[1;31maware\x1b[0m',
-                   '\x1b[35m\x1b[22m' + os.path.normpath('/home/flo/Untitled Document') + ':\x1b[39m\x1b[22m2:\x1b[1;31maware\x1b[0m werwer']
-    output = print_helper.print_matched_files_full_path(test_dict, search_term='aware')
+    test_output = [os.path.normpath('/home/flo/Untitled Document') + ':1:aware',
+                   os.path.normpath('/home/flo/Untitled Document') + ':2:aware werwer']
+    output = print_helper.generate_output_for_matched_files_full_path(test_dict, search_term='aware')
 
     assert output == test_output
 
 
-def test_print_matched_files_relative_path():
+def test_generate_output_for_matched_files_relative_path():
     if platform.system() == 'Windows':
         test_dict = {'./../../../../Untitled Document': {1: 'aware\n', 2: 'aware werwer\n'}}
 
@@ -27,29 +27,14 @@ def test_print_matched_files_relative_path():
     else:
         raise ValueError('No system information found.')
 
-    test_output = ['\x1b[35m\x1b[22m' + os.path.normpath('../../../../Untitled Document') + ':\x1b[39m\x1b[22m1:\x1b[1;31maware\x1b[0m',
-                   '\x1b[35m\x1b[22m' + os.path.normpath('../../../../Untitled Document') + ':\x1b[39m\x1b[22m2:\x1b[1;31maware\x1b[0m werwer']
-    output = print_helper.print_matched_files_relative_path(test_dict, search_term='aware')
+    test_output = [os.path.normpath('../../../../Untitled Document') + ':1:aware',
+                   os.path.normpath('../../../../Untitled Document') + ':2:aware werwer']
+    output = print_helper.generate_output_for_matched_files_relative_path(test_dict, search_term='aware')
 
-    assert output == test_output
-
-
-def test_rreplace():
-
-    original_string = "12234545235323"
-    test_string = "1223454523533"
-    old = '2'
-    new = ''
-    num_occurences = 1
-
-    string_to_test_against = print_helper.rreplace(
-        string_to_edit=original_string,
-        old=old,
-        new=new,
-        num_occurrences=num_occurences)
-
-    assert test_string == string_to_test_against
-
+    try:
+        assert output == test_output
+    except AssertionError:
+        pytest.fail(test_output)
 
 def test_color_term_in_string():
     test_list = ['Thebrownfoxjumpsover.']
@@ -57,6 +42,10 @@ def test_color_term_in_string():
     # FYI \33 gets turned into \x1b
     test_output = ['Thebrown\033[1;31mfox\033[0mjumpsover.']
 
-    output = print_helper.color_term_in_string(list_to_edit=test_list, term=term, color='red')
+    output = function_for_color_term_in_string(test_list, term)
 
     assert output == test_output
+
+@print_helper.color_term_in_string
+def function_for_color_term_in_string(l, term):
+    return l

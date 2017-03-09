@@ -37,10 +37,10 @@ class Searcher(object):
 
             matched_file = self.search_file(f)
             if self.is_abs_path:
-                print_helper.print_matched_files_full_path(matched_file, self.search_term)
+                print_helper.generate_output_for_matched_files_full_path(matched_file, self.search_term)
 
             else:
-                print_helper.print_matched_files_relative_path(matched_file, self.search_term)
+                print_helper.generate_output_for_matched_files_relative_path(matched_file, self.search_term)
 
         # TESTING
         print ("--- %s seconds ---" % (time.time() - start_time))
