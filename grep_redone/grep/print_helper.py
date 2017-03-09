@@ -6,7 +6,7 @@ from clint.textui import colored
 from grep_redone.grep import file_helper
 
 
-def print_matched_files_full_path(matched_files_and_lines, search_term):
+def generate_output_for_matched_files_full_path(matched_files_and_lines, search_term):
     """Prints matched files in a dict using absolute paths."""
 
     assert type(matched_files_and_lines) == dict
@@ -14,25 +14,22 @@ def print_matched_files_full_path(matched_files_and_lines, search_term):
 
     output = []
     for f, lines in matched_files_and_lines.iteritems():
-        output.extend([(colored.magenta(os.path.normpath(f) + ':', True, False)
-                        + colored.green(str(line_num)) + ':' + line)
+        output.extend([(colored.magenta(os.path.normpath(f)) + colored.green(':')
+                        + colored.green(str(line_num)) + colored.green(':') + line)
                        for line_num, line in lines.iteritems()
                        ])
 
     # Remove last occurrence of new line
-    output = [rreplace(f, '\n', '', 1) for f in output]
+    output = [''.join(f.rsplit('\n', 1)) for f in output]
 
-    # Color search term.
-    if search_term:
-        output = color_term_in_string(output, search_term, 'red')
-
-    for f in iter(output):
-        print f
+    # Color term and print
+    for line in color_matched(output, search_term):
+        print line
 
     return output
 
 
-def print_matched_files_relative_path(matched_files_and_lines, search_term):
+def generate_output_for_matched_files_relative_path(matched_files_and_lines, search_term):
     """Prints matched files in a dict using relative paths."""
 
     assert type(matched_files_and_lines) == dict
@@ -44,48 +41,33 @@ def print_matched_files_relative_path(matched_files_and_lines, search_term):
             output.extend(['Binary file ' + f + ' matches'])
 
         else:
-            output.extend([(colored.magenta(os.path.normpath(os.path.relpath(f)) + ':', True, False)
-                            + colored.green(str(line_num)) + ':' + line)
+            output.extend([(colored.magenta(os.path.normpath(os.path.relpath(f))) + colored.blue(':')
+                            + colored.green(str(line_num)) + colored.blue(':') + line)
                            for line_num, line in lines.iteritems()
                            ])
 
     # Remove last occurrence of new line
-    output = [rreplace(f, '\n', '', 1) for f in output]
+    output = [''.join(f.rsplit('\n', 1)) for f in output]
 
-    # Color search term.
-    if search_term:
-        output = color_term_in_string(output, search_term, 'red')
-
-    for f in iter(output):
-        print f
+    # Color term and print
+    for line in color_matched(output, search_term):
+        print line
 
     return output
 
 
-def color_term_in_string(list_to_edit, term, color):
-    """Colors a single term/word inside a list."""
 
-    assert type(list_to_edit) == list
-    assert type(term) == str
-    assert type(color) == str
+def color_term_in_string(func):
+    def func_wrapper(list_to_edit, term):
+        assert type(list_to_edit) == list
+        assert type(term) == str
 
-    lightish_red = '\033[1;31m'
-    no_color = '\033[0m'
-
-    if color == 'red':
-        return [rreplace(f, term, (lightish_red + term + no_color), 1) for f in list_to_edit]
+        lightish_red = '\033[1;31m'
+        no_color = '\033[0m'
+        return [(lightish_red + term + no_color).join(f.rsplit(term, 1)) for f in func(list_to_edit, term)]
+    return func_wrapper
 
 
-    return None
-
-
-def rreplace(string_to_edit, old, new, num_occurrences):
-    """Replace a term x times. Replacing is done from right to left."""
-
-    assert type(string_to_edit) == str
-    assert type(old) == str
-    assert type(new) == str
-    assert type(num_occurrences) == int
-
-    li = string_to_edit.rsplit(old, num_occurrences)
-    return new.join(li)
+@color_term_in_string
+def color_matched(output, search_term):
+    return output
