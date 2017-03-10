@@ -80,14 +80,24 @@ class Searcher(object):
             with open(file_path, 'r') as f:
                 for index, line in enumerate(f):
                     if self.search_term in line:
-                        splitted_str = line.split(self.search_term)
-                        try:
-                            matched_lines[index + 1] = (splitted_str[0] + self.search_term
-                                                        + splitted_str[1][:-len(splitted_str[1])+len(splitted_str[0] + self.search_term)]
-                                                        ).strip()
+                        splitted_str = ""
+                        should_skip = False
 
-                        except IndexError:
-                            matched_lines[index + 1] = (splitted_str[0] + self.search_term).strip()
+                        try:
+                            splitted_str = line.split(self.search_term)
+
+                        except ValueError:
+                            should_skip = True
+                            matched_lines[index + 1] = line.strip()
+
+                        if not should_skip:
+                            try:
+                                matched_lines[index + 1] = (splitted_str[0] + self.search_term
+                                                            + splitted_str[1][:-len(splitted_str[1])+len(splitted_str[0] + self.search_term)]
+                                                            ).strip()
+
+                            except IndexError:
+                                matched_lines[index + 1] = (splitted_str[0] + self.search_term).strip()
 
         except IOError, ioerror:
             print "Error while reading file: %s" % ioerror

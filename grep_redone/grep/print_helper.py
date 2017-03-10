@@ -64,7 +64,13 @@ def color_term_in_string(func):
 
         lightish_red = '\033[1;31m'
         no_color = '\033[0m'
-        return [(lightish_red + term + no_color).join(f.rsplit(term, 1)) for f in func(list_to_edit, term)]
+
+        if term:
+            return [(lightish_red + term + no_color).join(f.rsplit(term, 1)) for f in func(list_to_edit, term)]
+
+        else:
+            return list_to_edit
+
     return func_wrapper
 
 
