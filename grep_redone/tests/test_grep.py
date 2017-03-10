@@ -14,11 +14,11 @@ def test_dunder_init():
     is_regex_pattern = False
     searcher = Searcher(caller_dir, search_term, is_recursive, is_abs_path, is_regex_pattern)
 
-    assert searcher.caller_dir == caller_dir and \
-           searcher.search_term == search_term and \
-           searcher.is_recursive == is_recursive and \
-           searcher.is_abs_path == is_abs_path and \
-           searcher.is_regex_pattern == is_regex_pattern
+    assert searcher.caller_dir == caller_dir
+    assert searcher.search_term == search_term
+    assert searcher.is_recursive == is_recursive
+    assert searcher.is_abs_path == is_abs_path
+    assert searcher.is_regex_pattern == is_regex_pattern
 
 
 def test_run(with_f_write):
@@ -41,7 +41,7 @@ def test_run(with_f_write):
     assert matched_files[os.path.abspath(with_f_write.name)] == {1: "docopt"}
 
 
-def test_run_with(with_f_write):
+def test_run_with_empty_str(with_f_write):
     with_f_write.write('docopt\nasdfwer')
     # Rewind to read data back from file.
     with_f_write.seek(0)

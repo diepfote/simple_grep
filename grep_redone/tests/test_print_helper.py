@@ -36,6 +36,7 @@ def test_generate_output_for_matched_files_relative_path():
     except AssertionError:
         pytest.fail(test_output)
 
+
 def test_color_term_in_string():
     test_list = ['Thebrownfoxjumpsover.']
     term = 'fox'
@@ -45,6 +46,7 @@ def test_color_term_in_string():
     output = function_for_color_term_in_string(test_list, term)
 
     assert output == test_output
+
 
 @print_helper.color_term_in_string
 def function_for_color_term_in_string(l, term):
