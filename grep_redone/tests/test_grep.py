@@ -6,7 +6,7 @@ from grep_redone.grep.grep import Searcher
 from grep_redone.tests.helper_for_tests import with_f_write, with_f_read, with_restricted_file
 
 
-def test_dunder_init():
+def test_instantiating_searcher_class():
     caller_dir = os.curdir
     search_term = "docopt"
     is_recursive = False
