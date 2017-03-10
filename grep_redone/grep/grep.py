@@ -89,8 +89,8 @@ class Searcher(object):
 
                         try:
                             matched_lines[index + 1] = (splitted_str[0] + self.search_term
-                                                        + splitted_str[1][:-len(splitted_str[1])+len(splitted_str[0] + self.search_term)]
-                                                            ).strip()
+                                                        + splitted_str[1][:-len(splitted_str[1])+len(splitted_str[0]+self.search_term)]
+                                                        ).strip()
 
                         except IndexError:
                             matched_lines[index + 1] = (splitted_str[0] + self.search_term).strip()
