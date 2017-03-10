@@ -41,6 +41,26 @@ def test_run(with_f_write):
     assert matched_files[os.path.abspath(with_f_write.name)] == {1: "docopt"}
 
 
+def test_run_with(with_f_write):
+    with_f_write.write('docopt\nasdfwer')
+    # Rewind to read data back from file.
+    with_f_write.seek(0)
+
+    caller_dir = os.path.dirname(with_f_write.name)
+    search_term = ""
+    is_abs_path = True
+
+    matched_files = Searcher.run(
+        Searcher(caller_dir=caller_dir,
+                 search_term=search_term,
+                 is_recursive=False,
+                 is_abs_path=is_abs_path,
+                 is_regex_pattern=False)
+    )
+
+    assert matched_files[with_f_write.name] == {1: 'docopt', 2: 'asdfwer'}
+
+
 def test_search_file(with_f_write):
     with_f_write.flush()
     with_f_write.write('sdf\na\nrghsf')
