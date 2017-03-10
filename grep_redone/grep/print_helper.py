@@ -56,7 +56,6 @@ def generate_output_for_matched_files_relative_path(matched_files_and_lines, sea
     return output
 
 
-
 def color_term_in_string(func):
     def func_wrapper(list_to_edit, term):
         assert type(list_to_edit) == list
