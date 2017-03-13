@@ -6,6 +6,7 @@ import sre_constants
 
 import file_helper
 from grep_redone.grep import print_helper
+from grep_redone.grep import file_helper
 
 
 class Searcher(object):
@@ -53,6 +54,7 @@ class Searcher(object):
         assert type(file_path) == str
 
         matched_line_dict = {}
+
         if self.is_regex_pattern:
             try:
                 matched_line_dict = self.search_line_by_line_for_regex(file_path)
@@ -63,37 +65,36 @@ class Searcher(object):
         else:
             matched_line_dict = self.search_line_by_line_for_term(file_path)
 
-        if matched_line_dict:
-            matched_file = {file_path: matched_line_dict}
-            return matched_file
+        return {file_path: matched_line_dict}
 
-        else:
-            return {}
 
     def search_line_by_line_for_term(self, file_path):
         """Search a single file for occurrences of a string."""
 
         assert type(file_path) == str
 
+        # Do not include matches if file is binary
+        if file_helper.is_f_binary_file(file_path):
+            return {'empty': ''}
+
         matched_lines = {}
         try:
             with open(file_path, 'r') as f:
-                for index, line in enumerate(f):
+                for line_num, line in enumerate(f):
 
-                    if self.search_term == "":
-                        matched_lines[index + 1] = line.strip()
+                    if self.search_term == '':
+                        matched_lines[line_num + 1] = line.strip()
 
                     elif self.search_term in line:
 
-                        splitted_str = line.split(self.search_term)
-
+                        split_str = line.split(self.search_term)
                         try:
-                            matched_lines[index + 1] = (splitted_str[0] + self.search_term
-                                                        + splitted_str[1][:-len(splitted_str[1])+len(splitted_str[0]+self.search_term)]
+                            matched_lines[line_num + 1] = (split_str[0] + self.search_term
+                                                        + split_str[1][:-len(split_str[1])+len(split_str[0]+self.search_term)]
                                                         ).strip()
 
                         except IndexError:
-                            matched_lines[index + 1] = (splitted_str[0] + self.search_term).strip()
+                            matched_lines[line_num + 1] = (split_str[0] + self.search_term).strip()
 
         except IOError, ioerror:
             print "Error while reading file: %s" % ioerror
@@ -105,15 +106,35 @@ class Searcher(object):
 
         assert type(file_path) == str
 
+        # Do not include matches if file is binary
+        if file_helper.is_f_binary_file(file_path):
+            return {'empty': ''}
+
         regexp = re.compile(self.search_term)
         matched_lines = {}
 
         try:
             with open(file_path, 'r') as f:
-                for index, line in enumerate(f):
-                    if regexp.search(line):
-                        # TODO Implement same behavior as for normal string
-                        matched_lines[index + 1] = line[:-len(line)+50].strip()
+                for line_num, line in enumerate(f):
+
+                    if self.search_term == '':
+                        matched_lines[line_num + 1] = line.strip()
+
+                    match = regexp.findall(line)
+                    if match:
+                        for row in match:
+                            if not row:
+                                del row
+
+                        try:
+                            split_str = line.split(match[0])
+                            matched_lines[line_num + 1] = (split_str[0] + match[0]
+                                                           + split_str[1][
+                                                             :-len(split_str[1]) + len(split_str[0] + match[0])]
+                                                           ).strip()
+
+                        except IndexError:
+                            matched_lines[line_num + 1] = line.strip()
 
         except IOError, ioerror:
             print "Error while reading file:\n\t%s" % ioerror

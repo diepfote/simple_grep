@@ -1,10 +1,9 @@
 
 """
 grep_redone  grep re-implemented in python
-
 Usage: grep_redone [-rfe] [SEARCH_TERM] ...
 
-Search for a string in files in a directory; optionally do this recursively.
+Search for str in files; optionally do this recursively.
 
 Arguments:
   SEARCH_TERM        string to search for

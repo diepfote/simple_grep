@@ -14,10 +14,14 @@ def generate_output_for_matched_files_full_path(matched_files_and_lines, search_
 
     output = []
     for f, lines in matched_files_and_lines.iteritems():
-        output.extend([(colored.magenta(os.path.normpath(f)) + colored.green(':')
-                        + colored.green(str(line_num)) + colored.green(':') + line)
-                       for line_num, line in lines.iteritems()
-                       ])
+        if file_helper.is_f_binary_file(f):
+            output.extend(['Binary file ' + f + ' matches'])
+
+        else:
+            output.extend([(colored.magenta(os.path.normpath(f)) + colored.green(':')
+                            + colored.green(str(line_num)) + colored.green(':') + line)
+                           for line_num, line in lines.iteritems()
+                           ])
 
     # Remove last occurrence of new line
     output = [''.join(f.rsplit('\n', 1)) for f in output]

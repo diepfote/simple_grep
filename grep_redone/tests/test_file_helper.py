@@ -14,7 +14,6 @@ def test_get_next_file():
 def test_is_f_binary_file_with_binary_file(with_f_bwrite):
     with_f_bwrite.flush()
     with_f_bwrite.write(b'\x07\x08\x07')
-    with_f_bwrite.seek(0)
     with_f_bwrite.close()
 
     try:
@@ -30,7 +29,6 @@ def test_is_f_binary_file_with_binary_file(with_f_bwrite):
 def test_is_f_binary_file_with_text_file(with_f_write):
     with_f_write.flush()
     with_f_write.write('asdadsf')
-    with_f_write.seek(0)
     with_f_write.close()
 
     try:

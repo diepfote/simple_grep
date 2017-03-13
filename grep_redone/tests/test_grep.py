@@ -3,7 +3,7 @@ import platform
 import pytest
 
 from grep_redone.grep.grep import Searcher
-from grep_redone.tests.helper_for_tests import with_f_write, with_f_read, with_restricted_file
+from grep_redone.tests.helper_for_tests import with_f_write, with_f_read, with_restricted_file, with_f_bwrite
 
 
 def test_instantiating_searcher_class():
@@ -50,7 +50,7 @@ def test_run_with_empty_str(with_f_write):
     search_term = ""
     is_abs_path = True
 
-    matched_files = Searcher.run(
+    matched_file = Searcher.run(
         Searcher(caller_dir=caller_dir,
                  search_term=search_term,
                  is_recursive=False,
@@ -58,7 +58,7 @@ def test_run_with_empty_str(with_f_write):
                  is_regex_pattern=False)
     )
 
-    assert matched_files[with_f_write.name] == {1: 'docopt', 2: 'asdfwer'}
+    assert matched_file[with_f_write.name] == {1: 'docopt', 2: 'asdfwer'}
 
 
 def test_search_file(with_f_write):
@@ -68,18 +68,42 @@ def test_search_file(with_f_write):
     with_f_write.seek(0)
 
     search_term = "a"
-    f = with_f_write.name
     # Directory and recursive option are irrelevant for the test.
-    matched_files = Searcher.search_file(
+    matched_file = Searcher.search_file(
         Searcher(caller_dir="",
                  search_term=search_term,
                  is_recursive=False,
                  is_abs_path=False,
                  is_regex_pattern=False),
-        f
+        with_f_write.name
     )
 
-    assert matched_files[with_f_write.name] == {2: 'a'}
+    assert matched_file[with_f_write.name] == {2: 'a'}
+
+
+def test_search_binary_file(with_f_bwrite):
+    with_f_bwrite.flush()
+    with_f_bwrite.write(b'\x07\x08\x07')
+    # Rewind to read data back from file.
+    with_f_bwrite.close()
+
+    search_term = "\x07"
+    matched_file = ""
+    try:
+        with_f_bwrite = open(with_f_bwrite.name, 'rb')
+        # Directory and recursive option are irrelevant for the test.
+        matched_file = Searcher.search_file(
+            Searcher(caller_dir="",
+                     search_term=search_term,
+                     is_recursive=False,
+                     is_abs_path=False,
+                     is_regex_pattern=False),
+            with_f_bwrite.name
+        )
+    finally:
+        with_f_bwrite.close()
+
+    assert matched_file == {with_f_bwrite.name : {'empty': ''}}
 
 
 def test_search_line_by_line_for_term(with_f_write):
