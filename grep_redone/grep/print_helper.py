@@ -39,6 +39,7 @@ def generate_output_for_matched_files_relative_path(matched_files_and_lines, sea
     assert type(matched_files_and_lines) == dict
     assert type(search_term) == str
 
+    print matched_files_and_lines
     output = []
     for f, lines in matched_files_and_lines.iteritems():
         if file_helper.is_f_binary_file(f):
