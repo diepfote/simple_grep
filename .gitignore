@@ -1,4 +1,4 @@
-w# Compiled python modules.
+# Compiled python modules.
 *.pyc
 
 # Setuptools distribution folder.
@@ -30,3 +30,4 @@ venv/
 
 # restricted files
 *.restricted
+
