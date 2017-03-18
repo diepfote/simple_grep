@@ -2,7 +2,7 @@ clean:
 	rm -f */**.pyc
 
 test: clean
-	pytest2 -vv
+	py.test -vv
 
 test-report: clean
-	pytest2 -vv --cov-report term-missing --cov=grep_redone/grep/
+	py.test -vv --cov-report term-missing --cov=grep_redone/grep/

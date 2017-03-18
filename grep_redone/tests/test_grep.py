@@ -3,7 +3,7 @@ import platform
 import pytest
 
 from grep_redone.grep.grep import Searcher
-from grep_redone.tests.helper_for_tests import with_f_write, with_f_read, with_restricted_file, with_f_bwrite
+from grep_redone.tests.helper_for_tests import *
 
 
 def test_instantiating_searcher_class():
@@ -286,9 +286,26 @@ def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_regex(with_re
         with_restricted_file)
 
 
-def test_regular_expression_error(with_f_read):
+def test_regular_expression_error_file_level(with_f_read):
     search_term = "[\\]"
     is_regex_pattern = True
+    is_search_line_by_line = False
+    f = with_f_read.name
+
+    Searcher.search_f(Searcher(
+        caller_dir="",
+        search_term=search_term,
+        is_recursive=False,
+        is_abs_path=False,
+        is_regex_pattern=is_regex_pattern,
+        is_search_line_by_line=is_search_line_by_line),
+        f)
+
+
+def test_regular_expression_error_line_by_line(with_f_read):
+    search_term = "[\\]"
+    is_regex_pattern = True
+    is_search_line_by_line = True
     f = with_f_read.name
 
     # Directory option is irrelevant for the test.
@@ -298,5 +315,10 @@ def test_regular_expression_error(with_f_read):
         is_recursive=False,
         is_abs_path=False,
         is_regex_pattern=is_regex_pattern,
-        is_search_line_by_line=True),
+        is_search_line_by_line=is_search_line_by_line),
         f)
+
+
+# TODO FIX
+def test_hotfix_delete_temp_dir(hotfix_delete_temp_dir):
+    pass

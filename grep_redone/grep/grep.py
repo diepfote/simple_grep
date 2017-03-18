@@ -108,10 +108,8 @@ class Searcher(object):
 
                 split_str = entire_file.split(self.search_term)
                 try:
-                    matched['file'] = (split_str[0] + self.search_term
-                                                   + split_str[1][
-                                                     :-len(split_str[1]) + len(split_str[0] + self.search_term)]
-                                                   ).strip()
+                    matched['file'] = (split_str[0] + self.search_term +
+                                       split_str[1][:-len(split_str[1]) + len(split_str[0] + self.search_term)]).strip()
 
                 except IndexError:
                     matched['file'] = (split_str[0] + self.search_term).strip()
@@ -232,7 +230,6 @@ class Searcher(object):
                         # Catch empty separator
                         except ValueError:
                             matched_lines[line_num + 1] = line.strip()
-
 
         except IOError, ioerror:
             print "Error while reading file:\n\t%s" % ioerror
