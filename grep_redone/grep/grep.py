@@ -15,6 +15,7 @@ class Searcher(object):
     # TESTING
     global start_time
     start_time = time.time()
+
     # TESTING
 
     def __init__(self, caller_dir, search_term, is_recursive, is_abs_path, is_regex_pattern, is_search_line_by_line):
@@ -108,8 +109,12 @@ class Searcher(object):
 
                 split_str = entire_file.split(self.search_term)
                 try:
-                    matched['file'] = (split_str[0] + self.search_term +
-                                       split_str[1][:-len(split_str[1]) + len(split_str[0] + self.search_term)]).strip()
+                    shortend_file = (split_str[0][len(split_str[0]) - len(self.search_term) * 15:] + self.search_term
+                                     + split_str[1][:-(len(split_str[1]) - len(self.search_term) * 15)]).strip()
+
+                    assert len(shortend_file) != len(entire_file.strip())
+
+                    matched['file'] = shortend_file
 
                 except IndexError:
                     matched['file'] = (split_str[0] + self.search_term).strip()
@@ -127,7 +132,6 @@ class Searcher(object):
             for line in f.readlines():
                 entire_file += line
 
-            #  TODO include text before and after search term
             regexp = re.compile(self.search_term)
             match = regexp.findall(entire_file)
             matched = {}
@@ -148,7 +152,8 @@ class Searcher(object):
                     f.seek(0)
                     entire_file = ""
                     split_str = entire_file.split(match[0])
-                    matched['file'] = match[0]
+                    #  TODO include text before and after search term - ***IMPLEMENT functionality from match_f_for_str***
+                    matched['file'] = entire_file
 
                 except IndexError:
                     f.seek(0)
@@ -180,9 +185,8 @@ class Searcher(object):
 
                         split_str = line.split(self.search_term)
                         try:
-                            matched_lines[line_num + 1] = (split_str[0] + self.search_term
-                                                           + split_str[1][:-len(split_str[1])+len(split_str[0]+self.search_term)]
-                                                           ).strip()
+                            matched_lines[line_num + 1] = (split_str[0] + self.search_term + split_str[1][:
+                            -len(split_str[1]) + len(split_str[0] + self.search_term) ]).strip()
 
                         except IndexError:
                             matched_lines[line_num + 1] = (split_str[0] + self.search_term).strip()

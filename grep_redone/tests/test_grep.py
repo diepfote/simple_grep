@@ -319,6 +319,10 @@ def test_regular_expression_error_line_by_line(with_f_read):
         f)
 
 
+def test_match_f_for_str_with_binary_file():
+    assert False == True
+
+
 # TODO FIX
 def test_hotfix_delete_temp_dir(hotfix_delete_temp_dir):
     pass
