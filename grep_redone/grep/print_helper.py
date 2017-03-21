@@ -60,7 +60,6 @@ def generate_output_for_matched_files_relative_path(matched_files_and_lines, sea
     return output
 
 
-# TODO FIX colors output even if output is just: 'Binary file f matches'
 # TODO FIX matches for regex patterns printed incorrectly
 def color_term_in_string(func):
     def func_wrapper(list_to_edit, term):
@@ -71,6 +70,9 @@ def color_term_in_string(func):
         no_color = '\033[0m'
 
         if term:
+            if list_to_edit[0].startswith("Binary file"):
+                return list_to_edit
+
             return [(lightish_red + term + no_color).join(f.rsplit(term, 1)) for f in func(list_to_edit, term)]
 
         else:

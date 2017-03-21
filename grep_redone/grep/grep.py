@@ -40,7 +40,11 @@ class Searcher(object):
         matched_file = {}
         for f in file_helper.get_next_file(self.caller_dir, self.is_recursive):
 
-            matched_file = self.search_f(f)
+            try:
+                matched_file = self.search_f(f)
+            except IOError, ioerror:
+                print "Error while reading file:\n\t%s" % ioerror
+                
             if matched_file:
                 if self.is_abs_path:
                     print_helper.generate_output_for_matched_files_full_path(matched_file, self.search_term)
@@ -175,28 +179,24 @@ class Searcher(object):
         assert type(file_path) == str
 
         matched_lines = {}
-        try:
-            with open(file_path, 'r') as f:
-                for line_num, line in enumerate(f):
+        with open(file_path, 'r') as f:
+            for line_num, line in enumerate(f):
 
-                    if self.search_term == '':
-                        matched_lines[line_num + 1] = line.strip()
+                if self.search_term == '':
+                    matched_lines[line_num + 1] = line.strip()
 
-                    elif self.search_term in line:
-                        # Do not include matches if file is binary
-                        if file_helper.is_f_binary_file(file_path):
-                            return {'file_matched': ''}
+                elif self.search_term in line:
+                    # Do not include matches if file is binary
+                    if file_helper.is_f_binary_file(file_path):
+                        return {'file_matched': ''}
 
-                        split_str = line.split(self.search_term)
-                        try:
-                            matched_lines[line_num + 1] = (split_str[0] + self.search_term + split_str[1]
-                                [:-len(split_str[1]) + len(split_str[0] + self.search_term)]).strip()
+                    split_str = line.split(self.search_term)
+                    try:
+                        matched_lines[line_num + 1] = (split_str[0] + self.search_term + split_str[1]
+                            [:-len(split_str[1]) + len(split_str[0] + self.search_term)]).strip()
 
-                        except IndexError:
-                            matched_lines[line_num + 1] = (split_str[0] + self.search_term).strip()
-
-        except IOError, ioerror:
-            print "Error while reading file: %s" % ioerror
+                    except IndexError:
+                        matched_lines[line_num + 1] = (split_str[0] + self.search_term).strip()
 
         return matched_lines
 
@@ -208,36 +208,32 @@ class Searcher(object):
         regexp = re.compile(self.search_term)
         matched_lines = {}
 
-        try:
-            with open(file_path, 'r') as f:
-                for line_num, line in enumerate(f):
+        with open(file_path, 'r') as f:
+            for line_num, line in enumerate(f):
 
-                    if self.search_term == '':
+                if self.search_term == '':
+                    matched_lines[line_num + 1] = line.strip()
+
+                match = regexp.findall(line)
+                if match:
+                    # Do not include matches if file is binary
+                    if file_helper.is_f_binary_file(file_path):
+                        return {'file_matched': ''}
+
+                    for row in match:
+                        if not row:
+                            del row
+
+                    try:
+                        split_str = line.split(match[0])
+                        matched_lines[line_num + 1] = (split_str[0] + match[0] + split_str[1][:-len(split_str[1])
+                                                                            + len(split_str[0] + match[0])]).strip()
+
+                    except IndexError:
                         matched_lines[line_num + 1] = line.strip()
 
-                    match = regexp.findall(line)
-                    if match:
-                        # Do not include matches if file is binary
-                        if file_helper.is_f_binary_file(file_path):
-                            return {'file_matched': ''}
-
-                        for row in match:
-                            if not row:
-                                del row
-
-                        try:
-                            split_str = line.split(match[0])
-                            matched_lines[line_num + 1] = (split_str[0] + match[0] + split_str[1][:-len(split_str[1])
-                                                                                + len(split_str[0] + match[0])]).strip()
-
-                        except IndexError:
-                            matched_lines[line_num + 1] = line.strip()
-
-                        # Catch empty separator
-                        except ValueError:
-                            matched_lines[line_num + 1] = line.strip()
-
-        except IOError, ioerror:
-            print "Error while reading file:\n\t%s" % ioerror
+                    # Catch empty separator
+                    except ValueError:
+                        matched_lines[line_num + 1] = line.strip()
 
         return matched_lines
