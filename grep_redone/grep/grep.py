@@ -109,15 +109,15 @@ class Searcher(object):
 
                 split_str = entire_file.split(self.search_term)
                 try:
-                    shortend_file = (split_str[0][len(split_str[0]) - len(self.search_term) * 15:] + self.search_term
+                    shortened_file = (split_str[0][len(split_str[0]) - len(self.search_term) * 15:] + self.search_term
                                      + split_str[1][:-(len(split_str[1]) - len(self.search_term) * 15)]).strip()
 
-                    assert len(shortend_file) != len(entire_file.strip())
+                    assert len(shortened_file) != len(entire_file.strip())
 
-                    matched['file'] = shortend_file
+                    matched['file'] = shortened_file
 
                 except IndexError:
-                    matched['file'] = (split_str[0] + self.search_term).strip()
+                    matched['file'] = entire_file.strip()
 
             return matched
 
@@ -133,35 +133,39 @@ class Searcher(object):
                 entire_file += line
 
             regexp = re.compile(self.search_term)
-            match = regexp.findall(entire_file)
+            matches = regexp.findall(entire_file)
             matched = {}
 
             if self.search_term == '':
                 return {'file': entire_file}
 
-            if len(match) >= 1:
+            if len(matches) >= 1:
                 # Do not include matches if file is binary
                 if file_helper.is_f_binary_file(file_path):
                     return {'file_matched': ''}
 
-                for row in match:
+                for row in matches:
                     if not row:
                         del row
 
+                f.seek(0)
+                entire_file = ""
+                for line in f.readlines():
+                    entire_file += line
+
                 try:
-                    f.seek(0)
-                    entire_file = ""
-                    split_str = entire_file.split(match[0])
-                    #  TODO include text before and after search term - ***IMPLEMENT functionality from match_f_for_str***
-                    matched['file'] = entire_file
+                    shortened_file = ""
+                    for match in matches:
+                        split_str = entire_file.split(match)
+                        shortened_file = (split_str[0][len(split_str[0]) - len(self.search_term) * 15:] + self.search_term
+                                         + split_str[1][:-(len(split_str[1]) - len(self.search_term) * 15)]).strip()
+
+                    assert len(shortened_file) != len(entire_file.strip())
+
+                    matched['file'] = shortened_file
 
                 except IndexError:
-                    f.seek(0)
-                    entire_file = ""
-                    for line in f.readlines():
-                        entire_file += line
-
-                    matched['file'] = entire_file
+                    matched['file'] = entire_file.strip()
 
             return matched
 
@@ -185,8 +189,8 @@ class Searcher(object):
 
                         split_str = line.split(self.search_term)
                         try:
-                            matched_lines[line_num + 1] = (split_str[0] + self.search_term + split_str[1][:
-                            -len(split_str[1]) + len(split_str[0] + self.search_term) ]).strip()
+                            matched_lines[line_num + 1] = (split_str[0] + self.search_term + split_str[1]
+                                [:-len(split_str[1]) + len(split_str[0] + self.search_term)]).strip()
 
                         except IndexError:
                             matched_lines[line_num + 1] = (split_str[0] + self.search_term).strip()
@@ -223,10 +227,8 @@ class Searcher(object):
 
                         try:
                             split_str = line.split(match[0])
-                            matched_lines[line_num + 1] = (split_str[0] + match[0]
-                                                           + split_str[1][
-                                                             :-len(split_str[1]) + len(split_str[0] + match[0])]
-                                                           ).strip()
+                            matched_lines[line_num + 1] = (split_str[0] + match[0] + split_str[1][:-len(split_str[1])
+                                                                                + len(split_str[0] + match[0])]).strip()
 
                         except IndexError:
                             matched_lines[line_num + 1] = line.strip()
