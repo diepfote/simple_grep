@@ -44,7 +44,7 @@ class Searcher(object):
                 matched_file = self.search_f(f)
             except IOError, ioerror:
                 print "Error while reading file:\n\t%s" % ioerror
-                
+
             if matched_file:
                 if self.is_abs_path:
                     print_helper.generate_output_for_matched_files_full_path(matched_file, self.search_term)

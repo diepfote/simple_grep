@@ -20,7 +20,7 @@ def test_instantiating_searcher_class():
     assert searcher.is_recursive == is_recursive
     assert searcher.is_abs_path == is_abs_path
     assert searcher.is_regex_pattern == is_regex_pattern
-    assert  searcher.is_search_line_by_line == is_search_line_by_line
+    assert searcher.is_search_line_by_line == is_search_line_by_line
 
 
 def test_run(with_f_write):
@@ -151,31 +151,8 @@ def test_search_f(with_f_write):
     assert matched_file[with_f_write.name] == {2: 'a'}
 
 
-def test_search_binary_f(with_f_bwrite):
-    with_f_bwrite.write(b'\x07\x08\x07')
-    # Rewind to read data back from file.
-    with_f_bwrite.close()
-
-    search_term = "\x07"
-    try:
-        with_f_bwrite = open(with_f_bwrite.name, 'rb')
-        # Directory and recursive option are irrelevant for the test.
-        matched_file = Searcher.search_f(
-            Searcher(caller_dir="",
-                     search_term=search_term,
-                     is_recursive=False,
-                     is_abs_path=False,
-                     is_regex_pattern=False,
-                     is_search_line_by_line=True),
-            with_f_bwrite.name)
-    finally:
-        with_f_bwrite.close()
-
-    assert matched_file == {with_f_bwrite.name: {'file_matched': ''}}
-
-
 def test_match_f_for_str(with_f_write):
-    with_f_write.write('sdf\na\nrghsf')
+    with_f_write.write('sbiugz8gfzuftzdrdsrts5445tzzftfjguikhoizbtzctzztcuzoh\nsdf\na\n rghsf')
     # Rewind to read data back from file.
     with_f_write.close()
 
@@ -195,11 +172,11 @@ def test_match_f_for_str(with_f_write):
     finally:
         with_f_write.close()
 
-    assert matched_file == {'file': 'sdf\na'}
+    assert matched_file == {'file': 'zuftzdrdsrts5445tzzftfjguikhoizbtzctzztcuzoh\nsdf\na\n rghsf'}
 
 
 def test_match_f_for_pattern(with_f_write):
-    with_f_write.write('sdf\na\nrghsf')
+    with_f_write.write('sbiugz8gfzuftzdrdsrts5445tzzftfjguikhoizbtzctzztcuzoh\nsdf\na\n rghsf')
     # Rewind to read data back from file.
     with_f_write.close()
 
@@ -219,7 +196,7 @@ def test_match_f_for_pattern(with_f_write):
     finally:
         with_f_write.close()
 
-    assert matched_file == {'file': 'sdf'}
+    assert matched_file == {'file': 'zuftzdrdsrts5445tzzftfjguikhoizbtzctzztcuzoh\nsdf\na\n rghsf'}
 
 
 def test_search_line_by_line_for_term(with_f_write):
@@ -261,29 +238,15 @@ def test_search_line_by_line_for_regex(with_f_write):
 
 
 @pytest.mark.skipif("platform.system() == 'Windows'")
-def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_term(with_restricted_file):
+def test_ioerror_due_to_restricted_file(with_restricted_file):
 
-    Searcher.search_line_by_line_for_term(Searcher(caller_dir="",
-                                                   search_term="",
-                                                   is_recursive=False,
-                                                   is_abs_path=False,
-                                                   is_regex_pattern=False,
-                                                   is_search_line_by_line=True),
-                                          with_restricted_file)
-
-
-@pytest.mark.skipif("platform.system() == 'Windows'")
-def test_ioerror_due_to_restricted_file_in_search_line_by_line_for_regex(with_restricted_file):
-
-    # Directory option is irrelevant for the test.
-    Searcher.search_line_by_line_for_regex(
-        Searcher(caller_dir="",
-                 search_term="",
-                 is_recursive=False,
-                 is_abs_path=False,
-                 is_regex_pattern=False,
-                 is_search_line_by_line=True),
-        with_restricted_file)
+    caller_dir = with_restricted_file
+    Searcher.run(Searcher(caller_dir=caller_dir,
+                          search_term="",
+                          is_recursive=False,
+                          is_abs_path=False,
+                          is_regex_pattern=False,
+                          is_search_line_by_line=True))
 
 
 def test_regular_expression_error_file_level(with_f_read):
@@ -319,10 +282,92 @@ def test_regular_expression_error_line_by_line(with_f_read):
         f)
 
 
-def test_match_f_for_str_with_binary_file():
-    assert False == True
+def test_match_f_for_pattern_with_binary_file(with_f_bwrite):
+    with_f_bwrite.write(b'\x07\x08\x07')
+    # Rewind to read data back from file.
+    with_f_bwrite.close()
+
+    search_term = "\x07"
+    try:
+        with_f_bwrite = open(with_f_bwrite.name, 'rb')
+        # Directory and recursive option are irrelevant for the test.
+        matched_file = Searcher.match_f_for_pattern(
+            Searcher(caller_dir="",
+                     search_term=search_term,
+                     is_recursive=False,
+                     is_abs_path=False,
+                     is_regex_pattern=False,
+                     is_search_line_by_line=False),
+            with_f_bwrite.name)
+    finally:
+        with_f_bwrite.close()
+
+    assert matched_file == {'file_matched': ''}
 
 
-# TODO FIX
+def test_match_f_for_str_with_binary_file(with_f_bwrite):
+    with_f_bwrite.write(b'\x07\x08\x07')
+    # Rewind to read data back from file
+    with_f_bwrite.close()
+
+    search_term = "\x07"
+    try:
+        with_f_bwrite = open(with_f_bwrite.name, 'rb')
+        matched_file = Searcher.match_f_for_str(Searcher(caller_dir="",
+                     search_term=search_term,
+                     is_recursive=False,
+                     is_abs_path=False,
+                     is_regex_pattern=False,
+                     is_search_line_by_line=False),
+            with_f_bwrite.name)
+    finally:
+        with_f_bwrite.close()
+
+    assert matched_file == {'file_matched': ''}
+
+
+def test_search_line_by_line_for_regex_with_binary_file(with_f_bwrite):
+    with_f_bwrite.write(b'\x07\x08\x07')
+    # Rewind to read data back from file
+    with_f_bwrite.close()
+
+    search_term = "\x07"
+    try:
+        with_f_bwrite = open(with_f_bwrite.name, 'rb')
+        matched_file = Searcher.search_line_by_line_for_regex(Searcher(caller_dir="",
+                     search_term=search_term,
+                     is_recursive=False,
+                     is_abs_path=False,
+                     is_regex_pattern=False,
+                     is_search_line_by_line=False),
+            with_f_bwrite.name)
+    finally:
+        with_f_bwrite.close()
+
+    assert matched_file == {'file_matched': ''}
+
+
+def search_line_by_line_for_term_with_binary_file(with_f_bwrite):
+    with_f_bwrite.write(b'\x07\x08\x07')
+    # Rewind to read data back from file
+    with_f_bwrite.close()
+
+    search_term = "\x07"
+    try:
+        with_f_bwrite = open(with_f_bwrite.name, 'rb')
+        matched_file = Searcher.search_line_by_line_for_term(Searcher(caller_dir="",
+                     search_term=search_term,
+                     is_recursive=False,
+                     is_abs_path=False,
+                     is_regex_pattern=False,
+                     is_search_line_by_line=False),
+            with_f_bwrite.name)
+    finally:
+        with_f_bwrite.close()
+
+    assert matched_file == {'file_matched': ''}
+
+
+# TODO FIX calling hotfix_delete_temp_dir manually
 def test_hotfix_delete_temp_dir(hotfix_delete_temp_dir):
     pass
