@@ -70,6 +70,7 @@ def color_term_in_string(func):
         no_color = '\033[0m'
 
         if term:
+            # Don't color output if output is 'Binary file x matches'
             if list_to_edit[0].startswith("Binary file"):
                 return list_to_edit
 
