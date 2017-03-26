@@ -116,7 +116,7 @@ class Searcher(object):
                     shortened_file = (split_str[0][len(split_str[0]) - len(self.search_term) * 15:] + self.search_term
                                      + split_str[1][:-(len(split_str[1]) - len(self.search_term) * 15)]).strip()
 
-                    assert len(shortened_file) != len(entire_file.strip())
+                    # assert len(shortened_file) != len(entire_file.strip())
 
                     matched['file'] = shortened_file
 
@@ -164,7 +164,7 @@ class Searcher(object):
                         shortened_file = (split_str[0][len(split_str[0]) - len(self.search_term) * 15:] + self.search_term
                                          + split_str[1][:-(len(split_str[1]) - len(self.search_term) * 15)]).strip()
 
-                    assert len(shortened_file) != len(entire_file.strip())
+                    # assert len(shortened_file) != len(entire_file.strip())
 
                     matched['file'] = shortened_file
 
