@@ -347,7 +347,7 @@ def test_search_line_by_line_for_regex_with_binary_file(with_f_bwrite):
     assert matched_file == {'file_matched': ''}
 
 
-def search_line_by_line_for_term_with_binary_file(with_f_bwrite):
+def test_search_line_by_line_for_term_with_binary_file(with_f_bwrite):
     with_f_bwrite.write(b'\x07\x08\x07')
     # Rewind to read data back from file
     with_f_bwrite.close()
@@ -360,7 +360,7 @@ def search_line_by_line_for_term_with_binary_file(with_f_bwrite):
                      is_recursive=False,
                      is_abs_path=False,
                      is_regex_pattern=False,
-                     is_search_line_by_line=False),
+                     is_search_line_by_line=True),
             with_f_bwrite.name)
     finally:
         with_f_bwrite.close()
