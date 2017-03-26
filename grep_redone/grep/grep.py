@@ -114,7 +114,7 @@ class Searcher(object):
                 split_str = entire_file.split(self.search_term)
                 try:
                     shortened_file = (split_str[0][len(split_str[0]) - len(self.search_term) * 15:] + self.search_term
-                                     + split_str[1][:-(len(split_str[1]) - len(self.search_term) * 15)]).strip()
+                                      + split_str[1][:-(len(split_str[1]) - len(self.search_term) * 15)]).strip()
 
                     # assert len(shortened_file) != len(entire_file.strip())
 
@@ -161,8 +161,8 @@ class Searcher(object):
                     shortened_file = ""
                     for match in matches:
                         split_str = entire_file.split(match)
-                        shortened_file = (split_str[0][len(split_str[0]) - len(self.search_term) * 15:] + self.search_term
-                                         + split_str[1][:-(len(split_str[1]) - len(self.search_term) * 15)]).strip()
+                        shortened_file = (split_str[0][len(split_str[0]) - len(self.search_term) * 15:]
+                                          + self.search_term + split_str[1][:-(len(split_str[1]) - len(self.search_term) * 15)]).strip()
 
                     # assert len(shortened_file) != len(entire_file.strip())
 
@@ -192,8 +192,8 @@ class Searcher(object):
 
                     split_str = line.split(self.search_term)
                     try:
-                        matched_lines[line_num + 1] = (split_str[0] + self.search_term + split_str[1]
-                            [:-len(split_str[1]) + len(split_str[0] + self.search_term)]).strip()
+                        matched_lines[line_num + 1] = (split_str[0] + self.search_term + split_str[1][:-len(
+                            split_str[1]) + len(split_str[0] + self.search_term)]).strip()
 
                     except IndexError:
                         matched_lines[line_num + 1] = (split_str[0] + self.search_term).strip()
@@ -226,8 +226,8 @@ class Searcher(object):
 
                     try:
                         split_str = line.split(match[0])
-                        matched_lines[line_num + 1] = (split_str[0] + match[0] + split_str[1][:-len(split_str[1])
-                                                                            + len(split_str[0] + match[0])]).strip()
+                        matched_lines[line_num + 1] = (split_str[0] + match[0] + split_str[1][:-len(split_str[1]) + len(
+                            split_str[0] + match[0])]).strip()
 
                     except IndexError:
                         matched_lines[line_num + 1] = line.strip()
