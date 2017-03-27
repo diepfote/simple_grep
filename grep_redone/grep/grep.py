@@ -143,11 +143,6 @@ class Searcher(object):
                 if file_helper.is_f_binary_file(file_path):
                     return {'file_matched': ''}
 
-                # TODO add test
-                for row in matches:
-                    if not row:
-                        del row
-
                 f.seek(0)
                 entire_file = ""
                 for line in f.readlines():
