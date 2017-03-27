@@ -44,94 +44,6 @@ def test_run(with_f_write):
     assert matched_files[os.path.abspath(with_f_write.name)] == {1: "docopt"}
 
 
-def test_run_with_empty_str_not_regex_line_by_line(with_f_write):
-    with_f_write.write('docopt\nasdfwer')
-    # Rewind to read data back from file.
-    with_f_write.seek(0)
-
-    caller_dir = os.path.dirname(with_f_write.name)
-    search_term = ""
-    is_regex_pattern = False
-    is_search_line_by_line = True
-
-    matched_file = Searcher.run(
-        Searcher(caller_dir=caller_dir,
-                 search_term=search_term,
-                 is_recursive=False,
-                 is_abs_path=False,
-                 is_regex_pattern=is_regex_pattern,
-                 is_search_line_by_line=is_search_line_by_line
-                 ))
-
-    assert matched_file[with_f_write.name] == {1: 'docopt', 2: 'asdfwer'}
-
-
-def test_run_with_empty_str_is_regex_line_by_line(with_f_write):
-    with_f_write.write('docopt\nasdfwer')
-    # Rewind to read data back from file.
-    with_f_write.seek(0)
-
-    caller_dir = os.path.dirname(with_f_write.name)
-    search_term = ""
-    is_regex_pattern = True
-    is_search_line_by_line = True
-
-    matched_file = Searcher.run(
-        Searcher(caller_dir=caller_dir,
-                 search_term=search_term,
-                 is_recursive=False,
-                 is_abs_path=False,
-                 is_regex_pattern=is_regex_pattern,
-                 is_search_line_by_line=is_search_line_by_line
-                 ))
-
-    assert matched_file[with_f_write.name] == {1: 'docopt', 2: 'asdfwer'}
-
-
-def test_run_with_empty_str_not_regex_file_level(with_f_write):
-    with_f_write.write('docopt\nasdfwer')
-    # Rewind to read data back from file.
-    with_f_write.seek(0)
-
-    caller_dir = os.path.dirname(with_f_write.name)
-    search_term = ""
-    is_regex_pattern = False
-    is_search_line_by_line = False
-
-    matched_file = Searcher.run(
-        Searcher(caller_dir=caller_dir,
-                 search_term=search_term,
-                 is_recursive=False,
-                 is_abs_path=False,
-                 is_regex_pattern=is_regex_pattern,
-                 is_search_line_by_line=is_search_line_by_line
-                 ))
-
-    assert matched_file[with_f_write.name] == {'file': 'docopt\nasdfwer'}
-
-
-def test_run_with_empty_str_is_regex_file_level(with_f_write):
-    with_f_write.write('docopt\nasdfwer')
-    # Rewind to read data back from file.
-    with_f_write.seek(0)
-
-    caller_dir = os.path.dirname(with_f_write.name)
-    search_term = ""
-    is_regex_pattern = True
-    is_search_line_by_line = False
-
-    matched_file = Searcher.run(
-        Searcher(caller_dir=caller_dir,
-                 search_term=search_term,
-                 is_recursive=False,
-                 is_abs_path=False,
-                 is_regex_pattern=is_regex_pattern,
-                 is_search_line_by_line=is_search_line_by_line
-                 ))
-
-    assert matched_file[with_f_write.name] == {'file': 'docopt\nasdfwer'}
-
-
 def test_search_f(with_f_write):
     with_f_write.write('sdf\na\nrghsf')
     # Rewind to read data back from file.
@@ -237,54 +149,8 @@ def test_search_line_by_line_for_regex(with_f_write):
     assert matched_lines[1] == "sdf"
 
 
-@pytest.mark.skipif("platform.system() == 'Windows'")
-def test_ioerror_due_to_restricted_file(with_restricted_file):
-
-    caller_dir = with_restricted_file
-    Searcher.run(Searcher(caller_dir=caller_dir,
-                          search_term="",
-                          is_recursive=False,
-                          is_abs_path=False,
-                          is_regex_pattern=False,
-                          is_search_line_by_line=True))
-
-
-def test_regular_expression_error_file_level(with_f_read):
-    search_term = "[\\]"
-    is_regex_pattern = True
-    is_search_line_by_line = False
-    f = with_f_read.name
-
-    Searcher.search_f(Searcher(
-        caller_dir="",
-        search_term=search_term,
-        is_recursive=False,
-        is_abs_path=False,
-        is_regex_pattern=is_regex_pattern,
-        is_search_line_by_line=is_search_line_by_line),
-        f)
-
-
-def test_regular_expression_error_line_by_line(with_f_read):
-    search_term = "[\\]"
-    is_regex_pattern = True
-    is_search_line_by_line = True
-    f = with_f_read.name
-
-    # Directory option is irrelevant for the test.
-    Searcher.search_f(Searcher(
-        caller_dir="",
-        search_term=search_term,
-        is_recursive=False,
-        is_abs_path=False,
-        is_regex_pattern=is_regex_pattern,
-        is_search_line_by_line=is_search_line_by_line),
-        f)
-
-
 def test_match_f_for_pattern_with_binary_file(with_f_bwrite):
     with_f_bwrite.write(b'\x07\x08\x07')
-    # Rewind to read data back from file.
     with_f_bwrite.close()
 
     search_term = "\x07"
@@ -307,7 +173,6 @@ def test_match_f_for_pattern_with_binary_file(with_f_bwrite):
 
 def test_match_f_for_str_with_binary_file(with_f_bwrite):
     with_f_bwrite.write(b'\x07\x08\x07')
-    # Rewind to read data back from file
     with_f_bwrite.close()
 
     search_term = "\x07"
@@ -328,7 +193,6 @@ def test_match_f_for_str_with_binary_file(with_f_bwrite):
 
 def test_search_line_by_line_for_regex_with_binary_file(with_f_bwrite):
     with_f_bwrite.write(b'\x07\x08\x07')
-    # Rewind to read data back from file
     with_f_bwrite.close()
 
     search_term = "\x07"
@@ -349,7 +213,6 @@ def test_search_line_by_line_for_regex_with_binary_file(with_f_bwrite):
 
 def test_search_line_by_line_for_term_with_binary_file(with_f_bwrite):
     with_f_bwrite.write(b'\x07\x08\x07')
-    # Rewind to read data back from file
     with_f_bwrite.close()
 
     search_term = "\x07"
