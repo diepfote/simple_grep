@@ -209,8 +209,3 @@ def test_search_line_by_line_for_term_with_binary_file(with_f_bwrite):
         with_f_bwrite.name)
 
     assert matched_file == {'file_matched': ''}
-
-
-# TODO FIX calling hotfix_delete_temp_dir manually
-def test_hotfix_delete_temp_dir(hotfix_delete_temp_dir):
-    pass
