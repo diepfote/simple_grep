@@ -40,17 +40,6 @@ def main():
             is_search_line_by_line=args['-n']
         )
 
-    # TESTING
-        # searcher = grep_.Searcher(
-        #     caller_dir='/home/flo',
-        #     search_term="aware",
-        #     is_recursive=args['-r'],
-        #     is_abs_path=args['-f'],
-        #     is_regex_pattern=False,
-        #     is_search_line_by_line=False
-        # )
-    # TESTING
-
         searcher.run()
 
     except KeyboardInterrupt:

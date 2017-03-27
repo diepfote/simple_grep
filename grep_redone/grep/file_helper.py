@@ -23,7 +23,7 @@ def get_next_file(caller_dir, is_recursive):
             break
 
 
-def is_f_binary_file(file_path, blocksize=512):
+def is_binary_file(file_path, blocksize=512):
     """ Uses heuristics to guess whether the given file is text or binary,
         by reading a single block of bytes from the file.
         If more than 0% of the chars in the block are non-text, or there

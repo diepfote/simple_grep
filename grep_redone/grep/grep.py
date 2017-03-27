@@ -108,7 +108,7 @@ class Searcher(object):
 
             if self.search_term in entire_file:
                 # Do not include matches if file is binary
-                if file_helper.is_f_binary_file(file_path):
+                if file_helper.is_binary_file(file_path):
                     return {'file_matched': ''}
 
                 split_str = entire_file.split(self.search_term)
@@ -140,7 +140,7 @@ class Searcher(object):
 
             if len(matches) >= 1:
                 # Do not include matches if file is binary
-                if file_helper.is_f_binary_file(file_path):
+                if file_helper.is_binary_file(file_path):
                     return {'file_matched': ''}
 
                 f.seek(0)
@@ -174,7 +174,7 @@ class Searcher(object):
 
                 elif self.search_term in line:
                     # Do not include matches if file is binary
-                    if file_helper.is_f_binary_file(file_path):
+                    if file_helper.is_binary_file(file_path):
                         return {'file_matched': ''}
 
                     split_str = line.split(self.search_term)
@@ -200,7 +200,7 @@ class Searcher(object):
                 match = regexp.findall(line)
                 if match:
                     # Do not include matches if file is binary
-                    if file_helper.is_f_binary_file(file_path):
+                    if file_helper.is_binary_file(file_path):
                         return {'file_matched': ''}
 
                     for row in match:
