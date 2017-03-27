@@ -3,6 +3,7 @@ import tempfile
 import pytest
 
 
+# TODO FIX
 global temp_dir, fd, temp_path
 temp_dir = tempfile.mkdtemp()
 fd, temp_path = tempfile.mkstemp(dir=temp_dir, suffix='.txt', text=True)
@@ -55,6 +56,10 @@ def hotfix_delete_temp_dir(request):
         os.close(fd)
         os.remove(temp_path)
         os.removedirs(temp_dir)
+
+        # Check that file has been deleted
+        with pytest.raises(IOError):
+            open(temp_path, 'r')
 
     # Run fin function after all tests have run
     request.addfinalizer(fin)
