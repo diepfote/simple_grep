@@ -1,21 +1,19 @@
 
 """
-grep_redone  grep re-implemented in python with certain alterations
-Usage: grep_redone [-rnfe] [SEARCH_TERM] ...
+grep_redone, version 0.9 
+Search files for pattern or string, optionally do this recursively.
 
-Search for str or pattern in files; optionally do this recursively.
+usage: grep_redone [-rnfe] [SEARCH_TERM]
 
 Arguments:
-  SEARCH_TERM        string to search for
+  SEARCH_TERM       string to search for
 
 Options:
-  -h --help
-  -r       recursive search
-  -f       display full/absolute path
-  -e       search term is a regex pattern
-  -n       display line number for match
-
-
+  -h --help         Display this page.
+  -r                Do a recursive search.
+  -f                Display full/absolute paths.
+  -e                Use the search term as a regex pattern.
+  -n                Display line numbers for matches.
 """
 
 import os
