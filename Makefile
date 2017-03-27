@@ -1,6 +1,6 @@
 clean:
 	rm -f */**.pyc
-	rm -f */*/*.pyc
+	rm -f */*/**.pyc
 
 test: clean
 	py.test -vv
