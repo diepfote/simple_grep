@@ -3,8 +3,8 @@ import tempfile
 import platform
 import pytest
 
-from grep_redone.grep import print_helper
-from grep_redone.tests.helper_for_tests import with_f_bwrite, hotfix_delete_temp_dir
+from grep import print_helper
+from tests.helper_for_tests import with_f_bwrite, hotfix_delete_temp_dir
 
 
 def test_generate_output_for_matched_files_full_path():

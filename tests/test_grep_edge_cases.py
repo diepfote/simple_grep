@@ -2,8 +2,8 @@ import os
 import platform
 import pytest
 
-from grep_redone.grep.grep import Searcher
-from grep_redone.tests.helper_for_tests import *
+from grep.grep import Searcher
+from tests.helper_for_tests import *
 
 
 def test_instantiating_searcher_class():

@@ -21,7 +21,7 @@ Options:
 import os
 
 from docopt import docopt
-from grep import grep as grep_
+import grep.grep as grep_
 
 
 def main():
