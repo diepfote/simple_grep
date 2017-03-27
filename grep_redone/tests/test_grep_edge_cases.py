@@ -154,28 +154,3 @@ def test_regular_expression_error_line_by_line(with_f_read):
         is_regex_pattern=is_regex_pattern,
         is_search_line_by_line=is_search_line_by_line),
         f)
-
-
-# TODO Add tests for INDEX ERROR
-def test_index_error_line_by_line_term(with_f_write):
-    with_f_write.write('some')
-    # Rewind to read data back from file.
-    with_f_write.seek(0)
-
-    search_term = 'some'
-    matched_file = Searcher.search_line_by_line_for_term(Searcher(caller_dir="",
-                                                                  search_term=search_term,
-                                                                  is_recursive=False,
-                                                                  is_abs_path=False,
-                                                                  is_regex_pattern=False,
-                                                                  is_search_line_by_line=True),
-                                                         with_f_write.name)
-
-    assert matched_file == {1: 'some'}
-
-
-# def test_index_error_line_by_line_regex():
-# def test_index_error_file_level_term():
-# def test_index_error_file_level_regex():
-
-
