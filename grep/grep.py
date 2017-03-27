@@ -4,9 +4,8 @@ import time
 import re
 import sre_constants
 
+import print_helper
 import file_helper
-from grep_redone.grep import print_helper
-from grep_redone.grep import file_helper
 
 
 class Searcher(object):

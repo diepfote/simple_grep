@@ -7,7 +7,7 @@ setup(
     install_requires=['docopt', 'clint', 'pytest'],
     entry_points={
         'console_scripts': [
-            'grep_redone=grep_redone.__main__:main'
+            'grep_redone=grep.__main__:main'
             ]
     },
 )

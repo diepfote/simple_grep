@@ -3,7 +3,7 @@
 import os
 from clint.textui import colored
 
-from grep_redone.grep import file_helper
+import file_helper
 
 
 def generate_output_for_matched_files_full_path(matched_files_and_lines, search_term):

@@ -5,4 +5,4 @@ test: clean
 	py.test -vv
 
 test-report: clean
-	py.test -vv --cov-report term-missing:skip-covered --cov=grep_redone/grep/
+	py.test -vv --cov-report term-missing:skip-covered --cov=grep/
