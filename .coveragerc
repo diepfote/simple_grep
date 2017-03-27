@@ -1,0 +1,2 @@
+[run]
+omit = grep/__main__.py
