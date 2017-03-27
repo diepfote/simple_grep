@@ -14,7 +14,7 @@ def generate_output_for_matched_files_full_path(matched_files_and_lines, search_
 
     output = []
     for f, lines in matched_files_and_lines.iteritems():
-        if file_helper.is_f_binary_file(f):
+        if file_helper.is_binary_file(f):
             output.extend(['Binary file ' + f + ' matches'])
 
         else:
@@ -41,7 +41,7 @@ def generate_output_for_matched_files_relative_path(matched_files_and_lines, sea
 
     output = []
     for f, lines in matched_files_and_lines.iteritems():
-        if file_helper.is_f_binary_file(f):
+        if file_helper.is_binary_file(f):
             output.extend(['Binary file ' + f + ' matches'])
 
         else:
