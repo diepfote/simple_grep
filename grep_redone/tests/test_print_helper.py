@@ -4,32 +4,32 @@ import platform
 import pytest
 
 from grep_redone.grep import print_helper
-from grep_redone.tests.helper_for_tests import with_f_bwrite, with_f_write
+from grep_redone.tests.helper_for_tests import with_f_bwrite, hotfix_delete_temp_dir
 
 
 def test_generate_output_for_matched_files_full_path():
-    test_dict = {'/home/flo/Untitled Document': {1: 'aware\n', 2: 'aware werwer\n'}}
+    matched_items = {'/home/flo/Untitled Document': {1: 'aware\n', 2: 'aware werwer\n'}}
 
     test_output = [os.path.normpath('/home/flo/Untitled Document') + ':1:aware',
                    os.path.normpath('/home/flo/Untitled Document') + ':2:aware werwer']
-    output = print_helper.generate_output_for_matched_files_full_path(test_dict, search_term='aware')
+    output = print_helper.generate_output_for_matched_files_full_path(matched_items, search_term='aware')
 
     assert output == test_output
 
 
 def test_generate_output_for_matched_files_relative_path():
     if platform.system() == 'Windows':
-        test_dict = {'./../../../../Untitled Document': {1: 'aware\n', 2: 'aware werwer\n'}}
+        matched_items = {'./../../../../Untitled Document': {1: 'aware\n', 2: 'aware werwer\n'}}
 
     elif platform.system() == 'Linux':
-        test_dict = {'/home/flo/Untitled Document': {1: 'aware\n', 2: 'aware werwer\n'}}
+        matched_items = {'/home/flo/Untitled Document': {1: 'aware\n', 2: 'aware werwer\n'}}
 
     else:
         raise ValueError('No system information found.')
 
     test_output = [os.path.normpath('../../../../Untitled Document') + ':1:aware',
                    os.path.normpath('../../../../Untitled Document') + ':2:aware werwer']
-    output = print_helper.generate_output_for_matched_files_relative_path(test_dict, search_term='aware')
+    output = print_helper.generate_output_for_matched_files_relative_path(matched_items, search_term='aware')
 
     try:
         assert output == test_output
@@ -51,3 +51,30 @@ def test_color_term_in_string():
 @print_helper.color_term_in_string
 def function_for_color_term_in_string(l, term):
     return l
+
+
+def test_outptut_binary_file_matches_full_path(with_f_bwrite):
+    matched_items = {with_f_bwrite.name: {'file_matched': ''}}
+    with_f_bwrite.write(b'\x00')
+    with_f_bwrite.seek(0)
+
+    test_output = ['Binary file ' + with_f_bwrite.name + ' matches']
+    output = print_helper.generate_output_for_matched_files_full_path(matched_items, search_term='aware')
+
+    assert output == test_output
+
+
+def test_outptut_binary_file_matches_relative_path(with_f_bwrite):
+    matched_items = {with_f_bwrite.name: {'file_matched': ''}}
+    with_f_bwrite.write(b'\x00')
+    with_f_bwrite.seek(0)
+
+    test_output = ['Binary file ' + with_f_bwrite.name + ' matches']
+    output = print_helper.generate_output_for_matched_files_relative_path(matched_items, search_term='aware')
+
+    assert output == test_output
+
+
+# TODO FIX calling hotfix_delete_temp_dir manually
+def test_hotfix_delete_temp_dir(hotfix_delete_temp_dir):
+    pass
