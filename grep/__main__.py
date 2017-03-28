@@ -32,7 +32,7 @@ def main():
 
         searcher = grep_.Searcher(
             caller_dir=os.path.abspath(os.path.curdir),
-            search_term=search_term[0],
+            search_term=search_term,
             is_recursive=args['-r'],
             is_abs_path=args['-f'],
             is_regex_pattern=args['-e'],
