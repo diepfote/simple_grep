@@ -25,7 +25,6 @@ def test_instantiating_searcher_class():
 
 def test_run(with_f_write):
     with_f_write.write('docopt')
-    # Rewind to read data back from file.
     with_f_write.seek(0)
 
     caller_dir = os.path.dirname(with_f_write.name)
@@ -46,11 +45,9 @@ def test_run(with_f_write):
 
 def test_search_f(with_f_write):
     with_f_write.write('sdf\na\nrghsf')
-    # Rewind to read data back from file.
     with_f_write.seek(0)
 
     search_term = "a"
-    # Directory and recursive option are irrelevant for the test.
     matched_file = Searcher.search_f(
         Searcher(caller_dir="",
                  search_term=search_term,
@@ -65,12 +62,10 @@ def test_search_f(with_f_write):
 
 def test_match_f_for_str(with_f_write):
     with_f_write.write('sbiugz8gfzuftzdrdsrts5445tzzftfjguikhoizbtzctzztcuzoh\nsdf\na\n rghsf')
-    # Rewind to read data back from file.
     with_f_write.seek(0)
 
     search_term = "sdf"
     is_search_line_by_line = False
-    # Directory and recursive option are irrelevant for the test.
     matched_file = Searcher.match_f_for_str(
         Searcher(caller_dir="",
                  search_term=search_term,
@@ -85,12 +80,10 @@ def test_match_f_for_str(with_f_write):
 
 def test_match_f_for_pattern(with_f_write):
     with_f_write.write('sbiugz8gfzuftzdrdsrts5445tzzftfjguikhoizbtzctzztcuzoh\nsdf\na\n rghsf')
-    # Rewind to read data back from file.
     with_f_write.seek(0)
 
     search_term = "sdf"
     is_search_line_by_line = False
-    # Directory and recursive option are irrelevant for the test.
     matched_file = Searcher.match_f_for_pattern(
         Searcher(caller_dir="",
                  search_term=search_term,
@@ -105,11 +98,9 @@ def test_match_f_for_pattern(with_f_write):
 
 def test_search_line_by_line_for_term(with_f_write):
     with_f_write.write('sdf\na\nrghsfz')
-    # Rewind to read data back from file.
     with_f_write.seek(0)
 
     search_term = "a"
-    # Directory and recursive option are irrelevant for the test.
     matched_lines = Searcher.search_line_by_line_for_term(
         Searcher(caller_dir="",
                  search_term=search_term,
@@ -124,11 +115,9 @@ def test_search_line_by_line_for_term(with_f_write):
 
 def test_search_line_by_line_for_regex(with_f_write):
     with_f_write.write('sdf\na\nrghsfz')
-    # Rewind to read data back from file.
     with_f_write.seek(0)
 
     search_term = "^[d-s]{1,}$"
-    # Directory and recursive option are irrelevant for the test.
     matched_lines = Searcher.search_line_by_line_for_regex(
         Searcher(caller_dir="",
                  search_term=search_term,
@@ -143,11 +132,9 @@ def test_search_line_by_line_for_regex(with_f_write):
 
 def test_match_f_for_pattern_with_binary_file(with_f_bwrite):
     with_f_bwrite.write(b'\x07\x08\x07')
-    # Rewind to read data back from file.
     with_f_bwrite.seek(0)
 
     search_term = "\x07"
-    # Directory and recursive option are irrelevant for the test.
     matched_file = Searcher.match_f_for_pattern(
         Searcher(caller_dir="",
                  search_term=search_term,
@@ -162,7 +149,6 @@ def test_match_f_for_pattern_with_binary_file(with_f_bwrite):
 
 def test_match_f_for_str_with_binary_file(with_f_bwrite):
     with_f_bwrite.write(b'\x07\x08\x07')
-    # Rewind to read data back from file.
     with_f_bwrite.seek(0)
 
     search_term = "\x07"
@@ -179,7 +165,6 @@ def test_match_f_for_str_with_binary_file(with_f_bwrite):
 
 def test_search_line_by_line_for_regex_with_binary_file(with_f_bwrite):
     with_f_bwrite.write(b'\x07\x08\x07')
-    # Rewind to read data back from file.
     with_f_bwrite.seek(0)
 
     search_term = "\x07"
@@ -196,7 +181,6 @@ def test_search_line_by_line_for_regex_with_binary_file(with_f_bwrite):
 
 def test_search_line_by_line_for_term_with_binary_file(with_f_bwrite):
     with_f_bwrite.write(b'\x07\x08\x07')
-    # Rewind to read data back from file.
     with_f_bwrite.seek(0)
 
     search_term = "\x07"

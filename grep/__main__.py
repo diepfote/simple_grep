@@ -1,12 +1,12 @@
 
 """
 grep_redone, version 0.9 
-Search files for pattern or string, optionally do this recursively.
+Search files for a pattern or string, optionally do this recursively.
 
 usage: grep_redone [-rnfe] [SEARCH_TERM]
 
 Arguments:
-  SEARCH_TERM       string to search for
+  SEARCH_TERM       The string to search for.
 
 Options:
   -h --help         Display this page.
@@ -24,6 +24,7 @@ import grep as grep_
 
 def main():
     """Entry point for grep_redone."""
+
     try:
         args = docopt(__doc__)
 
