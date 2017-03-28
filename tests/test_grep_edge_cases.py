@@ -25,7 +25,6 @@ def test_instantiating_searcher_class():
 
 def test_run_with_empty_str_not_regex_line_by_line(with_f_write):
     with_f_write.write('docopt\nasdfwer')
-    # Rewind to read data back from file.
     with_f_write.seek(0)
 
     caller_dir = os.path.dirname(with_f_write.name)
@@ -47,7 +46,6 @@ def test_run_with_empty_str_not_regex_line_by_line(with_f_write):
 
 def test_run_with_empty_str_is_regex_line_by_line(with_f_write):
     with_f_write.write('docopt\nasdfwer')
-    # Rewind to read data back from file.
     with_f_write.seek(0)
 
     caller_dir = os.path.dirname(with_f_write.name)
@@ -69,7 +67,6 @@ def test_run_with_empty_str_is_regex_line_by_line(with_f_write):
 
 def test_run_with_empty_str_not_regex_file_level(with_f_write):
     with_f_write.write('docopt\nasdfwer')
-    # Rewind to read data back from file.
     with_f_write.seek(0)
 
     caller_dir = os.path.dirname(with_f_write.name)
@@ -91,7 +88,6 @@ def test_run_with_empty_str_not_regex_file_level(with_f_write):
 
 def test_run_with_empty_str_is_regex_file_level(with_f_write):
     with_f_write.write('docopt\nasdfwer')
-    # Rewind to read data back from file.
     with_f_write.seek(0)
 
     caller_dir = os.path.dirname(with_f_write.name)

@@ -9,7 +9,7 @@ import file_helper
 
 
 class Searcher(object):
-    """Search functionality implemented as a class."""
+    """Greps search functionality implemented as a class."""
 
     # TESTING
     global start_time
@@ -34,7 +34,7 @@ class Searcher(object):
         self.is_search_line_by_line = is_search_line_by_line
 
     def run(self):
-        """Runs search using command line options."""
+        """Runs search_f using command line options."""
 
         matched_file = {}
         for f in file_helper.get_next_file(self.caller_dir, self.is_recursive):
@@ -91,7 +91,7 @@ class Searcher(object):
             return None
 
     def match_f_for_str(self, file_path):
-        """Search a file for the occurrence of a str."""
+        """Search a file for the occurrence of a string."""
 
         assert type(file_path) == str
 
@@ -160,7 +160,7 @@ class Searcher(object):
             return matched
 
     def search_line_by_line_for_term(self, file_path):
-        """Search a single file for occurrences of a string; each line is searched subsequently."""
+        """Search a single file for occurrences of a string; each line is searched separately."""
 
         assert type(file_path) == str
 
@@ -183,7 +183,7 @@ class Searcher(object):
         return matched_lines
 
     def search_line_by_line_for_regex(self, file_path):
-        """Search a single file using a regex pattern; each line is searched subsequently."""
+        """Search a single file using a regex pattern; each line is searched separately."""
 
         assert type(file_path) == str
 

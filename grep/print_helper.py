@@ -7,7 +7,7 @@ import file_helper
 
 
 def generate_output_for_matched_files_full_path(matched_files_and_lines, search_term):
-    """Prints matched files in a dict using absolute paths."""
+    """Prints matching files using absolute paths."""
 
     assert type(matched_files_and_lines) == dict
     assert type(search_term) == str
@@ -27,14 +27,14 @@ def generate_output_for_matched_files_full_path(matched_files_and_lines, search_
     output = [''.join(f.rsplit('\n', 1)) for f in output]
 
     # Color term and print
-    for line in color_matched(output, search_term):
+    for line in color_matched_items(output, search_term):
         print line
 
     return output
 
 
 def generate_output_for_matched_files_relative_path(matched_files_and_lines, search_term):
-    """Prints matched files in a dict using relative paths."""
+    """Prints matching files using relative paths."""
 
     assert type(matched_files_and_lines) == dict
     assert type(search_term) == str
@@ -54,7 +54,7 @@ def generate_output_for_matched_files_relative_path(matched_files_and_lines, sea
     output = [''.join(f.rsplit('\n', 1)) for f in output]
 
     # Color term and print
-    for line in color_matched(output, search_term):
+    for line in color_matched_items(output, search_term):
         print line
 
     return output
@@ -62,6 +62,8 @@ def generate_output_for_matched_files_relative_path(matched_files_and_lines, sea
 
 # TODO FIX matches for regex patterns printed incorrectly
 def color_term_in_string(func):
+    """Colors the last occurrence of a term in a string."""
+
     def func_wrapper(list_to_edit, term):
         assert type(list_to_edit) == list
         assert type(term) == str
@@ -83,5 +85,5 @@ def color_term_in_string(func):
 
 
 @color_term_in_string
-def color_matched(output, search_term):
+def color_matched_items(output, search_term):
     return output
