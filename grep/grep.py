@@ -8,14 +8,9 @@ import print_helper
 import file_helper
 
 
+# TODO abstract IO
 class Searcher(object):
     """Greps search functionality implemented as a class."""
-
-    # TESTING
-    global start_time
-    start_time = time.time()
-
-    # TESTING
 
     def __init__(self, caller_dir, search_term, is_recursive, is_abs_path, is_regex_pattern, is_search_line_by_line):
 
@@ -50,10 +45,6 @@ class Searcher(object):
 
                 else:
                     print_helper.generate_output_for_matched_files_relative_path(matched_file, self.search_term)
-
-        # TESTING
-        print ("--- %s seconds ---" % (time.time() - start_time))
-        # TESTING
 
         return matched_file
 
