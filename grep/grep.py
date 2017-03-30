@@ -12,10 +12,11 @@ import file_helper
 class Searcher(object):
     """Greps search functionality implemented as a class."""
 
-    def __init__(self, caller_dir, search_term, is_recursive, is_abs_path, is_regex_pattern, is_search_line_by_line):
+    def __init__(self, caller_dir, search_term, specific_file, is_recursive, is_abs_path, is_regex_pattern, is_search_line_by_line):
 
         assert type(caller_dir) == str
         assert type(search_term) == str
+        assert type(specific_file) == str
         assert type(is_recursive) == bool
         assert type(is_abs_path) == bool
         assert type(is_regex_pattern) == bool
@@ -23,28 +24,50 @@ class Searcher(object):
 
         self.caller_dir = caller_dir
         self.search_term = search_term
+        self.specific_file = specific_file
         self.is_recursive = is_recursive
         self.is_abs_path = is_abs_path
         self.is_regex_pattern = is_regex_pattern
         self.is_search_line_by_line = is_search_line_by_line
 
     def run(self):
-        """Runs search_f using command line options."""
+        """Runs search_wrapper using a file if specified.."""
 
-        matched_file = {}
-        for f in file_helper.get_next_file(self.caller_dir, self.is_recursive):
+        all_matched = []
+        if self.specific_file == '':
+            for f in file_helper.get_next_file(self.caller_dir, self.is_recursive):
+                matched_file = self.search_wrapper(f)
 
-            try:
-                matched_file = self.search_f(f)
-            except IOError, ioerror:
-                print "Error while reading file:\n\t%s" % ioerror
+                if matched_file:
+                    self.printing(matched_file)
+                    all_matched.extend(matched_file)
+
+        else:
+            matched_file = self.search_wrapper(self.specific_file)
 
             if matched_file:
-                if self.is_abs_path:
-                    print_helper.generate_output_for_matched_files_full_path(matched_file, self.search_term)
+                self.printing(matched_file)
+                all_matched.extend(matched_file)
 
-                else:
-                    print_helper.generate_output_for_matched_files_relative_path(matched_file, self.search_term)
+        return all_matched
+
+    def printing(self, matched_file):
+        """Prints a matched file or line."""
+
+        if self.is_abs_path:
+            print_helper.generate_output_for_matched_files_full_path(matched_file, self.search_term)
+
+        else:
+            print_helper.generate_output_for_matched_files_relative_path(matched_file, self.search_term)
+
+    def search_wrapper(self, file_path):
+        """Wraps search_f to accommodate for errors."""
+
+        matched_file = {}
+        try:
+            matched_file = self.search_f(file_path)
+        except IOError, ioerror:
+            print "Error while reading file:\n\t%s" % ioerror
 
         return matched_file
 
