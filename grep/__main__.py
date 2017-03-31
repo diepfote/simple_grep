@@ -1,17 +1,17 @@
 
 """
 grep_redone, version 0.9 
-Search files for a pattern or string, optionally do this recursively.
 
 usage: grep_redone [-rnpe] [SEARCH_TERM] [FILE_TO_SEARCH] 
 
 Arguments:
-  SEARCH_TERM       The string to search for.
-
+  SEARCH_TERM
+  FILE_TO_SEARCH
+  
 Options:
-  -h --help         Display this page.
-  -r                Do a recursive search.
-  -p                Display full/absolute paths.
+  -h --help         
+  -r                Search directory recursively.
+  -p                Display full/absolute paths for matches.
   -e                Use the search term as a regex pattern.
   -n                Display line numbers for matches.
 """
@@ -74,8 +74,6 @@ def main():
 
                 else:
                     directory = os.path.abspath(os.path.curdir)
-
-                print directory
 
         search_term = args['SEARCH_TERM'] if args['SEARCH_TERM'] else ''
         specific_file = args['FILE_TO_SEARCH'] if args['FILE_TO_SEARCH'] else ''
