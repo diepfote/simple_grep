@@ -38,7 +38,17 @@ def main():
 
         # If there's input ready, do something, else do something
         # else. Note timeout is zero so select won't block at all.
-        if platform.system() != 'Windows':
+        if platform.system() == 'Windows':
+            f = args['FILE_TO_SEARCH']
+            if f:
+                if os.path.isdir(os.path.abspath(f)):
+                    directory = f
+                    args['FILE_TO_SEARCH'] = ''
+
+            else:
+                directory = os.path.abspath(os.path.curdir)
+
+        else:
             if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
                 line = sys.stdin.readline()
                 if line:
@@ -51,16 +61,21 @@ def main():
                         f.close()
                         assert type(directory) == str
 
-        else:  # An empty line means stdin has been closed.
-            # Check if the specified path is a directory.
-            f = args['FILE_TO_SEARCH']
-            if f:
-                if os.path.isdir(os.path.abspath(f)):
-                    directory = f
-                    args['FILE_TO_SEARCH'] = ''
+            else:  # An empty line means stdin has been closed.
+                # Check if the specified path is a directory.
+                f = args['FILE_TO_SEARCH']
+                if f:
+                    if os.path.isdir(os.path.abspath(f)):
+                        directory = f
+                        args['FILE_TO_SEARCH'] = ''
 
-            else:
-                directory = os.path.abspath(os.path.curdir)
+                    else:
+                        directory = ''
+
+                else:
+                    directory = os.path.abspath(os.path.curdir)
+
+                print directory
 
         search_term = args['SEARCH_TERM'] if args['SEARCH_TERM'] else ''
         specific_file = args['FILE_TO_SEARCH'] if args['FILE_TO_SEARCH'] else ''
