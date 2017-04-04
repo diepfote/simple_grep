@@ -14,8 +14,10 @@ def test_generate_output_for_matched_files_full_path():
                    os.path.normpath('/home/flo/Untitled Document') + ':2:aware werwer']
     output = print_helper.generate_output_for_matched_files_full_path(matched_items, search_term='aware')
 
-    assert output == test_output
-
+    try:
+        assert output == test_output
+    except AssertionError:
+        pytest.fail(output)
 
 def test_generate_output_for_matched_files_relative_path():
     if platform.system() == 'Windows':
@@ -34,7 +36,7 @@ def test_generate_output_for_matched_files_relative_path():
     try:
         assert output == test_output
     except AssertionError:
-        pytest.fail(test_output)
+        pytest.fail(output)
 
 
 def test_color_term_in_string():
