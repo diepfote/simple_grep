@@ -4,10 +4,10 @@ clean:
 	rm -f */*/**.pyc
 
 test: clean
-	py.test -vv
+	py.test -vv --ignore=venv/
 
 test-report: clean
-	py.test -vv --cov-report term-missing:skip-covered --cov=grep/
+	py.test -vv --cov-report term-missing:skip-covered --cov=grep/ --ignore=venv/
 
 
 else
