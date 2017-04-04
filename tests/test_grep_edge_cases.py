@@ -22,7 +22,8 @@ def test_run_with_empty_str_not_regex_line_by_line(with_f_write):
                  is_recursive=False,
                  is_abs_path=False,
                  is_regex_pattern=is_regex_pattern,
-                 is_search_line_by_line=is_search_line_by_line
+                 is_search_line_by_line=is_search_line_by_line,
+                 is_from_stdin=False
                  ))
 
     assert matched_files == [os.path.abspath(with_f_write.name)]
@@ -44,7 +45,8 @@ def test_run_with_empty_str_is_regex_line_by_line(with_f_write):
                  is_recursive=False,
                  is_abs_path=False,
                  is_regex_pattern=is_regex_pattern,
-                 is_search_line_by_line=is_search_line_by_line
+                 is_search_line_by_line=is_search_line_by_line,
+                 is_from_stdin=False
                  ))
 
     assert matched_files == [os.path.abspath(with_f_write.name)]
@@ -66,7 +68,8 @@ def test_run_with_empty_str_not_regex_file_level(with_f_write):
                  is_recursive=False,
                  is_abs_path=False,
                  is_regex_pattern=is_regex_pattern,
-                 is_search_line_by_line=is_search_line_by_line
+                 is_search_line_by_line=is_search_line_by_line,
+                 is_from_stdin=False
                  ))
 
     assert matched_files == [os.path.abspath(with_f_write.name)]
@@ -88,7 +91,8 @@ def test_run_with_empty_str_is_regex_file_level(with_f_write):
                  is_recursive=False,
                  is_abs_path=False,
                  is_regex_pattern=is_regex_pattern,
-                 is_search_line_by_line=is_search_line_by_line
+                 is_search_line_by_line=is_search_line_by_line,
+                 is_from_stdin=False
                  ))
 
     assert matched_files == [os.path.abspath(with_f_write.name)]
@@ -104,7 +108,8 @@ def test_ioerror_due_to_restricted_file(with_restricted_file):
                           is_recursive=False,
                           is_abs_path=False,
                           is_regex_pattern=False,
-                          is_search_line_by_line=True))
+                          is_search_line_by_line=True,
+                          is_from_stdin=False))
 
 
 def test_regular_expression_error_file_level(with_f_read):
@@ -120,7 +125,8 @@ def test_regular_expression_error_file_level(with_f_read):
         is_recursive=False,
         is_abs_path=False,
         is_regex_pattern=is_regex_pattern,
-        is_search_line_by_line=is_search_line_by_line),
+        is_search_line_by_line=is_search_line_by_line,
+                 is_from_stdin=False),
         f)
 
 
@@ -138,5 +144,6 @@ def test_regular_expression_error_line_by_line(with_f_read):
         is_recursive=False,
         is_abs_path=False,
         is_regex_pattern=is_regex_pattern,
-        is_search_line_by_line=is_search_line_by_line),
+        is_search_line_by_line=is_search_line_by_line,
+                 is_from_stdin=False),
         f)

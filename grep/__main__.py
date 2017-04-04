@@ -32,8 +32,8 @@ def main():
     temp_dir = tempfile.mkdtemp()
     fd, temp_f = tempfile.mkstemp(dir=temp_dir, suffix='.tmp', text=True)
     directory = 1
+    is_from_stdin = False
     try:
-
         args = docopt(__doc__)
 
         # If there's input ready, do something, else do something
@@ -50,16 +50,15 @@ def main():
 
         else:
             if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
-                line = sys.stdin.readline()
-                if line:
-                    f = open(temp_f, 'w')
-                    try:
-                        f.write(line)
-                        directory = os.path.dirname(f.name)
+                is_from_stdin = True
+                f = open(temp_f, 'w')
+                try:
+                    f.write(sys.stdin.read())
+                    directory = os.path.dirname(f.name)
 
-                    finally:
-                        f.close()
-                        assert type(directory) == str
+                finally:
+                    f.close()
+                    assert type(directory) == str
 
             else:  # An empty line means stdin has been closed.
                 # Check if the specified path is a directory.
@@ -85,7 +84,8 @@ def main():
             is_recursive=args['-r'],
             is_abs_path=args['-p'],
             is_regex_pattern=args['-e'],
-            is_search_line_by_line=args['-n']
+            is_search_line_by_line=args['-n'],
+            is_from_stdin=is_from_stdin
         )
 
         searcher.run()

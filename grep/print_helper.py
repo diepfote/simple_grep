@@ -6,11 +6,12 @@ from clint.textui import colored
 import file_helper
 
 
-def generate_output_for_matched_files_full_path(matched_files_and_lines, search_term):
+def generate_output_for_matched_files_full_path(matched_files_and_lines, search_term, is_from_stdin):
     """Prints matching files using absolute paths."""
 
     assert type(matched_files_and_lines) == dict
     assert type(search_term) == str
+    assert type(is_from_stdin) == bool
 
     output = []
     for f, lines in matched_files_and_lines.iteritems():
@@ -18,10 +19,14 @@ def generate_output_for_matched_files_full_path(matched_files_and_lines, search_
             output.extend(['Binary file ' + f + ' matches'])
 
         else:
-            output.extend([(colored.magenta(os.path.normpath(f)) + colored.green(':')
-                            + colored.green(str(line_num)) + colored.green(':') + line)
-                           for line_num, line in lines.iteritems()
-                           ])
+            if is_from_stdin:
+                output.extend([line for line_num, line in lines.iteritems()])
+
+            else:
+                output.extend([(colored.magenta(os.path.normpath(f)) + colored.green(':')
+                                + colored.green(str(line_num)) + colored.green(':') + line)
+                               for line_num, line in lines.iteritems()
+                               ])
 
     # Remove last occurrence of new line
     output = [''.join(f.rsplit('\n', 1)) for f in output]
@@ -33,11 +38,12 @@ def generate_output_for_matched_files_full_path(matched_files_and_lines, search_
     return output
 
 
-def generate_output_for_matched_files_relative_path(matched_files_and_lines, search_term):
+def generate_output_for_matched_files_relative_path(matched_files_and_lines, search_term, is_from_stdin):
     """Prints matching files using relative paths."""
 
     assert type(matched_files_and_lines) == dict
     assert type(search_term) == str
+    assert type(is_from_stdin) == bool
 
     output = []
     for f, lines in matched_files_and_lines.iteritems():
@@ -45,10 +51,14 @@ def generate_output_for_matched_files_relative_path(matched_files_and_lines, sea
             output.extend(['Binary file ' + f + ' matches'])
 
         else:
-            output.extend([(colored.magenta(os.path.normpath(os.path.relpath(f))) + colored.blue(':')
-                            + colored.green(str(line_num)) + colored.blue(':') + line)
-                           for line_num, line in lines.iteritems()
-                           ])
+            if is_from_stdin:
+                output.extend([line for line_num, line in lines.iteritems()])
+
+            else:
+                output.extend([(colored.magenta(os.path.normpath(os.path.relpath(f))) + colored.blue(':')
+                                + colored.green(str(line_num)) + colored.blue(':') + line)
+                               for line_num, line in lines.iteritems()
+                               ])
 
     # Remove last occurrence of new line
     output = [''.join(f.rsplit('\n', 1)) for f in output]

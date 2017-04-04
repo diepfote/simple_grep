@@ -12,7 +12,14 @@ import file_helper
 class Searcher(object):
     """Greps search functionality implemented as a class."""
 
-    def __init__(self, caller_dir, search_term, specific_file, is_recursive, is_abs_path, is_regex_pattern, is_search_line_by_line):
+    def __init__(self, caller_dir,
+                 search_term,
+                 specific_file,
+                 is_recursive,
+                 is_abs_path,
+                 is_regex_pattern,
+                 is_search_line_by_line,
+                 is_from_stdin):
 
         assert type(caller_dir) == str
         assert type(search_term) == str
@@ -21,6 +28,7 @@ class Searcher(object):
         assert type(is_abs_path) == bool
         assert type(is_regex_pattern) == bool
         assert type(is_search_line_by_line) == bool
+        assert type(is_from_stdin) == bool
 
         self.caller_dir = caller_dir
         self.search_term = search_term
@@ -29,6 +37,7 @@ class Searcher(object):
         self.is_abs_path = is_abs_path
         self.is_regex_pattern = is_regex_pattern
         self.is_search_line_by_line = is_search_line_by_line
+        self.is_from_stdin = is_from_stdin
 
     def run(self):
         """Runs search_wrapper using a file if specified.."""
@@ -55,10 +64,10 @@ class Searcher(object):
         """Prints a matched file or line."""
 
         if self.is_abs_path:
-            print_helper.generate_output_for_matched_files_full_path(matched_file, self.search_term)
+            print_helper.generate_output_for_matched_files_full_path(matched_file, self.search_term, self.is_from_stdin)
 
         else:
-            print_helper.generate_output_for_matched_files_relative_path(matched_file, self.search_term)
+            print_helper.generate_output_for_matched_files_relative_path(matched_file, self.search_term, self.is_from_stdin)
 
     def search_wrapper(self, file_path):
         """Wraps search_f to accommodate for errors."""
