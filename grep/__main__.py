@@ -49,8 +49,8 @@ def main():
                 directory = os.path.abspath(os.path.curdir)
 
         else:
-            if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
-                is_from_stdin = True
+            is_from_stdin = sys.stdin in select.select([sys.stdin], [], [], 0)[0]
+            if is_from_stdin:
                 f = open(temp_f, 'w')
                 try:
                     f.write(sys.stdin.read())
