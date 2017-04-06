@@ -124,21 +124,32 @@ class Searcher(object):
             for line in f.readlines():
                 entire_file += line
 
+            # Match literal str
+            regexp = re.compile(re.escape(self.search_term))
+            matches = regexp.findall(entire_file)
             matched = {}
+
             if self.search_term == '':
                 return {'file': entire_file}
 
-            if self.search_term in entire_file:
+            if len(matches) >= 1:
                 # Do not include matches if file is binary
                 if file_helper.is_binary_file(file_path):
                     return {'file_matched': ''}
 
-                split_str = entire_file.split(self.search_term)
-                shortened_file = (split_str[0][len(split_str[0]) - len(self.search_term) * 15:] + self.search_term
-                                  + split_str[1][:-(len(split_str[1]) - len(self.search_term) * 15)]).strip()
+                f.seek(0)
+                entire_file = ""
+                for line in f.readlines():
+                    entire_file += line
 
-                # assert len(shortened_file) != len(entire_file.strip())
-                matched['file'] = shortened_file
+                shortened_file = ""
+                for index, match in enumerate(matches):
+                    split_str = entire_file.split(match)
+                    shortened_file = (split_str[0][len(split_str[0]) - len(self.search_term) * 15:]
+                                      + self.search_term + split_str[1][
+                                                           :-(len(split_str[1]) - len(self.search_term) * 15)]).strip()
+
+                    matched[index] = shortened_file
 
             return matched
 
@@ -171,14 +182,12 @@ class Searcher(object):
                     entire_file += line
 
                 shortened_file = ""
-                for match in matches:
+                for index, match in enumerate(matches):
                     split_str = entire_file.split(match)
                     shortened_file = (split_str[0][len(split_str[0]) - len(self.search_term) * 15:]
                                       + self.search_term + split_str[1][:-(len(split_str[1]) - len(self.search_term) * 15)]).strip()
 
-                # assert len(shortened_file) != len(entire_file.strip())
-
-                matched['file'] = shortened_file
+                    matched[index] = shortened_file
 
             return matched
 
