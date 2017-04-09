@@ -12,7 +12,8 @@ def test_generate_output_for_matched_files_full_path():
 
     test_output = [os.path.normpath('/home/flo/Untitled Document') + ':1:aware',
                    os.path.normpath('/home/flo/Untitled Document') + ':2:aware werwer']
-    output = print_helper.generate_output_for_matched_files_full_path(matched_items, search_term='aware', is_from_stdin=False)
+    output = print_helper.generate_output_for_matched_files_full_path(matched_items, search_term='aware',
+                                                                      is_from_stdin=False, is_line_by_line=True)
 
     try:
         assert output == test_output
@@ -31,7 +32,8 @@ def test_generate_output_for_matched_files_relative_path():
 
     test_output = [os.path.normpath('../../../../Untitled Document') + ':1:aware',
                    os.path.normpath('../../../../Untitled Document') + ':2:aware werwer']
-    output = print_helper.generate_output_for_matched_files_relative_path(matched_items, search_term='aware', is_from_stdin=False)
+    output = print_helper.generate_output_for_matched_files_relative_path(matched_items, search_term='aware',
+                                                                          is_from_stdin=False, is_line_by_line=True)
 
     try:
         assert output == test_output
@@ -61,7 +63,8 @@ def test_outptut_binary_file_matches_full_path(with_f_bwrite):
     with_f_bwrite.seek(0)
 
     test_output = ['Binary file ' + with_f_bwrite.name + ' matches']
-    output = print_helper.generate_output_for_matched_files_full_path(matched_items, search_term='aware', is_from_stdin=False)
+    output = print_helper.generate_output_for_matched_files_full_path(matched_items, search_term='aware',
+                                                                      is_from_stdin=False, is_line_by_line=False)
 
     assert output == test_output
 
@@ -72,7 +75,8 @@ def test_outptut_binary_file_matches_relative_path(with_f_bwrite):
     with_f_bwrite.seek(0)
 
     test_output = ['Binary file ' + with_f_bwrite.name + ' matches']
-    output = print_helper.generate_output_for_matched_files_relative_path(matched_items, search_term='aware', is_from_stdin=False)
+    output = print_helper.generate_output_for_matched_files_relative_path(matched_items, search_term='aware',
+                                                                          is_from_stdin=False, is_line_by_line=False)
 
     assert output == test_output
 
@@ -81,7 +85,8 @@ def test_printing_for_searching_stdin_rel_path():
     matched_items = {'/tmp/sadf.tmp': {'file': 'aware'}}
 
     test_output = ['aware']
-    output = print_helper.generate_output_for_matched_files_relative_path(matched_items, search_term='aware', is_from_stdin=True)
+    output = print_helper.generate_output_for_matched_files_relative_path(matched_items, search_term='aware',
+                                                                          is_from_stdin=True, is_line_by_line=False)
 
     assert output == test_output
 
@@ -90,7 +95,8 @@ def test_printing_for_searching_stdin_abs_path():
     matched_items = {'/tmp/sadf.tmp': {'file': 'aware'}}
 
     test_output = ['aware']
-    output = print_helper.generate_output_for_matched_files_full_path(matched_items, search_term='aware', is_from_stdin=True)
+    output = print_helper.generate_output_for_matched_files_full_path(matched_items, search_term='aware',
+                                                                      is_from_stdin=True, is_line_by_line=False)
 
     assert output == test_output
 

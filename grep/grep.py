@@ -1,6 +1,7 @@
 """Search functionality for grep_redone."""
 
 import time
+from show import show
 import re
 import sre_constants
 
@@ -64,10 +65,10 @@ class Searcher(object):
         """Prints a matched file or line."""
 
         if self.is_abs_path:
-            print_helper.generate_output_for_matched_files_full_path(matched_file, self.search_term, self.is_from_stdin)
+            print_helper.generate_output_for_matched_files_full_path(matched_file, self.search_term, self.is_from_stdin, self.is_search_line_by_line)
 
         else:
-            print_helper.generate_output_for_matched_files_relative_path(matched_file, self.search_term, self.is_from_stdin)
+            print_helper.generate_output_for_matched_files_relative_path(matched_file, self.search_term, self.is_from_stdin, self.is_search_line_by_line)
 
     def search_wrapper(self, file_path):
         """Wraps search_f to accommodate for errors."""
@@ -123,33 +124,34 @@ class Searcher(object):
             entire_file = ""
             for line in f.readlines():
                 entire_file += line
+            f.close()
 
             # Match literal str
             regexp = re.compile(re.escape(self.search_term))
             matches = regexp.findall(entire_file)
+            match = ""
+            try:
+                match = matches.pop()
+            except IndexError:
+                pass
+
             matched = {}
+            previous = []
 
             if self.search_term == '':
                 return {'file': entire_file}
 
-            if len(matches) >= 1:
+            if match:
                 # Do not include matches if file is binary
                 if file_helper.is_binary_file(file_path):
                     return {'file_matched': ''}
 
-                f.seek(0)
-                entire_file = ""
-                for line in f.readlines():
-                    entire_file += line
-
                 shortened_file = ""
-                for index, match in enumerate(matches):
-                    split_str = entire_file.split(match)
-                    shortened_file = (split_str[0][len(split_str[0]) - len(self.search_term) * 15:]
-                                      + self.search_term + split_str[1][
-                                                           :-(len(split_str[1]) - len(self.search_term) * 15)]).strip()
+                for index, line in enumerate(entire_file.split()):
 
-                    matched[index] = shortened_file
+                    if match in line:
+                        previous.append(line)
+                        matched[index] = line
 
             return matched
 
@@ -163,31 +165,33 @@ class Searcher(object):
             entire_file = ""
             for line in f.readlines():
                 entire_file += line
+            f.close()
 
             regexp = re.compile(self.search_term)
             matches = regexp.findall(entire_file)
+            match = ""
+            try:
+                match = matches.pop()
+            except IndexError:
+                pass
+
+            previous = []
             matched = {}
 
             if self.search_term == '':
                 return {'file': entire_file}
 
-            if len(matches) >= 1:
+            if match:
                 # Do not include matches if file is binary
                 if file_helper.is_binary_file(file_path):
                     return {'file_matched': ''}
 
-                f.seek(0)
-                entire_file = ""
-                for line in f.readlines():
-                    entire_file += line
-
                 shortened_file = ""
-                for index, match in enumerate(matches):
-                    split_str = entire_file.split(match)
-                    shortened_file = (split_str[0][len(split_str[0]) - len(self.search_term) * 15:]
-                                      + self.search_term + split_str[1][:-(len(split_str[1]) - len(self.search_term) * 15)]).strip()
+                for index, line in enumerate(entire_file.split()):
 
-                    matched[index] = shortened_file
+                    if match in line:
+                        previous.append(line)
+                        matched[index] = line
 
             return matched
 

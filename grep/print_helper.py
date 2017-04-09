@@ -6,7 +6,7 @@ from clint.textui import colored
 import file_helper
 
 
-def generate_output_for_matched_files_full_path(matched_files_and_lines, search_term, is_from_stdin):
+def generate_output_for_matched_files_full_path(matched_files_and_lines, search_term, is_from_stdin, is_line_by_line):
     """Prints matching files using absolute paths."""
 
     assert type(matched_files_and_lines) == dict
@@ -22,11 +22,14 @@ def generate_output_for_matched_files_full_path(matched_files_and_lines, search_
             if is_from_stdin:
                 output.extend([line for line_num, line in lines.iteritems()])
 
+            elif not is_line_by_line:
+                output.extend([(colored.magenta(os.path.normpath(f)) + colored.green(':') + line)
+                               for line_num, line in lines.iteritems()])
+
             else:
                 output.extend([(colored.magenta(os.path.normpath(f)) + colored.green(':')
                                 + colored.green(str(line_num)) + colored.green(':') + line)
-                               for line_num, line in lines.iteritems()
-                               ])
+                               for line_num, line in lines.iteritems()])
 
     # Remove last occurrence of new line
     output = [''.join(f.rsplit('\n', 1)) for f in output]
@@ -38,7 +41,7 @@ def generate_output_for_matched_files_full_path(matched_files_and_lines, search_
     return output
 
 
-def generate_output_for_matched_files_relative_path(matched_files_and_lines, search_term, is_from_stdin):
+def generate_output_for_matched_files_relative_path(matched_files_and_lines, search_term, is_from_stdin, is_line_by_line):
     """Prints matching files using relative paths."""
 
     assert type(matched_files_and_lines) == dict
@@ -54,11 +57,14 @@ def generate_output_for_matched_files_relative_path(matched_files_and_lines, sea
             if is_from_stdin:
                 output.extend([line for line_num, line in lines.iteritems()])
 
+            elif not is_line_by_line:
+                output.extend([(colored.magenta(os.path.normpath(os.path.relpath(f))) + colored.blue(':') + line)
+                               for line_num, line in lines.iteritems()])
+
             else:
                 output.extend([(colored.magenta(os.path.normpath(os.path.relpath(f))) + colored.blue(':')
                                 + colored.green(str(line_num)) + colored.blue(':') + line)
-                               for line_num, line in lines.iteritems()
-                               ])
+                               for line_num, line in lines.iteritems()])
 
     # Remove last occurrence of new line
     output = [''.join(f.rsplit('\n', 1)) for f in output]
