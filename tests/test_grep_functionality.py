@@ -92,7 +92,7 @@ def test_match_f_for_str(with_f_write):
                  is_from_stdin=False),
         with_f_write.name)
 
-    assert matched_file == {0: 'zuftzdrdsrts5445tzzftfjguikhoizbtzctzztcuzoh\nsdf\na\n rghsf'}
+    assert matched_file == {1: 'sdf'}
 
 
 def test_match_f_for_pattern(with_f_write):
@@ -112,7 +112,7 @@ def test_match_f_for_pattern(with_f_write):
                  is_from_stdin=False),
         with_f_write.name)
 
-    assert matched_file == {0: 'zuftzdrdsrts5445tzzftfjguikhoizbtzctzztcuzoh\nsdf\na\n rghsf'}
+    assert matched_file == {1: 'sdf'}
 
 
 def test_search_line_by_line_for_term(with_f_write):
