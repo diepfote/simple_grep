@@ -45,7 +45,7 @@ def with_restricted_file():
     yield temp_dir
 
     # Leading zero ensures int is treated as octal
-    os.chmod(f.name, 0777)
+    os.chmod(f.name, 0o777)
 
 
 # TODO FIX
