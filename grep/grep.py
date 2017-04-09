@@ -1,7 +1,5 @@
 """Search functionality for grep_redone."""
 
-import time
-from show import show
 import re
 import sre_constants
 
