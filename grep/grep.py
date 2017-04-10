@@ -3,8 +3,8 @@
 import re
 import sre_constants
 
-import print_helper
-import file_helper
+from . import print_helper
+from . import file_helper
 
 
 # TODO abstract IO
@@ -74,8 +74,8 @@ class Searcher(object):
         matched_file = {}
         try:
             matched_file = self.search_f(file_path)
-        except IOError, ioerror:
-            print "Error while reading file:\n\t%s" % ioerror
+        except IOError as ioerror:
+            print ('Error while reading file:\n\t{}'.format(ioerror))
 
         return matched_file
 
@@ -90,8 +90,8 @@ class Searcher(object):
                 try:
                     matched_line_dict = self.search_line_by_line_for_regex(file_path)
 
-                except sre_constants.error, error:
-                    print "Regex expression error:\n\t%s" % error
+                except sre_constants.error as error:
+                    print ("Regex expression error:\n\t%s" % error)
 
             else:
                 matched_line_dict = self.search_line_by_line_for_term(file_path)
@@ -101,8 +101,8 @@ class Searcher(object):
                 try:
                     matched_line_dict = self.match_f_for_pattern(file_path)
 
-                except sre_constants.error, error:
-                    print "Regex expression error:\n\t%s" % error
+                except sre_constants.error as error:
+                    print ("Regex expression error:\n\t%s" % error)
 
             else:
                 matched_line_dict = self.match_f_for_str(file_path)
@@ -117,11 +117,13 @@ class Searcher(object):
 
         assert type(file_path) == str
 
-        with open(file_path, 'r') as f:
+        entire_file = ''
+        f = open(file_path, 'r')
+        try:
             f.seek(0)
-            entire_file = ""
             for line in f.readlines():
                 entire_file += line
+        finally:
             f.close()
 
             # Match literal str
@@ -158,11 +160,15 @@ class Searcher(object):
 
         assert type(file_path) == str
 
-        with open(file_path, 'r') as f:
+        entire_file = ''
+        f = open(file_path, 'r')
+        try:
             f.seek(0)
             entire_file = ""
             for line in f.readlines():
                 entire_file += line
+
+        finally:
             f.close()
 
             regexp = re.compile(self.search_term)
@@ -199,7 +205,8 @@ class Searcher(object):
         assert type(file_path) == str
 
         matched_lines = {}
-        with open(file_path, 'r') as f:
+        f = open(file_path, 'r')
+        try:
             for line_num, line in enumerate(f):
 
                 if self.search_term == '':
@@ -214,6 +221,9 @@ class Searcher(object):
                     matched_lines[line_num + 1] = (split_str[0] + self.search_term + split_str[1][:-len(
                         split_str[1]) + len(split_str[0] + self.search_term)]).strip()
 
+        finally:
+            f.close()
+
         return matched_lines
 
     def search_line_by_line_for_regex(self, file_path):
@@ -224,7 +234,8 @@ class Searcher(object):
         regexp = re.compile(self.search_term)
         matched_lines = {}
 
-        with open(file_path, 'r') as f:
+        f = open(file_path, 'r')
+        try:
             for line_num, line in enumerate(f):
 
                 if self.search_term == '':
@@ -248,5 +259,8 @@ class Searcher(object):
                     # Catch empty separator
                     except ValueError:
                         matched_lines[line_num + 1] = line.strip()
+
+        finally:
+            f.close()
 
         return matched_lines
