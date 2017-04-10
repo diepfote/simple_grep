@@ -4,7 +4,11 @@ import os
 import sys
 from clint.textui import colored
 
-from grep import file_helper
+if sys.version_info[0] > 2:
+    from grep import file_helper
+
+else:
+    import file_helper
 
 
 def generate_output_for_matched_files_full_path(matched_files_and_lines, search_term, is_from_stdin, is_line_by_line):
