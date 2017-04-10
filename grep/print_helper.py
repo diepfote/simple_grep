@@ -1,9 +1,10 @@
 """Print matched items for grep_redone."""
 
 import os
+import sys
 from clint.textui import colored
 
-import file_helper
+from grep import file_helper
 
 
 def generate_output_for_matched_files_full_path(matched_files_and_lines, search_term, is_from_stdin, is_line_by_line):
@@ -14,29 +15,48 @@ def generate_output_for_matched_files_full_path(matched_files_and_lines, search_
     assert type(is_from_stdin) == bool
 
     output = []
-    for f, lines in matched_files_and_lines.iteritems():
-        if file_helper.is_binary_file(f):
-            output.extend(['Binary file ' + f + ' matches'])
-
-        else:
-            if is_from_stdin:
-                output.extend([line for line_num, line in lines.iteritems()])
-
-            elif not is_line_by_line:
-                output.extend([(colored.magenta(os.path.normpath(f)) + colored.green(':') + line)
-                               for line_num, line in lines.iteritems()])
+    if sys.version_info[0] < 3:
+        for f, lines in matched_files_and_lines.iteritems():
+            if file_helper.is_binary_file(f):
+                output.extend(['Binary file ' + f + ' matches'])
 
             else:
-                output.extend([(colored.magenta(os.path.normpath(f)) + colored.green(':')
-                                + colored.green(str(line_num)) + colored.green(':') + line)
-                               for line_num, line in lines.iteritems()])
+                if is_from_stdin:
+                    output.extend([line for line_num, line in lines.iteritems()])
+
+                elif not is_line_by_line:
+                    output.extend([(colored.magenta(os.path.normpath(f)) + colored.green(':') + line)
+                                   for line_num, line in lines.iteritems()])
+
+                else:
+                    output.extend([(colored.magenta(os.path.normpath(f)) + colored.green(':')
+                                    + colored.green(str(line_num)) + colored.green(':') + line)
+                                   for line_num, line in lines.iteritems()])
+
+    else:
+        for f, lines in matched_files_and_lines.items():
+            if file_helper.is_binary_file(f):
+                output.extend(['Binary file ' + f + ' matches'])
+
+            else:
+                if is_from_stdin:
+                    output.extend([line for line_num, line in lines.items()])
+
+                elif not is_line_by_line:
+                    output.extend([(colored.magenta(os.path.normpath(f)) + colored.green(':') + line)
+                                   for line_num, line in lines.items()])
+
+                else:
+                    output.extend([(colored.magenta(os.path.normpath(f)) + colored.green(':')
+                                    + colored.green(str(line_num)) + colored.green(':') + line)
+                                   for line_num, line in lines.items()])
 
     # Remove last occurrence of new line
     output = [''.join(f.rsplit('\n', 1)) for f in output]
 
     # Color term and print
     for line in color_matched_items(output, search_term):
-        print line
+        print (line)
 
     return output
 
@@ -49,29 +69,48 @@ def generate_output_for_matched_files_relative_path(matched_files_and_lines, sea
     assert type(is_from_stdin) == bool
 
     output = []
-    for f, lines in matched_files_and_lines.iteritems():
-        if file_helper.is_binary_file(f):
-            output.extend(['Binary file ' + f + ' matches'])
-
-        else:
-            if is_from_stdin:
-                output.extend([line for line_num, line in lines.iteritems()])
-
-            elif not is_line_by_line:
-                output.extend([(colored.magenta(os.path.normpath(os.path.relpath(f))) + colored.blue(':') + line)
-                               for line_num, line in lines.iteritems()])
+    if sys.version_info[0] < 3:
+        for f, lines in matched_files_and_lines.iteritems():
+            if file_helper.is_binary_file(f):
+                output.extend(['Binary file ' + f + ' matches'])
 
             else:
-                output.extend([(colored.magenta(os.path.normpath(os.path.relpath(f))) + colored.blue(':')
-                                + colored.green(str(line_num)) + colored.blue(':') + line)
-                               for line_num, line in lines.iteritems()])
+                if is_from_stdin:
+                    output.extend([line for line_num, line in lines.iteritems()])
+
+                elif not is_line_by_line:
+                    output.extend([(colored.magenta(os.path.normpath(os.path.relpath(f))) + colored.blue(':') + line)
+                                   for line_num, line in lines.iteritems()])
+
+                else:
+                    output.extend([(colored.magenta(os.path.normpath(os.path.relpath(f))) + colored.blue(':')
+                                    + colored.green(str(line_num)) + colored.blue(':') + line)
+                                   for line_num, line in lines.iteritems()])
+
+    else:
+        for f, lines in matched_files_and_lines.items():
+            if file_helper.is_binary_file(f):
+                output.extend(['Binary file ' + f + ' matches'])
+
+            else:
+                if is_from_stdin:
+                    output.extend([line for line_num, line in lines.items()])
+
+                elif not is_line_by_line:
+                    output.extend([(colored.magenta(os.path.normpath(os.path.relpath(f))) + colored.blue(':') + line)
+                                   for line_num, line in lines.items()])
+
+                else:
+                    output.extend([(colored.magenta(os.path.normpath(os.path.relpath(f))) + colored.blue(':')
+                                    + colored.green(str(line_num)) + colored.blue(':') + line)
+                                   for line_num, line in lines.items()])
 
     # Remove last occurrence of new line
     output = [''.join(f.rsplit('\n', 1)) for f in output]
 
     # Color term and print
     for line in color_matched_items(output, search_term):
-        print line
+        print (line)
 
     return output
 

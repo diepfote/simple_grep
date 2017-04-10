@@ -1,7 +1,7 @@
 import os
 
 from grep import file_helper
-from helper_for_tests import with_f_bwrite, with_f_write, temp_path
+from tests.helper_for_tests import with_f_bwrite, with_f_write, temp_path
 
 
 def test_get_next_f():

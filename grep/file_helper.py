@@ -1,6 +1,7 @@
 """Supplies relevant files for grep.py."""
 
 import os
+import sys
 
 
 def get_next_file(caller_dir, is_recursive):
@@ -45,6 +46,9 @@ def is_binary_file(file_path, blocksize=512):
                 # An empty file is considered a valid text file
                 return False
 
+            if sys.version_info[0] > 2:
+                return False
+            
             # Use translate's 'deletechars' argument to efficiently remove all
             # occurrences of _text_characters from the block
             character_table = (
@@ -56,6 +60,6 @@ def is_binary_file(file_path, blocksize=512):
 
             return not float(len(nontext)) / len(block) <= 0
 
-    except IOError, ioerror:
-        print "Error while reading file:\n\t%s" % ioerror
+    except IOError as ioerror:
+        print ('Error while reading file:\n\t{}'.format(ioerror))
         return False
