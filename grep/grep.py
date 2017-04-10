@@ -2,9 +2,15 @@
 
 import re
 import sre_constants
+import sys
 
-from . import print_helper
-from . import file_helper
+if sys.version_info[0] > 2:
+    from . import print_helper
+    from . import file_helper
+
+else:
+    import print_helper
+    import file_helper
 
 
 # TODO abstract IO

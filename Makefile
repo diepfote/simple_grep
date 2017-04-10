@@ -4,9 +4,16 @@ clean:
 	rm -f */*/**.pyc
 
 test: clean
-	pytest -vv --ignore=venv/
+	py.test -vv --ignore=venv/
 
 test-report: clean
+	py.test -vv --cov-report term-missing:skip-covered --cov=grep/ --ignore=venv/
+
+
+test2: clean
+	pytest2 -vv --ignore=venv/
+
+test2-report: clean
 	pytest2 -vv --cov-report term-missing:skip-covered --cov=grep/ --ignore=venv/
 
 
@@ -16,6 +23,5 @@ clean:
 
 test: clean
 	py.test -vv
-
 
 endif
