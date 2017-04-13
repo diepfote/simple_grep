@@ -6,7 +6,7 @@ from tests.helper_for_tests import with_f_bwrite, with_f_write, temp_path
 
 def test_get_next_f():
     caller_dir = os.path.dirname(temp_path)
-    f = file_helper.get_next_file(caller_dir, is_recursive=False).next()
+    f = next(file_helper.get_next_file(caller_dir, is_recursive=False))
 
     assert f == temp_path
 
