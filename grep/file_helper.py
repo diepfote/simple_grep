@@ -47,6 +47,8 @@ def is_binary_file(file_path, blocksize=512):
                 return False
 
 
+            # Py3
+            # Files throwing UnicodeDecodeError are seen as binary files.
             if sys.version_info[0] > 2:
                 try:
                     block.decode('ascii')
@@ -55,6 +57,7 @@ def is_binary_file(file_path, blocksize=512):
                 except UnicodeDecodeError:
                     return True
 
+            # Py2
             # Use translate's 'deletechars' argument to efficiently remove all
             # occurrences of _text_characters from the block
             else:
