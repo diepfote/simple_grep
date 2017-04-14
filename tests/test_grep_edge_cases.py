@@ -2,6 +2,8 @@ import os
 import platform
 import pytest
 
+from grep import print_helper
+from grep import file_helper
 from grep.grep import Searcher
 from tests.helper_for_tests import *
 
