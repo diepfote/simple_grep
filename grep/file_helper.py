@@ -46,19 +46,24 @@ def is_binary_file(file_path, blocksize=512):
                 # An empty file is considered a valid text file
                 return False
 
+
             if sys.version_info[0] > 2:
-                return False
-            
+                try:
+                    block.decode('ascii')
+                    return False
+
+                except UnicodeDecodeError:
+                    return True
+
             # Use translate's 'deletechars' argument to efficiently remove all
             # occurrences of _text_characters from the block
-            character_table = (
-                b''.join(chr(i) for i in range(32, 127)) +
-                b'\n\r\t\f\b')
-            nontext = block.translate(None, character_table)
+            else:
+                character_table = (b''.join(chr(i) for i in range(32, 127)) + b'\n\r\t\f\b')
+                nontext = block.translate(None, bytes(character_table))
 
-            assert nontext is not None
+                assert nontext is not None
 
-            return not float(len(nontext)) / len(block) <= 0
+                return not float(len(nontext)) / len(block) <= 0
 
     except IOError as ioerror:
         print ('Error while reading file:\n\t{}'.format(ioerror))
