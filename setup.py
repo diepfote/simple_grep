@@ -8,6 +8,6 @@ setup(
                       'docopt'],
     entry_points={
         'console_scripts': [
-            'grep_redone=grep.__main__:main']
+            'simple_grep=grep.__main__:main']
     },
 )
