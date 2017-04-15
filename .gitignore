@@ -11,6 +11,8 @@ build/
 
 # Virtualenvironment.
 venv/
+venv2/
+venv3/
 
 #.cache Folder.
 .cache/

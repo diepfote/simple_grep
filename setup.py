@@ -1,8 +1,8 @@
 from setuptools import setup
 
 setup(
-    name='Grep Redone',
-    version='0.9',
+    name='Simple Grep',
+    version='0.95',
     packages=['grep'],
     install_requires=['clint',
                       'docopt'],
