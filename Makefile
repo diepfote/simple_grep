@@ -4,17 +4,17 @@ clean:
 	rm -f */*/**.pyc
 
 test: clean
-	py.test -vv --ignore=venv/
+	pytest -vv --ignore=venv2/ --ignore=venv3/
 
 test-report: clean
-	py.test -vv --cov-report term-missing:skip-covered --cov=grep/ --ignore=venv/
+	pytest -vv --cov-report term-missing:skip-covered --cov=grep/ --ignore=venv2/ --ignore=venv3/
 
 
 test2: clean
-	pytest2 -vv --ignore=venv/
+	pytest2 -vv --ignore=venv2/ --ignore=venv3/
 
 test2-report: clean
-	pytest2 -vv --cov-report term-missing:skip-covered --cov=grep/ --ignore=venv/
+	pytest2 -vv --cov-report term-missing:skip-covered --cov=grep/ --ignore=venv2/ --ignore=venv3/
 
 
 else

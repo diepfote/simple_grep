@@ -4,7 +4,7 @@ import os
 import sys
 from clint.textui import colored
 
-import file_helper
+from . import file_helper
 
 
 def generate_output_for_matched_files_full_path(matched_files_and_lines, search_term, is_from_stdin, is_line_by_line):

@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='Simple Grep',
-    version='0.95',
+    version='1.0',
     packages=['grep'],
     install_requires=['clint',
                       'docopt'],
