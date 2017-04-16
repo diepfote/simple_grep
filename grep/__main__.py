@@ -23,7 +23,7 @@ import select
 import platform
 
 from docopt import docopt
-import grep as grep_
+from . import grep as grep_
 
 
 def main():

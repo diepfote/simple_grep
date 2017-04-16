@@ -2,9 +2,17 @@ import os
 import platform
 import pytest
 
+# TESTING
+# import sys
+# import inspect
+# print ("sys.path in test_project/__init__.py\n%s" % sys.path)
+# print ("\ninspect.stack()")
+# print ("||\n\/\n")
+# print (inspect.stack())
+# TESTING
+
 from grep.grep import Searcher
 from tests.helper_for_tests import *
-
 
 def test_instantiating_searcher_class():
     caller_dir = os.curdir
