@@ -1,6 +1,4 @@
-import os
-import platform
-import pytest
+# -*- coding: utf-8 -*-
 
 # TESTING
 # import sys
@@ -16,7 +14,7 @@ from tests.helper_for_tests import *
 
 def test_instantiating_searcher_class():
     caller_dir = os.curdir
-    search_term = "docopt"
+    search_term = 'docopt'
     specific_file = ''
     is_recursive = False
     is_abs_path = False
@@ -47,7 +45,7 @@ def test_run(with_f_write):
     with_f_write.seek(0)
 
     caller_dir = os.path.dirname(with_f_write.name)
-    search_term = "docopt"
+    search_term = 'docopt'
     is_abs_path = True
 
     matched_files = Searcher.run(
@@ -68,9 +66,9 @@ def test_search_f(with_f_write):
     with_f_write.write('sdf\na\nrghsf')
     with_f_write.seek(0)
 
-    search_term = "a"
+    search_term = 'a'
     matched_file = Searcher.search_f(
-        Searcher(caller_dir="",
+        Searcher(caller_dir='',
                  search_term=search_term,
                  specific_file='',
                  is_recursive=False,
@@ -87,10 +85,10 @@ def test_match_f_for_str(with_f_write):
     with_f_write.write('sbiugz8gfzuftzdrdsrts5445tzzftfjguikhoizbtzctzztcuzoh\nsdf\na\n rghsf')
     with_f_write.seek(0)
 
-    search_term = "sdf"
+    search_term = 'sdf'
     is_search_line_by_line = False
     matched_file = Searcher.match_f_for_str(
-        Searcher(caller_dir="",
+        Searcher(caller_dir='',
                  search_term=search_term,
                  specific_file='',
                  is_recursive=False,
@@ -107,10 +105,10 @@ def test_match_f_for_pattern(with_f_write):
     with_f_write.write('sbiugz8gfzuftzdrdsrts5445tzzftfjguikhoizbtzctzztcuzoh\nsdf\na\n rghsf')
     with_f_write.seek(0)
 
-    search_term = "sdf"
+    search_term = 'sdf'
     is_search_line_by_line = False
     matched_file = Searcher.match_f_for_pattern(
-        Searcher(caller_dir="",
+        Searcher(caller_dir='',
                  search_term=search_term,
                  specific_file='',
                  is_recursive=False,
@@ -127,9 +125,9 @@ def test_search_line_by_line_for_term(with_f_write):
     with_f_write.write('sdf\na\nrghsfz')
     with_f_write.seek(0)
 
-    search_term = "a"
+    search_term = 'a'
     matched_lines = Searcher.search_line_by_line_for_term(
-        Searcher(caller_dir="",
+        Searcher(caller_dir='',
                  search_term=search_term,
                  specific_file='',
                  is_recursive=False,
@@ -139,16 +137,16 @@ def test_search_line_by_line_for_term(with_f_write):
                  is_from_stdin=False),
         with_f_write.name)
 
-    assert matched_lines[2] == "a"
+    assert matched_lines[2] == 'a'
 
 
 def test_search_line_by_line_for_regex(with_f_write):
     with_f_write.write('sdf\na\nrghsfz')
     with_f_write.seek(0)
 
-    search_term = "^[d-s]{1,}$"
+    search_term = '^[d-s]{1,}$'
     matched_lines = Searcher.search_line_by_line_for_regex(
-        Searcher(caller_dir="",
+        Searcher(caller_dir='',
                  search_term=search_term,
                  specific_file='',
                  is_recursive=False,
@@ -158,16 +156,19 @@ def test_search_line_by_line_for_regex(with_f_write):
                  is_from_stdin=False),
         with_f_write.name)
 
-    assert matched_lines[1] == "sdf"
+    assert matched_lines[1] == 'sdf'
 
 
+# TODO add support for all binary tests in py3
 def test_match_f_for_pattern_with_binary_file(with_f_bwrite):
-    with_f_bwrite.write(b'\x07\x08\x07')
-    with_f_bwrite.seek(0)
+    if sys.version_info[0] < 3:
+        search_term = '\x07'
 
-    search_term = "\x07"
+    else:
+        search_term = 'ä'
+
     matched_file = Searcher.match_f_for_pattern(
-        Searcher(caller_dir="",
+        Searcher(caller_dir='',
                  search_term=search_term,
                  specific_file='',
                  is_recursive=False,
@@ -181,11 +182,13 @@ def test_match_f_for_pattern_with_binary_file(with_f_bwrite):
 
 
 def test_match_f_for_str_with_binary_file(with_f_bwrite):
-    with_f_bwrite.write(b'\x07\x08\x07')
-    with_f_bwrite.seek(0)
+    if sys.version_info[0] < 3:
+        search_term = '\x07'
 
-    search_term = "\x07"
-    matched_file = Searcher.match_f_for_str(Searcher(caller_dir="",
+    else:
+        search_term = 'ä'
+
+    matched_file = Searcher.match_f_for_str(Searcher(caller_dir='',
                  search_term=search_term,
                  specific_file='',
                  is_recursive=False,
@@ -195,15 +198,18 @@ def test_match_f_for_str_with_binary_file(with_f_bwrite):
                  is_from_stdin=False),
         with_f_bwrite.name)
 
+
     assert matched_file == {'file_matched': ''}
 
 
 def test_search_line_by_line_for_regex_with_binary_file(with_f_bwrite):
-    with_f_bwrite.write(b'\x07\x08\x07')
-    with_f_bwrite.seek(0)
+    if sys.version_info[0] < 3:
+        search_term = '\x07'
 
-    search_term = "\x07"
-    matched_file = Searcher.search_line_by_line_for_regex(Searcher(caller_dir="",
+    else:
+        search_term = 'ä'
+
+    matched_file = Searcher.search_line_by_line_for_regex(Searcher(caller_dir='',
                  search_term=search_term,
                  specific_file='',
                  is_recursive=False,
@@ -217,11 +223,13 @@ def test_search_line_by_line_for_regex_with_binary_file(with_f_bwrite):
 
 
 def test_search_line_by_line_for_term_with_binary_file(with_f_bwrite):
-    with_f_bwrite.write(b'\x07\x08\x07')
-    with_f_bwrite.seek(0)
+    if sys.version_info[0] < 3:
+        search_term = '\x07'
 
-    search_term = "\x07"
-    matched_file = Searcher.search_line_by_line_for_term(Searcher(caller_dir="",
+    else:
+        search_term = 'ä'
+
+    matched_file = Searcher.search_line_by_line_for_term(Searcher(caller_dir='',
                  search_term=search_term,
                  specific_file='',
                  is_recursive=False,
@@ -238,10 +246,10 @@ def test_match_f_for_str_using_specific_file(with_f_write):
     with_f_write.write('sbiugz8gfzuftzdrdsrts5445tzzftfjguikhoizbtzctzztcuzoh\nsdf\na\n rghsf')
     with_f_write.seek(0)
 
-    search_term = "sdf"
+    search_term = 'sdf'
     is_search_line_by_line = False
     matched_files = Searcher.run(
-        Searcher(caller_dir="",
+        Searcher(caller_dir='',
                  search_term=search_term,
                  specific_file=with_f_write.name,
                  is_recursive=False,

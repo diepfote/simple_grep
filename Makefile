@@ -17,6 +17,11 @@ test2-report: clean
 	pytest2 -vv --cov-report term-missing:skip-covered --cov=grep/ --ignore=venv2/ --ignore=venv3/
 
 
+#install2: 
+#    - pip2 install -r requirements.txt
+#    - pip2 install -e .
+
+
 else
 clean:
 	del /s /q *.pyc
