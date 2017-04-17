@@ -12,9 +12,6 @@ def test_get_next_f():
 
 
 def test_is_binary_file_with_binary_file(with_f_bwrite):
-    with_f_bwrite.write(b'\x07\x08\x07')
-    with_f_bwrite.seek(0)
-
     test_result = True
     result = file_helper.is_binary_file(with_f_bwrite.name)
 
@@ -32,9 +29,6 @@ def test_is_binary_file_with_text_file(with_f_write):
 
 
 def test_is_binary_file_null_bytes(with_f_bwrite):
-    with_f_bwrite.write(b'\x00')
-    with_f_bwrite.seek(0)
-
     test_result = True
     result = file_helper.is_binary_file(with_f_bwrite.name)
 

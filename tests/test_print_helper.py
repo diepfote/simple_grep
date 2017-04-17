@@ -59,8 +59,6 @@ def function_for_color_term_in_string(l, term):
 
 def test_outptut_binary_file_matches_full_path(with_f_bwrite):
     matched_items = {with_f_bwrite.name: {'file_matched': ''}}
-    with_f_bwrite.write(b'\x00')
-    with_f_bwrite.seek(0)
 
     test_output = ['Binary file ' + with_f_bwrite.name + ' matches']
     output = print_helper.generate_output_for_matched_files_full_path(matched_items, search_term='aware',
@@ -71,8 +69,6 @@ def test_outptut_binary_file_matches_full_path(with_f_bwrite):
 
 def test_outptut_binary_file_matches_relative_path(with_f_bwrite):
     matched_items = {with_f_bwrite.name: {'file_matched': ''}}
-    with_f_bwrite.write(b'\x00')
-    with_f_bwrite.seek(0)
 
     test_output = ['Binary file ' + with_f_bwrite.name + ' matches']
     output = print_helper.generate_output_for_matched_files_relative_path(matched_items, search_term='aware',
