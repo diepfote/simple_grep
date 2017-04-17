@@ -36,6 +36,7 @@ def with_f_write():
 @pytest.fixture(scope='function')
 def with_f_bwrite():
 
+    #Py2
     if sys.version_info[0] < 3:
         f = open(temp_path, 'wb')
         f.write(b'\x07\x08\x07')
@@ -43,6 +44,7 @@ def with_f_bwrite():
         yield f
         f.close()
 
+    #Py3
     else:
         f = open(temp_path, 'w', encoding='utf-8')
         f.write('ä')
