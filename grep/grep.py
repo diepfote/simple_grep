@@ -4,8 +4,8 @@ import re
 import sre_constants
 import sys
 
-import print_helper
-import file_helper
+from . import print_helper
+from . import file_helper
 
 
 # TODO abstract IO

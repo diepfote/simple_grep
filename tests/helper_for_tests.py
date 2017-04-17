@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
+
 import os
+import sys
 import tempfile
 import pytest
 
@@ -32,10 +35,22 @@ def with_f_write():
 
 @pytest.fixture(scope='function')
 def with_f_bwrite():
-    f = open(temp_path, 'wb')
-    yield f
-    f.close()
 
+    #Py2
+    if sys.version_info[0] < 3:
+        f = open(temp_path, 'wb')
+        f.write(b'\x07\x08\x07')
+        f.seek(0)
+        yield f
+        f.close()
+
+    #Py3
+    else:
+        f = open(temp_path, 'w', encoding='utf-8')
+        f.write('ä')
+        f.seek(0)
+        yield f
+        f.close()
 
 @pytest.fixture(scope='function')
 def with_restricted_file():
