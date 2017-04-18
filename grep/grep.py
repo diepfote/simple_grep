@@ -75,10 +75,17 @@ class Searcher(object):
         matched_file = {}
         try:
             matched_file = self.search_f(file_path)
-        except IOError as ioerror:
-            print ('Error while reading file:\n\t{}'.format(ioerror))
+
+        except IOError as io_error:
+            self.print_file_error(io_error)
+
+        except UnicodeDecodeError as unicode_error:
+            self.print_file_error(unicode_error)
 
         return matched_file
+
+    def print_file_error(self, error):
+        sys.stderr.write('Error while reading file: {error}\n'.format(error=error))
 
     def search_f(self, file_path):
         """Decides which type of search should be executed."""
@@ -125,9 +132,6 @@ class Searcher(object):
             for line in f.readlines():
                 entire_file += line
 
-        except UnicodeDecodeError:
-            pass
-
         finally:
             f.close()
 
@@ -137,6 +141,7 @@ class Searcher(object):
             match = ""
             try:
                 match = matches.pop()
+
             except IndexError:
                 pass
 
@@ -151,7 +156,6 @@ class Searcher(object):
                 if file_helper.is_binary_file(file_path):
                     return {'file_matched': ''}
 
-                shortened_file = ""
                 for index, line in enumerate(entire_file.split()):
 
                     if match in line:
@@ -173,9 +177,6 @@ class Searcher(object):
             for line in f.readlines():
                 entire_file += line
 
-        except UnicodeDecodeError:
-            pass
-
         finally:
             f.close()
 
@@ -184,6 +185,7 @@ class Searcher(object):
             match = ""
             try:
                 match = matches.pop()
+
             except IndexError:
                 pass
 
@@ -198,7 +200,6 @@ class Searcher(object):
                 if file_helper.is_binary_file(file_path):
                     return {'file_matched': ''}
 
-                shortened_file = ""
                 for index, line in enumerate(entire_file.split()):
 
                     if match in line:
@@ -228,9 +229,6 @@ class Searcher(object):
                     split_str = line.split(self.search_term)
                     matched_lines[line_num + 1] = (split_str[0] + self.search_term + split_str[1][:-len(
                         split_str[1]) + len(split_str[0] + self.search_term)]).strip()
-
-        except UnicodeDecodeError:
-            pass
 
         finally:
             f.close()
@@ -270,9 +268,6 @@ class Searcher(object):
                     # Catch empty separator
                     except ValueError:
                         matched_lines[line_num + 1] = line.strip()
-
-        except UnicodeDecodeError:
-            pass
 
         finally:
             f.close()
