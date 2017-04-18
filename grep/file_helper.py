@@ -25,10 +25,9 @@ def get_next_file(caller_dir, is_recursive):
 
 
 def is_binary_file(file_path, blocksize=512):
-    """ Uses heuristics to guess whether the given file is text or binary,
-        by reading a single block of bytes from the file.
-        If more than 0% of the chars in the block are non-text, or there
-        are NUL ('\x00') bytes in the block, assume this is a binary file.
+    """ If more than 0% of the chars in the block are non-text or
+        file can't be decoded by ascii, or there are NUL ('\x00') bytes 
+        in the block, assume this is a binary file.
     """
 
     assert type(file_path) == str

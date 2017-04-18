@@ -124,6 +124,10 @@ class Searcher(object):
             f.seek(0)
             for line in f.readlines():
                 entire_file += line
+
+        except UnicodeDecodeError:
+            pass
+
         finally:
             f.close()
 
@@ -168,6 +172,9 @@ class Searcher(object):
             entire_file = ""
             for line in f.readlines():
                 entire_file += line
+
+        except UnicodeDecodeError:
+            pass
 
         finally:
             f.close()
@@ -222,6 +229,9 @@ class Searcher(object):
                     matched_lines[line_num + 1] = (split_str[0] + self.search_term + split_str[1][:-len(
                         split_str[1]) + len(split_str[0] + self.search_term)]).strip()
 
+        except UnicodeDecodeError:
+            pass
+
         finally:
             f.close()
 
@@ -260,6 +270,9 @@ class Searcher(object):
                     # Catch empty separator
                     except ValueError:
                         matched_lines[line_num + 1] = line.strip()
+
+        except UnicodeDecodeError:
+            pass
 
         finally:
             f.close()
