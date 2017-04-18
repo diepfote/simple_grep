@@ -60,6 +60,7 @@ def generate_output_for_matched_files_full_path(matched_files_and_lines, search_
     for line in color_matched_items(output, search_term):
         print (line)
 
+    # TODO make test appropriate
     return output
 
 
@@ -116,6 +117,7 @@ def generate_output_for_matched_files_relative_path(matched_files_and_lines, sea
     for line in color_matched_items(output, search_term):
         print (line)
 
+    # TODO make test appropriate
     return output
 
 

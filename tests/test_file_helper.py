@@ -13,9 +13,9 @@ def test_get_next_f():
 
 def test_is_binary_file_with_binary_file(with_f_bwrite):
     test_result = True
-    result = file_helper.is_binary_file(with_f_bwrite.name)
+    actual = file_helper.is_binary_file(with_f_bwrite.name)
 
-    assert result == test_result
+    assert actual ==  test_result
 
 
 def test_is_binary_file_with_text_file(with_f_write):
@@ -23,22 +23,32 @@ def test_is_binary_file_with_text_file(with_f_write):
     with_f_write.seek(0)
 
     test_result = False
-    result = file_helper.is_binary_file(with_f_write.name)
+    actual = file_helper.is_binary_file(with_f_write.name)
 
-    assert result == test_result
+    assert actual ==  test_result
 
 
 def test_is_binary_file_null_bytes(with_f_bwrite):
     test_result = True
-    result = file_helper.is_binary_file(with_f_bwrite.name)
+    actual = file_helper.is_binary_file(with_f_bwrite.name)
 
-    assert result == test_result
+    assert actual ==  test_result
 
 
 def test_is_binary_file_empty_file(with_f_write):
     with_f_write.flush()
 
     test_result = False
-    result = file_helper.is_binary_file(with_f_write.name)
+    actual = file_helper.is_binary_file(with_f_write.name)
 
-    assert result == test_result
+    assert actual ==  test_result
+
+
+def test_null_bytes_file_is_binary(with_f_bwrite):
+    with_f_bwrite.write('\x00')
+    with_f_bwrite.seek(0)
+
+    test_result = True
+    actual = file_helper.is_binary_file(with_f_bwrite.name)
+
+    assert actual == test_result
