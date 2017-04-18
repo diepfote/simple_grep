@@ -119,7 +119,6 @@ def generate_output_for_matched_files_relative_path(matched_files_and_lines, sea
     return output
 
 
-# TODO FIX matches for regex patterns printed incorrectly
 def color_term_in_string(func):
     """Colors the last occurrence of a term in a string."""
 
