@@ -10,14 +10,23 @@ clean_venv2:
 clean_venv:
 	rm -rf venv3/
 
+
 new_virtualenv: clean_venv
-	virtualenv2 -p /usr/bin/python3.6 venv3/
+	virtualenv -p /usr/bin/python3.6 venv3/
 
 new_virtualenv2: clean_venv2
-	virtualenv2 -p /usr/bin/python2.7 venv2/
+	virtualenv -p /usr/bin/python2.7 venv2/
+
+
+install:
+	pip3 install -e .
+
+uninstall:
+	pip3 uninstall simple_grep
+
 
 install2:
-	pip2 install --user -e .
+	pip2 install -e .
 
 uninstall2:
 	pip2 uninstall simple_grep
