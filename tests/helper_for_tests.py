@@ -6,7 +6,7 @@ import tempfile
 import pytest
 
 
-# TODO FIX
+# TODO fix global variables
 global temp_dir, fd, temp_path
 temp_dir = tempfile.mkdtemp()
 fd, temp_path = tempfile.mkstemp(dir=temp_dir, suffix='.txt', text=True)
@@ -63,7 +63,7 @@ def with_restricted_file():
     os.chmod(f.name, 0o777)
 
 
-# TODO FIX
+# TODO make clean up less subtle
 @pytest.fixture(scope='function')
 def hotfix_delete_temp_dir(request):
     # Delete directory after tests finished
