@@ -9,6 +9,7 @@ from . import file_helper
 
 
 # TODO abstract IO
+# TODO use attrs library https://glyph.twistedmatrix.com/2016/08/attrs.html
 class Searcher(object):
     """Greps search functionality implemented as a class."""
 
