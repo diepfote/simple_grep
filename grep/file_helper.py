@@ -5,7 +5,7 @@ import sys
 
 
 def get_next_file(caller_dir, is_recursive):
-    """Creates a list containing all files to be searched."""
+    """Generates next file to be searched."""
 
     assert type(caller_dir) is str
     assert type(is_recursive) is bool
@@ -24,9 +24,8 @@ def get_next_file(caller_dir, is_recursive):
             break
 
 
-def is_binary_file(file_path, blocksize=512):
-    """ If more than 0% of the chars in the block are non-text or
-        file can't be decoded by ascii, or there are NUL ('\x00') bytes 
+def is_binary_file(file_path, block_size=512):
+    """ If a file can't be decoded by ascii or there are NULL ('\x00') bytes 
         in the block, assume this is a binary file.
     """
 
@@ -34,9 +33,7 @@ def is_binary_file(file_path, blocksize=512):
 
     try:
         with open(file_path, 'rb') as f:
-            block = f.read(blocksize)
-
-            assert block is not None
+            block = f.read(block_size)
 
             if b'\x00' in block:
                 # Files with null bytes are binary
@@ -45,27 +42,12 @@ def is_binary_file(file_path, blocksize=512):
                 # An empty file is considered a valid text file
                 return False
 
+            try:
+                block.decode('ascii')
+                return False
 
-            # Py3
-            # Files throwing UnicodeDecodeError are seen as binary files.
-            if sys.version_info[0] > 2:
-                try:
-                    block.decode('ascii')
-                    return False
-
-                except UnicodeDecodeError:
-                    return True
-
-            # Py2
-            # Use translate's 'deletechars' argument to efficiently remove all
-            # occurrences of _text_characters from the block
-            else:
-                character_table = (b''.join(chr(i) for i in range(32, 127)) + b'\n\r\t\f\b')
-                nontext = block.translate(None, bytes(character_table))
-
-                assert nontext is not None
-
-                return not float(len(nontext)) / len(block) <= 0
+            except UnicodeDecodeError:
+                return True
 
     except IOError as ioerror:
         print ('Error while reading file:\n\t{}'.format(ioerror))

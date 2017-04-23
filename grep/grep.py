@@ -70,6 +70,10 @@ class Searcher(object):
         else:
             print_helper.generate_output_for_matched_files_relative_path(matched_file, self.search_term, self.is_from_stdin, self.is_search_line_by_line)
 
+    def print_file_error(self, error):
+        """Prints error messages-"""
+        sys.stderr.write('Error while reading file: {error}\n'.format(error=error))
+
     def search_wrapper(self, file_path):
         """Wraps search_f to accommodate for errors."""
 
@@ -85,8 +89,7 @@ class Searcher(object):
 
         return matched_file
 
-    def print_file_error(self, error):
-        sys.stderr.write('Error while reading file: {error}\n'.format(error=error))
+
 
     def search_f(self, file_path):
         """Decides which type of search should be executed."""
@@ -136,7 +139,7 @@ class Searcher(object):
         finally:
             f.close()
 
-            # Match literal str
+            # Match literal str not regex pattern
             regexp = re.compile(re.escape(self.search_term))
             matches = regexp.findall(entire_file)
             match = ""
@@ -166,7 +169,7 @@ class Searcher(object):
             return matched
 
     def match_f_for_pattern(self, file_path):
-        """Search a file for a pattern."""
+        """Search a file using a pattern."""
 
         assert type(file_path) == str
 
@@ -210,7 +213,10 @@ class Searcher(object):
             return matched
 
     def search_line_by_line_for_term(self, file_path):
-        """Search a single file for occurrences of a string; each line is searched separately."""
+        """
+            Search a single file for occurrences of a string.
+            Each line is searched separately.
+        """
 
         assert type(file_path) == str
 
@@ -237,7 +243,10 @@ class Searcher(object):
         return matched_lines
 
     def search_line_by_line_for_regex(self, file_path):
-        """Search a single file using a regex pattern; each line is searched separately."""
+        """
+            Search a file using a regex pattern.
+            Each line is searched separately.
+        """
 
         assert type(file_path) == str
 

@@ -1,4 +1,4 @@
-"""Print matched items for grep_redone."""
+"""Print matched items for grep.py."""
 
 import os
 import sys
@@ -56,7 +56,7 @@ def generate_output_for_matched_files_full_path(matched_files_and_lines, search_
     # Remove last occurrence of new line
     output = [''.join(f.rsplit('\n', 1)) for f in output]
 
-    # Color term and print
+    # Color and print term
     for line in color_matched_items(output, search_term):
         print (line)
 
@@ -113,7 +113,7 @@ def generate_output_for_matched_files_relative_path(matched_files_and_lines, sea
     # Remove last occurrence of new line
     output = [''.join(f.rsplit('\n', 1)) for f in output]
 
-    # Color term and print
+    # Color and print term
     for line in color_matched_items(output, search_term):
         print (line)
 

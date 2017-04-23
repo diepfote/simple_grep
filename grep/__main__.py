@@ -27,7 +27,7 @@ from . import grep as grep_
 
 
 def main():
-    """Entry point for grep_redone."""
+    """Entry point for simple_grep."""
 
     temp_dir = tempfile.mkdtemp()
     fd, temp_f = tempfile.mkstemp(dir=temp_dir, suffix='.tmp', text=True)
@@ -36,8 +36,6 @@ def main():
     try:
         args = docopt(__doc__)
 
-        # If there's input ready, do something, else do something
-        # else. Note timeout is zero so select won't block at all.
         if platform.system() == 'Windows':
             f = args['FILE_TO_SEARCH']
             if f:
@@ -49,6 +47,7 @@ def main():
                 directory = os.path.abspath(os.path.curdir)
 
         else:
+            # Timeout is zero so select won't block at all.
             is_from_stdin = sys.stdin in select.select([sys.stdin], [], [], 0)[0]
             if is_from_stdin:
                 f = open(temp_f, 'w')
@@ -60,7 +59,7 @@ def main():
                     f.close()
                     assert type(directory) == str
 
-            else:  # An empty line means stdin has been closed.
+            else:
                 # Check if the specified path is a directory.
                 f = args['FILE_TO_SEARCH']
                 if f:
