@@ -45,10 +45,17 @@ def test_is_binary_file_empty_file(with_f_write):
 
 
 def test_null_bytes_file_is_binary(with_f_bwrite):
-    with_f_bwrite.write('\x00')
-    with_f_bwrite.seek(0)
+    name = with_f_bwrite.name
+    with_f_bwrite.close()
+    f = open(name, 'wb')
+    try:
+        f.write(b'\x00')
+        f.seek(0)
+
+    finally:
+        f.close()
 
     test_result = True
-    actual = file_helper.is_binary_file(with_f_bwrite.name)
+    actual = file_helper.is_binary_file(name)
 
     assert actual == test_result

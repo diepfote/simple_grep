@@ -1,14 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# TESTING
-# import sys
-# import inspect
-# print ("sys.path in test_project/__init__.py\n%s" % sys.path)
-# print ("\ninspect.stack()")
-# print ("||\n\/\n")
-# print (inspect.stack())
-# TESTING
-
 from grep.grep import Searcher
 from tests.helper_for_tests import *
 
@@ -159,13 +150,8 @@ def test_search_line_by_line_for_regex(with_f_write):
     assert matched_lines[1] == 'sdf'
 
 
-# TODO add support for all binary tests in py3
 def test_match_f_for_pattern_with_binary_file(with_f_bwrite):
-    if sys.version_info[0] < 3:
-        search_term = '\x07'
-
-    else:
-        search_term = 'ä'
+    search_term = 'ä'
 
     matched_file = Searcher.match_f_for_pattern(
         Searcher(caller_dir='',
@@ -182,11 +168,7 @@ def test_match_f_for_pattern_with_binary_file(with_f_bwrite):
 
 
 def test_match_f_for_str_with_binary_file(with_f_bwrite):
-    if sys.version_info[0] < 3:
-        search_term = '\x07'
-
-    else:
-        search_term = 'ä'
+    search_term = 'ä'
 
     matched_file = Searcher.match_f_for_str(Searcher(caller_dir='',
                  search_term=search_term,
@@ -203,11 +185,7 @@ def test_match_f_for_str_with_binary_file(with_f_bwrite):
 
 
 def test_search_line_by_line_for_regex_with_binary_file(with_f_bwrite):
-    if sys.version_info[0] < 3:
-        search_term = '\x07'
-
-    else:
-        search_term = 'ä'
+    search_term = 'ä'
 
     matched_file = Searcher.search_line_by_line_for_regex(Searcher(caller_dir='',
                  search_term=search_term,
@@ -223,11 +201,7 @@ def test_search_line_by_line_for_regex_with_binary_file(with_f_bwrite):
 
 
 def test_search_line_by_line_for_term_with_binary_file(with_f_bwrite):
-    if sys.version_info[0] < 3:
-        search_term = '\x07'
-
-    else:
-        search_term = 'ä'
+    search_term = 'ä'
 
     matched_file = Searcher.search_line_by_line_for_term(Searcher(caller_dir='',
                  search_term=search_term,
