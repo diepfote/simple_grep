@@ -56,7 +56,7 @@ def with_f_bwrite():
 def with_restricted_file():
     f = open(temp_path, 'r')
     # Leading zero ensures int is treated as octal
-    os.chmod(f.name, 0000)
+    os.chmod(f.name, 0o000)
     yield temp_dir
 
     # Leading zero ensures int is treated as octal
