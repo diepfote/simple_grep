@@ -40,6 +40,24 @@ class Searcher(object):
         self.is_search_line_by_line = is_search_line_by_line
         self.is_from_stdin = is_from_stdin
 
+    def __repr__(self):
+        return (self.__class__.__name__ +
+                ('(caller_dir="{}",'
+                 ' search_term="{}", '
+                 'specific_file="{}", '
+                 'is_recursive={}, '
+                 'is_abs_path={},'
+                 ' is_regex_pattern={}, '
+                 'is_search_line_by_line={}, '
+                 'is_from_stdin={})'.format(self.caller_dir,
+                                            self.search_term,
+                                            self.specific_file,
+                                            self.is_recursive,
+                                            self.is_abs_path,
+                                            self.is_regex_pattern,
+                                            self.is_search_line_by_line,
+                                            self.is_from_stdin)))
+
     def run(self):
         """Runs search_wrapper using a file if specified.."""
 
@@ -88,8 +106,6 @@ class Searcher(object):
             self.print_file_error(unicode_error)
 
         return matched_file
-
-
 
     def search_f(self, file_path):
         """Decides which type of search should be executed."""
