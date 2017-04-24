@@ -54,6 +54,6 @@ clean:
 	del /s /q *.pyc
 
 test: clean
-	py.test -vv
+	python -m pytest -vv --ignore=venv2/ --ignore=venv3/
 
 endif
