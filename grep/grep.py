@@ -89,8 +89,10 @@ class Searcher(object):
             print_helper.generate_output_for_matched_files_relative_path(matched_file, self.search_term, self.is_from_stdin, self.is_search_line_by_line)
 
     def print_file_error(self, error):
-        """Prints error messages-"""
         sys.stderr.write('Error while reading file: {error}\n'.format(error=error))
+
+    def print_regex_error(self, error):
+        sys.stderr.write('Regex error occurred: {error}\n'.format(error=error))
 
     def search_wrapper(self, file_path):
         """Wraps search_f to accommodate for errors."""
@@ -118,8 +120,8 @@ class Searcher(object):
                 try:
                     matched_line_dict = self.search_line_by_line_for_regex(file_path)
 
-                except sre_constants.error as error:
-                    print ("Regex expression error:\n\t%s" % error)
+                except sre_constants.error as regex_error:
+                    self.print_regex_error(regex_error)
 
             else:
                 matched_line_dict = self.search_line_by_line_for_term(file_path)
@@ -129,8 +131,8 @@ class Searcher(object):
                 try:
                     matched_line_dict = self.match_f_for_pattern(file_path)
 
-                except sre_constants.error as error:
-                    print ("Regex expression error:\n\t%s" % error)
+                except sre_constants.error as regex_error:
+                    self.print_regex_error(regex_error)
 
             else:
                 matched_line_dict = self.match_f_for_str(file_path)
