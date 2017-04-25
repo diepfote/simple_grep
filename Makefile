@@ -1,8 +1,6 @@
 ifeq ($(shell uname), $(or Linux, Darwin))
 clean:
-	rm -f */**.pyc
-	rm -f */*/**.pyc
-
+	rm -f */**.pyc */*/**.pyc
 
 clean_venv2:
 	rm -rf venv2/
