@@ -11,3 +11,4 @@ setup(
             'simple_grep=grep.__main__:main']
     },
 )
+
