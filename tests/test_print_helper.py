@@ -99,6 +99,6 @@ def test_printing_for_searching_stdin_abs_path():
     assert actual == test_output
 
 
-# TODO FIX calling hotfix_delete_temp_dir manually
+# TODO do not call hotfix_delete_temp_dir manually
 def test_hotfix_delete_temp_dir(hotfix_delete_temp_dir):
     pass
