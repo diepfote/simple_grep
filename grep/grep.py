@@ -1,4 +1,4 @@
-"""Search functionality for grep_redone."""
+"""Search functionality for simple_grep."""
 
 import re
 import sre_constants
@@ -11,7 +11,7 @@ from . import file_helper
 # TODO abstract IO
 # TODO use attrs library https://glyph.twistedmatrix.com/2016/08/attrs.html
 class Searcher(object):
-	"""Greps search functionality implemented as a class."""
+	"""Grep's search functionality implemented as a class."""
 
 
 	def __init__(self, caller_dir,
@@ -62,7 +62,7 @@ class Searcher(object):
 
 
 	def run(self):
-		"""Runs search_wrapper using a file if specified.."""
+		"""Starts a search (using a file when specified)"""
 
 		all_matched = []
 		if self.specific_file == '':
@@ -84,7 +84,7 @@ class Searcher(object):
 
 
 	def printing(self, matched_file):
-		"""Prints a matched file or line."""
+		"""Prints a matching file or line."""
 
 		if self.is_abs_path:
 			print_helper.generate_output_for_matched_files_full_path(matched_file, self.search_term, self.is_from_stdin,
@@ -121,7 +121,7 @@ class Searcher(object):
 
 
 	def search_f(self, file_path):
-		"""Decides which type of search should be executed."""
+		"""Starts a search."""
 
 		assert type(file_path) == str
 
@@ -155,7 +155,7 @@ class Searcher(object):
 
 
 	def match_f_for_str(self, file_path):
-		"""Search a file for the occurrence of a string."""
+		"""Searches a file for the occurrence of a string."""
 
 		assert type(file_path) == str
 
@@ -169,8 +169,7 @@ class Searcher(object):
 		finally:
 			f.close()
 
-			# Match literal str not regex pattern
-			regexp = re.compile(re.escape(self.search_term))
+			regexp = re.compile(re.escape(self.search_term)) # Match literal str not regex pattern
 			matches = regexp.findall(entire_file)
 			match = ""
 			try:
@@ -200,7 +199,7 @@ class Searcher(object):
 
 
 	def match_f_for_pattern(self, file_path):
-		"""Search a file using a pattern."""
+		"""Searches a file using a pattern."""
 
 		assert type(file_path) == str
 
@@ -246,7 +245,7 @@ class Searcher(object):
 
 	def search_line_by_line_for_term(self, file_path):
 		"""
-			Search a single file for occurrences of a string.
+			Searches a single file for occurrences of a string.
 			Each line is searched separately.
 		"""
 
@@ -277,7 +276,7 @@ class Searcher(object):
 
 	def search_line_by_line_for_regex(self, file_path):
 		"""
-			Search a file using a regex pattern.
+			Searches a file using a regex pattern.
 			Each line is searched separately.
 		"""
 

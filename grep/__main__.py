@@ -1,7 +1,7 @@
 """
-grep_redone, version 0.9 
+simple_grep, version 1
 
-usage: grep_redone [-rnpe] [SEARCH_TERM] [FILE_TO_SEARCH] 
+usage: simple_grep [-rnpe] [SEARCH_TERM] [FILE_TO_SEARCH]
 
 Arguments:
   SEARCH_TERM
@@ -46,8 +46,7 @@ def main():
 				directory = os.path.abspath(os.path.curdir)
 
 		else:
-			# Timeout is zero so select won't block at all.
-			is_from_stdin = sys.stdin in select.select([sys.stdin], [], [], 0)[0]
+			is_from_stdin = sys.stdin in select.select([sys.stdin], [], [], 0)[0]  # Non-blocking select
 			if is_from_stdin:
 				f = open(temp_f, 'w')
 				try:
@@ -59,9 +58,8 @@ def main():
 					assert type(directory) == str
 
 			else:
-				# Check if the specified path is a directory.
 				f = args['FILE_TO_SEARCH']
-				if f:
+				if f:  # Is specified path a directory
 					if os.path.isdir(os.path.abspath(f)):
 						directory = f
 						args['FILE_TO_SEARCH'] = ''

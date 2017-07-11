@@ -23,7 +23,7 @@ replaces=()
 backup=()
 options=(!emptydirs)
 install=
-source=('git+ssh://git@bitbucket/florianbegusch/simple_grep.git')
+source=('git+ssh://git@github.com/florianbegusch/simple_grep.git')
 
 # Temporary
 md5sums=('SKIP')
