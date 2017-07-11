@@ -15,7 +15,9 @@ Simple grep is tested on:
 Running it
 ----------
 
-python -m __main__.py
+.. code-block:: bash
+
+    $ python -m grep.__main__ -h
 
 
 Installation
@@ -24,12 +26,15 @@ Installation
 On any system:
 
 .. code-block:: bash
-pip install .
+
+    $ pip install .
 
 
 On Arch:
 
 .. code-block:: bash
-$ makepkg
-$ sudo pacman -U simple_grep-1-1-x86_64.pkg.tar.xz
+
+    $ makepkg
+
+    $ sudo pacman -U simple_grep-1-1-x86_64.pkg.tar.xz
 
