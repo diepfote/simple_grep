@@ -25,8 +25,9 @@ def get_next_file(caller_dir, is_recursive):
 
 
 def is_binary_file(file_path, block_size=512):
-	""" If a file can't be decoded by ascii or there are NULL ('\x00') bytes
-		in the block, assume this is a binary file.
+	"""
+		If a file can't be decoded by ascii or there are NULL ('\x00') bytes
+		assume this is a binary file.
 	"""
 
 	assert type(file_path) == str
@@ -36,11 +37,9 @@ def is_binary_file(file_path, block_size=512):
 			block = f.read(block_size)
 
 			if b'\x00' in block:
-				# Files with null bytes are binary
-				return True
+				return True # Consider files containing null bytes binary
 			elif not block:
-				# An empty file is considered a valid text file
-				return False
+				return False # Consider an empty file a text file
 
 			try:
 				block.decode('ascii')
