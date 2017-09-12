@@ -15,7 +15,7 @@ def usage():
   version = subprocess.check_output((["grep", "-Eo", "[0-9].[0-9]"]), stdin=version_string.stdout)
   version_string.wait()
 
-  print('simple_grep, version ' + version)
+  print('simple_grep, version ' + version.decode('utf-8'))
   print('')
   print('usage: simple_grep [-rnpe] [SEARCH_TERM] [FILE_TO_SEARCH]')
   print('')
@@ -48,7 +48,8 @@ def main():
     
     except getopt.GetoptError as err:
       print(str(err))
-      print usage()
+      usage()
+      raise KeyboardInterrupt
  
     if len(args) < 1:
       args = ['', '']
