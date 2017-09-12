@@ -1,7 +1,7 @@
 Simple grep
 ^^^^^^^^^^^
 
-Simple grep is a minimal implementation of grep. It is entirely written in Python.
+Simple grep is a minimal implementation of grep entirely written in Python.
 
 Most notable alteration: No file or directory specified implies searching in current directory.
 Missing features: stdin support for Windows.
@@ -36,5 +36,5 @@ On Arch:
 
     $ makepkg
 
-    $ sudo pacman -U simple_grep-1-1-x86_64.pkg.tar.xz
+    $ sudo pacman -U simple_grep-1.1-1-x86_64.pkg.tar.xz
 
