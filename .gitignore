@@ -33,3 +33,4 @@ venv3/
 # restricted files
 *.restricted
 
+*.swp

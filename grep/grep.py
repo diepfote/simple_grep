@@ -11,307 +11,299 @@ from . import file_helper
 # TODO abstract IO
 # TODO use attrs library https://glyph.twistedmatrix.com/2016/08/attrs.html
 class Searcher(object):
-	"""Grep's search functionality implemented as a class."""
-
-
-	def __init__(self, caller_dir,
-	             search_term,
-	             specific_file,
-	             is_recursive,
-	             is_abs_path,
-	             is_regex_pattern,
-	             is_search_line_by_line,
-	             is_from_stdin):
+    """Grep's search functionality implemented as a class."""
+
+    def __init__(self, caller_dir,
+                 search_term,
+                 specific_file,
+                 is_recursive,
+                 is_abs_path,
+                 is_regex_pattern,
+                 is_search_line_by_line,
+                 is_from_stdin):
+
+        assert type(caller_dir) == str
+        assert type(search_term) == str
+        assert type(specific_file) == str
+        assert type(is_recursive) == bool
+        assert type(is_abs_path) == bool
+        assert type(is_regex_pattern) == bool
+        assert type(is_search_line_by_line) == bool
+        assert type(is_from_stdin) == bool
+
+        self.caller_dir = caller_dir
+        self.search_term = search_term
+        self.specific_file = specific_file
+        self.is_recursive = is_recursive
+        self.is_abs_path = is_abs_path
+        self.is_regex_pattern = is_regex_pattern
+        self.is_search_line_by_line = is_search_line_by_line
+        self.is_from_stdin = is_from_stdin
+
+    def __repr__(self):
+        return (self.__class__.__name__ +
+                ('(caller_dir="{}",'
+                 ' search_term="{}", '
+                 'specific_file="{}", '
+                 'is_recursive={}, '
+                 'is_abs_path={},'
+                 ' is_regex_pattern={}, '
+                 'is_search_line_by_line={}, '
+                 'is_from_stdin={})'.format(self.caller_dir,
+                                            self.search_term,
+                                            self.specific_file,
+                                            self.is_recursive,
+                                            self.is_abs_path,
+                                            self.is_regex_pattern,
+                                            self.is_search_line_by_line,
+                                            self.is_from_stdin)))
+
+    def run(self):
+        """Starts a search (using a file when specified)"""
+
+        all_matched = []
+        if self.specific_file == '':
+            for f in file_helper.get_next_file(self.caller_dir, self.is_recursive):
+                matched_file = self.search_wrapper(f)
+
+                if matched_file:
+                    self.printing(matched_file)
+                    all_matched.extend(matched_file)
+
+        else:
+            matched_file = self.search_wrapper(self.specific_file)
+
+            if matched_file:
+                self.printing(matched_file)
+                all_matched.extend(matched_file)
+
+        return all_matched
+
+    def printing(self, matched_file):
+        """Prints a matching file or line."""
+
+        if self.is_abs_path:
+            print_helper.generate_output_for_matched_files_full_path(matched_file, self.search_term, self.is_from_stdin,
+                                                                     self.is_search_line_by_line)
+
+        else:
+            print_helper.generate_output_for_matched_files_relative_path(matched_file, self.search_term,
+                                                                         self.is_from_stdin,
+                                                                         self.is_search_line_by_line)
+
+    def print_file_error(self, error):
+        sys.stderr.write(
+            'Error while reading file: {error}\n'.format(error=error))
+
+    def print_regex_error(self, error):
+        sys.stderr.write('Regex error occurred: {error}\n'.format(error=error))
+
+    def search_wrapper(self, file_path):
+        """Wraps search_f to accommodate for errors."""
+
+        matched_file = {}
+        try:
+            matched_file = self.search_f(file_path)
+
+        except IOError as io_error:
+            self.print_file_error(io_error)
+
+        except UnicodeDecodeError as unicode_error:
+            self.print_file_error(unicode_error)
+
+        return matched_file
 
-		assert type(caller_dir) == str
-		assert type(search_term) == str
-		assert type(specific_file) == str
-		assert type(is_recursive) == bool
-		assert type(is_abs_path) == bool
-		assert type(is_regex_pattern) == bool
-		assert type(is_search_line_by_line) == bool
-		assert type(is_from_stdin) == bool
+    def search_f(self, file_path):
+        """Starts a search."""
 
-		self.caller_dir = caller_dir
-		self.search_term = search_term
-		self.specific_file = specific_file
-		self.is_recursive = is_recursive
-		self.is_abs_path = is_abs_path
-		self.is_regex_pattern = is_regex_pattern
-		self.is_search_line_by_line = is_search_line_by_line
-		self.is_from_stdin = is_from_stdin
+        assert type(file_path) == str
 
+        matched_line_dict = {}
+        if self.is_search_line_by_line:
+            if self.is_regex_pattern:
+                try:
+                    matched_line_dict = self.search_line_by_line_for_regex(
+                        file_path)
 
-	def __repr__(self):
-		return (self.__class__.__name__ +
-		        ('(caller_dir="{}",'
-		         ' search_term="{}", '
-		         'specific_file="{}", '
-		         'is_recursive={}, '
-		         'is_abs_path={},'
-		         ' is_regex_pattern={}, '
-		         'is_search_line_by_line={}, '
-		         'is_from_stdin={})'.format(self.caller_dir,
-		                                    self.search_term,
-		                                    self.specific_file,
-		                                    self.is_recursive,
-		                                    self.is_abs_path,
-		                                    self.is_regex_pattern,
-		                                    self.is_search_line_by_line,
-		                                    self.is_from_stdin)))
+                except sre_constants.error as regex_error:
+                    self.print_regex_error(regex_error)
 
+            else:
+                matched_line_dict = self.search_line_by_line_for_term(
+                    file_path)
 
-	def run(self):
-		"""Starts a search (using a file when specified)"""
+        else:
+            if self.is_regex_pattern:
+                try:
+                    matched_line_dict = self.match_f_for_pattern(file_path)
 
-		all_matched = []
-		if self.specific_file == '':
-			for f in file_helper.get_next_file(self.caller_dir, self.is_recursive):
-				matched_file = self.search_wrapper(f)
+                except sre_constants.error as regex_error:
+                    self.print_regex_error(regex_error)
 
-				if matched_file:
-					self.printing(matched_file)
-					all_matched.extend(matched_file)
+            else:
+                matched_line_dict = self.match_f_for_str(file_path)
 
-		else:
-			matched_file = self.search_wrapper(self.specific_file)
+        if matched_line_dict:
+            return {file_path: matched_line_dict}
+        else:
+            return None
 
-			if matched_file:
-				self.printing(matched_file)
-				all_matched.extend(matched_file)
+    def match_f_for_str(self, file_path):
+        """Searches a file for the occurrence of a string."""
 
-		return all_matched
+        assert type(file_path) == str
 
+        entire_file = ''
+        f = open(file_path, 'r')
+        try:
+            f.seek(0)
+            for line in f.readlines():
+                entire_file += line
 
-	def printing(self, matched_file):
-		"""Prints a matching file or line."""
+        finally:
+            f.close()
 
-		if self.is_abs_path:
-			print_helper.generate_output_for_matched_files_full_path(matched_file, self.search_term, self.is_from_stdin,
-			                                                         self.is_search_line_by_line)
+            # Match literal str not regex pattern
+            regexp = re.compile(re.escape(self.search_term))
+            matches = regexp.findall(entire_file)
+            match = ""
+            try:
+                match = matches.pop()
 
-		else:
-			print_helper.generate_output_for_matched_files_relative_path(matched_file, self.search_term,
-			                                                             self.is_from_stdin,
-			                                                             self.is_search_line_by_line)
+            except IndexError:
+                pass
 
+            matched = {}
+            previous = []
 
-	def print_file_error(self, error):
-		sys.stderr.write('Error while reading file: {error}\n'.format(error=error))
+            if self.search_term == '':
+                return {'file': entire_file}
 
+            if match:
+                # Do not include matches if file is binary
+                if file_helper.is_binary_file(file_path):
+                    return {'file_matched': ''}
 
-	def print_regex_error(self, error):
-		sys.stderr.write('Regex error occurred: {error}\n'.format(error=error))
+                for index, line in enumerate(entire_file.split()):
 
+                    if match in line:
+                        previous.append(line)
+                        matched[index] = line
 
-	def search_wrapper(self, file_path):
-		"""Wraps search_f to accommodate for errors."""
+            return matched
 
-		matched_file = {}
-		try:
-			matched_file = self.search_f(file_path)
+    def match_f_for_pattern(self, file_path):
+        """Searches a file using a pattern."""
 
-		except IOError as io_error:
-			self.print_file_error(io_error)
+        assert type(file_path) == str
 
-		except UnicodeDecodeError as unicode_error:
-			self.print_file_error(unicode_error)
+        entire_file = ''
+        f = open(file_path, 'r')
+        try:
+            f.seek(0)
+            entire_file = ""
+            for line in f.readlines():
+                entire_file += line
 
-		return matched_file
+        finally:
+            f.close()
 
+            regexp = re.compile(self.search_term)
+            matches = regexp.findall(entire_file)
+            match = ""
+            try:
+                match = matches.pop()
 
-	def search_f(self, file_path):
-		"""Starts a search."""
+            except IndexError:
+                pass
 
-		assert type(file_path) == str
+            previous = []
+            matched = {}
 
-		matched_line_dict = {}
-		if self.is_search_line_by_line:
-			if self.is_regex_pattern:
-				try:
-					matched_line_dict = self.search_line_by_line_for_regex(file_path)
+            if self.search_term == '':
+                return {'file': entire_file}
 
-				except sre_constants.error as regex_error:
-					self.print_regex_error(regex_error)
+            if match:
+                # Do not include matches if file is binary
+                if file_helper.is_binary_file(file_path):
+                    return {'file_matched': ''}
 
-			else:
-				matched_line_dict = self.search_line_by_line_for_term(file_path)
+                for index, line in enumerate(entire_file.split()):
 
-		else:
-			if self.is_regex_pattern:
-				try:
-					matched_line_dict = self.match_f_for_pattern(file_path)
+                    if match in line:
+                        previous.append(line)
+                        matched[index] = line
 
-				except sre_constants.error as regex_error:
-					self.print_regex_error(regex_error)
+            return matched
 
-			else:
-				matched_line_dict = self.match_f_for_str(file_path)
+    def search_line_by_line_for_term(self, file_path):
+        """
+                Searches a single file for occurrences of a string.
+                Each line is searched separately.
+        """
 
-		if matched_line_dict:
-			return {file_path: matched_line_dict}
-		else:
-			return None
+        assert type(file_path) == str
 
+        matched_lines = {}
+        f = open(file_path, 'r')
+        try:
+            for line_num, line in enumerate(f):
 
-	def match_f_for_str(self, file_path):
-		"""Searches a file for the occurrence of a string."""
+                if self.search_term == '':
+                    matched_lines[line_num + 1] = line.strip()
 
-		assert type(file_path) == str
+                elif self.search_term in line:
+                    # Do not include matches if file is binary
+                    if file_helper.is_binary_file(file_path):
+                        return {'file_matched': ''}
 
-		entire_file = ''
-		f = open(file_path, 'r')
-		try:
-			f.seek(0)
-			for line in f.readlines():
-				entire_file += line
+                    split_str = line.split(self.search_term)
+                    matched_lines[line_num + 1] = (split_str[0] + self.search_term + split_str[1][:-len(
+                        split_str[1]) + len(split_str[0] + self.search_term)]).strip()
 
-		finally:
-			f.close()
+        finally:
+            f.close()
 
-			regexp = re.compile(re.escape(self.search_term)) # Match literal str not regex pattern
-			matches = regexp.findall(entire_file)
-			match = ""
-			try:
-				match = matches.pop()
+        return matched_lines
 
-			except IndexError:
-				pass
+    def search_line_by_line_for_regex(self, file_path):
+        """
+                Searches a file using a regex pattern.
+                Each line is searched separately.
+        """
 
-			matched = {}
-			previous = []
+        assert type(file_path) == str
 
-			if self.search_term == '':
-				return {'file': entire_file}
+        regexp = re.compile(self.search_term)
+        matched_lines = {}
 
-			if match:
-				# Do not include matches if file is binary
-				if file_helper.is_binary_file(file_path):
-					return {'file_matched': ''}
+        f = open(file_path, 'r')
+        try:
+            for line_num, line in enumerate(f):
 
-				for index, line in enumerate(entire_file.split()):
+                if self.search_term == '':
+                    matched_lines[line_num + 1] = line.strip()
 
-					if match in line:
-						previous.append(line)
-						matched[index] = line
+                match = regexp.findall(line)
+                if match:
+                    # Do not include matches if file is binary
+                    if file_helper.is_binary_file(file_path):
+                        return {'file_matched': ''}
 
-			return matched
+                    for row in match:
+                        if not row:
+                            del row
 
+                    try:
+                        split_str = line.split(match[0])
+                        matched_lines[line_num + 1] = (split_str[0] + match[0] + split_str[1][:-len(split_str[1]) + len(
+                            split_str[0] + match[0])]).strip()
 
-	def match_f_for_pattern(self, file_path):
-		"""Searches a file using a pattern."""
+                    # Catch empty separator
+                    except ValueError:
+                        matched_lines[line_num + 1] = line.strip()
 
-		assert type(file_path) == str
+        finally:
+            f.close()
 
-		entire_file = ''
-		f = open(file_path, 'r')
-		try:
-			f.seek(0)
-			entire_file = ""
-			for line in f.readlines():
-				entire_file += line
-
-		finally:
-			f.close()
-
-			regexp = re.compile(self.search_term)
-			matches = regexp.findall(entire_file)
-			match = ""
-			try:
-				match = matches.pop()
-
-			except IndexError:
-				pass
-
-			previous = []
-			matched = {}
-
-			if self.search_term == '':
-				return {'file': entire_file}
-
-			if match:
-				# Do not include matches if file is binary
-				if file_helper.is_binary_file(file_path):
-					return {'file_matched': ''}
-
-				for index, line in enumerate(entire_file.split()):
-
-					if match in line:
-						previous.append(line)
-						matched[index] = line
-
-			return matched
-
-
-	def search_line_by_line_for_term(self, file_path):
-		"""
-			Searches a single file for occurrences of a string.
-			Each line is searched separately.
-		"""
-
-		assert type(file_path) == str
-
-		matched_lines = {}
-		f = open(file_path, 'r')
-		try:
-			for line_num, line in enumerate(f):
-
-				if self.search_term == '':
-					matched_lines[line_num + 1] = line.strip()
-
-				elif self.search_term in line:
-					# Do not include matches if file is binary
-					if file_helper.is_binary_file(file_path):
-						return {'file_matched': ''}
-
-					split_str = line.split(self.search_term)
-					matched_lines[line_num + 1] = (split_str[0] + self.search_term + split_str[1][:-len(
-						split_str[1]) + len(split_str[0] + self.search_term)]).strip()
-
-		finally:
-			f.close()
-
-		return matched_lines
-
-
-	def search_line_by_line_for_regex(self, file_path):
-		"""
-			Searches a file using a regex pattern.
-			Each line is searched separately.
-		"""
-
-		assert type(file_path) == str
-
-		regexp = re.compile(self.search_term)
-		matched_lines = {}
-
-		f = open(file_path, 'r')
-		try:
-			for line_num, line in enumerate(f):
-
-				if self.search_term == '':
-					matched_lines[line_num + 1] = line.strip()
-
-				match = regexp.findall(line)
-				if match:
-					# Do not include matches if file is binary
-					if file_helper.is_binary_file(file_path):
-						return {'file_matched': ''}
-
-					for row in match:
-						if not row:
-							del row
-
-					try:
-						split_str = line.split(match[0])
-						matched_lines[line_num + 1] = (split_str[0] + match[0] + split_str[1][:-len(split_str[1]) + len(
-							split_str[0] + match[0])]).strip()
-
-					# Catch empty separator
-					except ValueError:
-						matched_lines[line_num + 1] = line.strip()
-
-		finally:
-			f.close()
-
-		return matched_lines
+        return matched_lines
