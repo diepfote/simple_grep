@@ -8,7 +8,7 @@
 
 # Maintainer: Your Name <youremail@domain.com>
 pkgname=simple_grep
-pkgver=1
+pkgver=1.1
 pkgrel=1
 pkgdesc=""
 arch=('i686' 'x86_64')
