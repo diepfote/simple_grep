@@ -14,7 +14,7 @@ def usage():
     version_string = subprocess.Popen(
         ("grep", "version", "setup.py"), stdout=subprocess.PIPE)
     version = subprocess.check_output(
-        (["grep", "-Eo", "[0-9].[0-9]"]), stdin=version_string.stdout)
+        (["grep", "-Eo", "[0-9].[0-9]{1,}"]), stdin=version_string.stdout)
     version_string.wait()
 
     print('simple_grep, version ' + version.decode('utf-8'))

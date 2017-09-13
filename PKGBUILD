@@ -8,14 +8,14 @@
 
 # Maintainer: Your Name <youremail@domain.com>
 pkgname=simple_grep
-pkgver=1.1
-pkgrel=1
+pkgver=1
+pkgrel=11
 pkgdesc=""
 arch=('i686' 'x86_64')
 url=""
 license=()
 groups=()
-depends=('python' 'python-setuptools' 'python-clint' 'python-docopt')
+depends=('python' 'python-setuptools')
 makedepends=()
 provides=('simple_grep')
 conflicts=()
@@ -29,8 +29,8 @@ source=('git+ssh://git@github.com/florianbegusch/simple_grep.git')
 md5sums=('SKIP')
 
 build() {
-	rm -rf $pkgname-1	
-	mv $pkgname $pkgname-1	
+	rm -rf $pkgname-$pkgver	
+	mv $pkgname $pkgname-$pkgver
 
 	rm -rf $pkgname
 }

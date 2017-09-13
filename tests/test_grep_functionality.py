@@ -76,7 +76,7 @@ def test_match_f_for_str(with_f_write):
 
     search_term = 'sdf'
     is_search_line_by_line = False
-    matched_file = Searcher.match_f_for_str(
+    matched_file = Searcher.match_f_for_str_wrapper(
         Searcher(
             caller_dir='',
             search_term=search_term,
@@ -98,7 +98,7 @@ def test_match_f_for_pattern(with_f_write):
 
     search_term = 'sdf'
     is_search_line_by_line = False
-    matched_file = Searcher.match_f_for_pattern(
+    matched_file = Searcher.match_f_for_pattern_wrapper(
         Searcher(
             caller_dir='',
             search_term=search_term,
@@ -117,7 +117,7 @@ def test_search_line_by_line_for_term(with_f_write):
     with_f_write.seek(0)
 
     search_term = 'a'
-    matched_lines = Searcher.search_line_by_line_for_term(
+    matched_lines = Searcher.search_line_by_line_for_term_wrapper(
         Searcher(
             caller_dir='',
             search_term=search_term,
@@ -136,7 +136,7 @@ def test_search_line_by_line_for_regex(with_f_write):
     with_f_write.seek(0)
 
     search_term = '^[d-s]{1,}$'
-    matched_lines = Searcher.search_line_by_line_for_regex(
+    matched_lines = Searcher.search_line_by_line_for_regex_wrapper(
         Searcher(
             caller_dir='',
             search_term=search_term,
@@ -153,7 +153,7 @@ def test_search_line_by_line_for_regex(with_f_write):
 def test_match_f_for_pattern_with_binary_file(with_f_bwrite):
     search_term = 'ä'
 
-    matched_file = Searcher.match_f_for_pattern(
+    matched_file = Searcher.match_f_for_pattern_wrapper(
         Searcher(
             caller_dir='',
             search_term=search_term,
@@ -170,7 +170,7 @@ def test_match_f_for_pattern_with_binary_file(with_f_bwrite):
 def test_match_f_for_str_with_binary_file(with_f_bwrite):
     search_term = 'ä'
 
-    matched_file = Searcher.match_f_for_str(
+    matched_file = Searcher.match_f_for_str_wrapper(
         Searcher(
             caller_dir='',
             search_term=search_term,
@@ -187,7 +187,7 @@ def test_match_f_for_str_with_binary_file(with_f_bwrite):
 def test_search_line_by_line_for_regex_with_binary_file(with_f_bwrite):
     search_term = 'ä'
 
-    matched_file = Searcher.search_line_by_line_for_regex(
+    matched_file = Searcher.search_line_by_line_for_regex_wrapper(
         Searcher(
             caller_dir='',
             search_term=search_term,
@@ -204,7 +204,7 @@ def test_search_line_by_line_for_regex_with_binary_file(with_f_bwrite):
 def test_search_line_by_line_for_term_with_binary_file(with_f_bwrite):
     search_term = 'ä'
 
-    matched_file = Searcher.search_line_by_line_for_term(
+    matched_file = Searcher.search_line_by_line_for_term_wrapper(
         Searcher(
             caller_dir='',
             search_term=search_term,
