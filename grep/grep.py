@@ -99,6 +99,15 @@ class Searcher(object):
 
         return matched_file
 
+    def with_read(self, file_path):
+        def wrapper(func):
+            matched = {}
+            with open(file_path, 'r') as f:
+                matched = func(self, f)
+            return matched
+
+        return wrapper
+
     def search_f(self, file_path):
         """Starts a search."""
 
@@ -108,44 +117,41 @@ class Searcher(object):
         if self.is_search_line_by_line:
             if self.is_regex_pattern:
                 try:
-                    matched_line_dict = self.search_line_by_line_for_regex(
+                    matched_line_dict = self.search_line_by_line_for_regex_wrapper(
                         file_path)
 
                 except sre_constants.error as regex_error:
                     pass
             else:
-                matched_line_dict = self.search_line_by_line_for_term(
+                matched_line_dict = self.search_line_by_line_for_term_wrapper(
                     file_path)
 
         else:
             if self.is_regex_pattern:
                 try:
-                    matched_line_dict = self.match_f_for_pattern(file_path)
-
+                    matched_line_dict = self.match_f_for_pattern_wrapper(
+                        file_path)
                 except sre_constants.error as regex_error:
                     pass
             else:
-                matched_line_dict = self.match_f_for_str(file_path)
+                matched_line_dict = self.match_f_for_str_wrapper(file_path)
 
         if matched_line_dict:
             return {file_path: matched_line_dict}
         else:
             return None
 
-    def match_f_for_str(self, file_path):
-        """Searches a file for the occurrence of a string."""
+    def match_f_for_str_wrapper(self, file_path):
+        @self.with_read(file_path)
+        def match_f_for_str(self, f):
+            """Searches a file for the occurrence of a string."""
 
-        assert type(file_path) == str
+            assert type(file_path) == str
 
-        entire_file = ''
-        f = open(file_path, 'r')
-        try:
+            entire_file = ''
             f.seek(0)
             for line in f.readlines():
                 entire_file += line
-
-        finally:
-            f.close()
 
             # Match literal str not regex pattern
             regexp = re.compile(re.escape(self.search_term))
@@ -176,21 +182,20 @@ class Searcher(object):
 
             return matched
 
-    def match_f_for_pattern(self, file_path):
-        """Searches a file using a pattern."""
+        return match_f_for_str
 
-        assert type(file_path) == str
+    def match_f_for_pattern_wrapper(self, file_path):
+        @self.with_read(file_path)
+        def match_f_for_pattern(self, f):
+            """Searches a file using a pattern."""
 
-        entire_file = ''
-        f = open(file_path, 'r')
-        try:
+            assert type(file_path) == str
+
+            entire_file = ''
             f.seek(0)
             entire_file = ""
             for line in f.readlines():
                 entire_file += line
-
-        finally:
-            f.close()
 
             regexp = re.compile(self.search_term)
             matches = regexp.findall(entire_file)
@@ -220,17 +225,19 @@ class Searcher(object):
 
             return matched
 
-    def search_line_by_line_for_term(self, file_path):
-        """
-                Searches a single file for occurrences of a string.
-                Each line is searched separately.
-        """
+        return match_f_for_pattern
 
-        assert type(file_path) == str
+    def search_line_by_line_for_term_wrapper(self, file_path):
+        @self.with_read(file_path)
+        def search_line_by_line_for_term(self, f):
+            """
+                    Searches a single file for occurrences of a string.
+                    Each line is searched separately.
+            """
 
-        matched_lines = {}
-        f = open(file_path, 'r')
-        try:
+            assert type(file_path) == str
+
+            matched_lines = {}
             for line_num, line in enumerate(f):
 
                 if self.search_term == '':
@@ -247,24 +254,23 @@ class Searcher(object):
                         split_str[1][:-len(split_str[1]) + len(
                             split_str[0] + self.search_term)]).strip()
 
-        finally:
-            f.close()
+            return matched_lines
 
-        return matched_lines
+        return search_line_by_line_for_term
 
-    def search_line_by_line_for_regex(self, file_path):
-        """
-                Searches a file using a regex pattern.
-                Each line is searched separately.
-        """
+    def search_line_by_line_for_regex_wrapper(self, file_path):
+        @self.with_read(file_path)
+        def search_line_by_line_for_regex(self, f):
+            """
+                    Searches a file using a regex pattern.
+                    Each line is searched separately.
+            """
 
-        assert type(file_path) == str
+            assert type(file_path) == str
 
-        regexp = re.compile(self.search_term)
-        matched_lines = {}
+            regexp = re.compile(self.search_term)
+            matched_lines = {}
 
-        f = open(file_path, 'r')
-        try:
             for line_num, line in enumerate(f):
 
                 if self.search_term == '':
@@ -291,7 +297,6 @@ class Searcher(object):
                     except ValueError:
                         matched_lines[line_num + 1] = line.strip()
 
-        finally:
-            f.close()
+            return matched_lines
 
-        return matched_lines
+        return search_line_by_line_for_regex
