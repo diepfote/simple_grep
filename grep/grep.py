@@ -8,7 +8,6 @@ from . import print_helper
 from . import file_helper
 
 
-# TODO abstract IO
 class Searcher(object):
     """Grep's search functionality implemented as a class."""
 
