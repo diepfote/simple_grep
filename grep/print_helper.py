@@ -35,13 +35,12 @@ def generate_output_for_matched_files_full_path(
 
             else:
                 if is_from_stdin:
-                    output.extend(
-                        [line for line_num, line in lines.iteritems()])
+                    output.extend([line for _, line in lines.iteritems()])
 
                 elif not is_line_by_line:
                     output.extend([(color_purple(os.path.normpath(f)) +
                                     color_green(':') + line)
-                                   for line_num, line in lines.iteritems()])
+                                   for _, line in lines.iteritems()])
 
                 else:
                     output.extend([
@@ -58,12 +57,12 @@ def generate_output_for_matched_files_full_path(
 
             else:
                 if is_from_stdin:
-                    output.extend([line for line_num, line in lines.items()])
+                    output.extend([line for _, line in lines.items()])
 
                 elif not is_line_by_line:
                     output.extend([(color_purple(os.path.normpath(f)) +
                                     color_green(':') + line)
-                                   for line_num, line in lines.items()])
+                                   for _, line in lines.items()])
 
                 else:
                     output.extend([
@@ -100,14 +99,13 @@ def generate_output_for_matched_files_relative_path(
 
             else:
                 if is_from_stdin:
-                    output.extend(
-                        [line for line_num, line in lines.iteritems()])
+                    output.extend([line for _, line in lines.iteritems()])
 
                 elif not is_line_by_line:
                     output.extend(
                         [(color_purple(os.path.normpath(os.path.relpath(f))) +
                           color_blue(':') + line)
-                         for line_num, line in lines.iteritems()])
+                         for _, line in lines.iteritems()])
 
                 else:
                     output.extend(
@@ -124,13 +122,13 @@ def generate_output_for_matched_files_relative_path(
 
             else:
                 if is_from_stdin:
-                    output.extend([line for line_num, line in lines.items()])
+                    output.extend([line for _, line in lines.items()])
 
                 elif not is_line_by_line:
                     output.extend(
                         [(color_purple(os.path.normpath(os.path.relpath(f))) +
                           color_blue(':') + line)
-                         for line_num, line in lines.items()])
+                         for _, line in lines.items()])
 
                 else:
                     output.extend(
