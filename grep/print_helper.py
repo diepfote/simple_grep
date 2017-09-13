@@ -18,7 +18,8 @@ def color_purple(term):
     return '\033[0;35m' + term + '\033[0m'
 
 
-def generate_output_for_matched_files_full_path(matched_files_and_lines, search_term, is_from_stdin, is_line_by_line):
+def generate_output_for_matched_files_full_path(
+        matched_files_and_lines, search_term, is_from_stdin, is_line_by_line):
     """Prints matching files using absolute paths."""
 
     assert type(matched_files_and_lines) == dict
@@ -38,13 +39,16 @@ def generate_output_for_matched_files_full_path(matched_files_and_lines, search_
                         [line for line_num, line in lines.iteritems()])
 
                 elif not is_line_by_line:
-                    output.extend([(color_purple(os.path.normpath(f)) + color_green(':') + line)
+                    output.extend([(color_purple(os.path.normpath(f)) +
+                                    color_green(':') + line)
                                    for line_num, line in lines.iteritems()])
 
                 else:
-                    output.extend([(color_purple(os.path.normpath(f)) + color_green(':')
-                                    + color_green(str(line_num)) + color_green(':') + line)
-                                   for line_num, line in lines.iteritems()])
+                    output.extend([
+                        (color_purple(os.path.normpath(f)) + color_green(':') +
+                         color_green(str(line_num)) + color_green(':') + line)
+                        for line_num, line in lines.iteritems()
+                    ])
 
     # Py3
     else:
@@ -57,13 +61,16 @@ def generate_output_for_matched_files_full_path(matched_files_and_lines, search_
                     output.extend([line for line_num, line in lines.items()])
 
                 elif not is_line_by_line:
-                    output.extend([(color_purple(os.path.normpath(f)) + color_green(':') + line)
+                    output.extend([(color_purple(os.path.normpath(f)) +
+                                    color_green(':') + line)
                                    for line_num, line in lines.items()])
 
                 else:
-                    output.extend([(color_purple(os.path.normpath(f)) + color_green(':')
-                                    + color_green(str(line_num)) + color_green(':') + line)
-                                   for line_num, line in lines.items()])
+                    output.extend([
+                        (color_purple(os.path.normpath(f)) + color_green(':') +
+                         color_green(str(line_num)) + color_green(':') + line)
+                        for line_num, line in lines.items()
+                    ])
 
     # Remove last occurrence of new line
     output = [''.join(f.rsplit('\n', 1)) for f in output]
@@ -76,8 +83,8 @@ def generate_output_for_matched_files_full_path(matched_files_and_lines, search_
     return output
 
 
-def generate_output_for_matched_files_relative_path(matched_files_and_lines, search_term, is_from_stdin,
-                                                    is_line_by_line):
+def generate_output_for_matched_files_relative_path(
+        matched_files_and_lines, search_term, is_from_stdin, is_line_by_line):
     """Prints matching files using relative paths."""
 
     assert type(matched_files_and_lines) == dict
@@ -97,13 +104,17 @@ def generate_output_for_matched_files_relative_path(matched_files_and_lines, sea
                         [line for line_num, line in lines.iteritems()])
 
                 elif not is_line_by_line:
-                    output.extend([(color_purple(os.path.normpath(os.path.relpath(f))) + color_blue(':') + line)
-                                   for line_num, line in lines.iteritems()])
+                    output.extend(
+                        [(color_purple(os.path.normpath(os.path.relpath(f))) +
+                          color_blue(':') + line)
+                         for line_num, line in lines.iteritems()])
 
                 else:
-                    output.extend([(color_purple(os.path.normpath(os.path.relpath(f))) + color_blue(':')
-                                    + color_green(str(line_num)) + color_blue(':') + line)
-                                   for line_num, line in lines.iteritems()])
+                    output.extend(
+                        [(color_purple(os.path.normpath(os.path.relpath(f))) +
+                          color_blue(':') + color_green(str(line_num)) +
+                          color_blue(':') + line)
+                         for line_num, line in lines.iteritems()])
 
     # Py3
     else:
@@ -116,13 +127,17 @@ def generate_output_for_matched_files_relative_path(matched_files_and_lines, sea
                     output.extend([line for line_num, line in lines.items()])
 
                 elif not is_line_by_line:
-                    output.extend([(color_purple(os.path.normpath(os.path.relpath(f))) + color_blue(':') + line)
-                                   for line_num, line in lines.items()])
+                    output.extend(
+                        [(color_purple(os.path.normpath(os.path.relpath(f))) +
+                          color_blue(':') + line)
+                         for line_num, line in lines.items()])
 
                 else:
-                    output.extend([(color_purple(os.path.normpath(os.path.relpath(f))) + color_blue(':')
-                                    + color_green(str(line_num)) + color_blue(':') + line)
-                                   for line_num, line in lines.items()])
+                    output.extend(
+                        [(color_purple(os.path.normpath(os.path.relpath(f))) +
+                          color_blue(':') + color_green(str(line_num)) +
+                          color_blue(':') + line)
+                         for line_num, line in lines.items()])
 
     # Remove last occurrence of new line
     output = [''.join(f.rsplit('\n', 1)) for f in output]
@@ -150,7 +165,8 @@ def color_term_in_string(func):
             if list_to_edit[0].startswith("Binary file"):
                 return list_to_edit
 
-            return [(bold_red + term + no_color).join(f.rsplit(term, 1)) for f in func(list_to_edit, term)]
+            return [(bold_red + term + no_color).join(f.rsplit(term, 1))
+                    for f in func(list_to_edit, term)]
 
         else:
             return list_to_edit
