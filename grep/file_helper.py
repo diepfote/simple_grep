@@ -52,9 +52,9 @@ def is_binary_file(file_path, block_size=512):
         return False
 
 
-# TODO implement
-def with_read(function):
-    def wrapper(file_path):
-        pass
+def with_read(file_path):
+    def wrapper(func):
+        with open(file_path, 'r') as f:
+            return func(self, f)
 
     return wrapper
