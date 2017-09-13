@@ -49,8 +49,6 @@ def is_binary_file(file_path, block_size=512):
                 return True
 
     except IOError as io_error:
-        sys.stderr.write(
-            'Error occurred during is_binary_file check:\n\t{}'.format(io_error))
         return False
 
 

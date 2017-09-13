@@ -9,17 +9,11 @@ from . import file_helper
 
 
 # TODO abstract IO
-# TODO use attrs library https://glyph.twistedmatrix.com/2016/08/attrs.html
 class Searcher(object):
     """Grep's search functionality implemented as a class."""
 
-    def __init__(self, caller_dir,
-                 search_term,
-                 specific_file,
-                 is_recursive,
-                 is_abs_path,
-                 is_regex_pattern,
-                 is_search_line_by_line,
+    def __init__(self, caller_dir, search_term, specific_file, is_recursive,
+                 is_abs_path, is_regex_pattern, is_search_line_by_line,
                  is_from_stdin):
 
         assert type(caller_dir) == str
@@ -41,29 +35,27 @@ class Searcher(object):
         self.is_from_stdin = is_from_stdin
 
     def __repr__(self):
-        return (self.__class__.__name__ +
-                ('(caller_dir="{}",'
-                 ' search_term="{}", '
-                 'specific_file="{}", '
-                 'is_recursive={}, '
-                 'is_abs_path={},'
-                 ' is_regex_pattern={}, '
-                 'is_search_line_by_line={}, '
-                 'is_from_stdin={})'.format(self.caller_dir,
-                                            self.search_term,
-                                            self.specific_file,
-                                            self.is_recursive,
-                                            self.is_abs_path,
-                                            self.is_regex_pattern,
-                                            self.is_search_line_by_line,
-                                            self.is_from_stdin)))
+        return (
+            self.__class__.__name__ +
+            ('(caller_dir="{}",'
+             ' search_term="{}", '
+             'specific_file="{}", '
+             'is_recursive={}, '
+             'is_abs_path={},'
+             ' is_regex_pattern={}, '
+             'is_search_line_by_line={}, '
+             'is_from_stdin={})'.format(
+                 self.caller_dir, self.search_term, self.specific_file,
+                 self.is_recursive, self.is_abs_path, self.is_regex_pattern,
+                 self.is_search_line_by_line, self.is_from_stdin)))
 
     def run(self):
         """Starts a search (using a file when specified)"""
 
         all_matched = []
         if self.specific_file == '':
-            for f in file_helper.get_next_file(self.caller_dir, self.is_recursive):
+            for f in file_helper.get_next_file(self.caller_dir,
+                                               self.is_recursive):
                 matched_file = self.search_wrapper(f)
 
                 if matched_file:
@@ -83,20 +75,14 @@ class Searcher(object):
         """Prints a matching file or line."""
 
         if self.is_abs_path:
-            print_helper.generate_output_for_matched_files_full_path(matched_file, self.search_term, self.is_from_stdin,
-                                                                     self.is_search_line_by_line)
+            print_helper.generate_output_for_matched_files_full_path(
+                matched_file, self.search_term, self.is_from_stdin,
+                self.is_search_line_by_line)
 
         else:
-            print_helper.generate_output_for_matched_files_relative_path(matched_file, self.search_term,
-                                                                         self.is_from_stdin,
-                                                                         self.is_search_line_by_line)
-
-    def print_file_error(self, error):
-        sys.stderr.write(
-            'Error while reading file: {error}\n'.format(error=error))
-
-    def print_regex_error(self, error):
-        sys.stderr.write('Regex error occurred: {error}\n'.format(error=error))
+            print_helper.generate_output_for_matched_files_relative_path(
+                matched_file, self.search_term, self.is_from_stdin,
+                self.is_search_line_by_line)
 
     def search_wrapper(self, file_path):
         """Wraps search_f to accommodate for errors."""
@@ -106,10 +92,10 @@ class Searcher(object):
             matched_file = self.search_f(file_path)
 
         except IOError as io_error:
-            self.print_file_error(io_error)
+            pass
 
         except UnicodeDecodeError as unicode_error:
-            self.print_file_error(unicode_error)
+            pass
 
         return matched_file
 
@@ -126,8 +112,7 @@ class Searcher(object):
                         file_path)
 
                 except sre_constants.error as regex_error:
-                    self.print_regex_error(regex_error)
-
+                    pass
             else:
                 matched_line_dict = self.search_line_by_line_for_term(
                     file_path)
@@ -138,8 +123,7 @@ class Searcher(object):
                     matched_line_dict = self.match_f_for_pattern(file_path)
 
                 except sre_constants.error as regex_error:
-                    self.print_regex_error(regex_error)
-
+                    pass
             else:
                 matched_line_dict = self.match_f_for_str(file_path)
 
@@ -258,8 +242,10 @@ class Searcher(object):
                         return {'file_matched': ''}
 
                     split_str = line.split(self.search_term)
-                    matched_lines[line_num + 1] = (split_str[0] + self.search_term + split_str[1][:-len(
-                        split_str[1]) + len(split_str[0] + self.search_term)]).strip()
+                    matched_lines[line_num + 1] = (
+                        split_str[0] + self.search_term +
+                        split_str[1][:-len(split_str[1]) + len(
+                            split_str[0] + self.search_term)]).strip()
 
         finally:
             f.close()
@@ -296,8 +282,10 @@ class Searcher(object):
 
                     try:
                         split_str = line.split(match[0])
-                        matched_lines[line_num + 1] = (split_str[0] + match[0] + split_str[1][:-len(split_str[1]) + len(
-                            split_str[0] + match[0])]).strip()
+                        matched_lines[line_num + 1] = (
+                            split_str[0] + match[0] +
+                            split_str[1][:-len(split_str[1]) + len(
+                                split_str[0] + match[0])]).strip()
 
                     # Catch empty separator
                     except ValueError:

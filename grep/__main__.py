@@ -46,8 +46,8 @@ def main():
     display_line_numbers = False
     try:
         try:
-            optlist, args = getopt.getopt(
-                sys.argv[1:], 'hren', ['help', 'full'])
+            optlist, args = getopt.getopt(sys.argv[1:], 'hren',
+                                          ['help', 'full'])
 
         except getopt.GetoptError as err:
             print(str(err))
@@ -83,8 +83,8 @@ def main():
                 directory = os.path.abspath(os.path.curdir)
 
         else:  # Darwin and Linux
-            is_from_stdin = sys.stdin in select.select([sys.stdin], [], [], 0)[
-                0]  # Non-blocking select
+            is_from_stdin = sys.stdin in select.select(
+                [sys.stdin], [], [], 0)[0]  # Non-blocking select
             if is_from_stdin:
                 f = open(temp_f, 'w')
                 try:
@@ -119,8 +119,7 @@ def main():
             is_abs_path=full_paths,
             is_regex_pattern=do_regex_search,
             is_search_line_by_line=display_line_numbers,
-            is_from_stdin=is_from_stdin
-        )
+            is_from_stdin=is_from_stdin)
 
         searcher.run()
 
