@@ -90,17 +90,16 @@ class Searcher(object):
         try:
             matched_file = self.search_f(file_path)
 
-        except IOError as io_error:
+        except IOError:
             pass
 
-        except UnicodeDecodeError as unicode_error:
+        except UnicodeDecodeError:
             pass
 
         return matched_file
 
     def with_read(self, file_path):
         def wrapper(func):
-            matched = {}
             with open(file_path, 'r') as f:
                 matched = func(self, f)
             return matched
@@ -119,7 +118,7 @@ class Searcher(object):
                     matched_line_dict = self.search_line_by_line_for_regex_wrapper(
                         file_path)
 
-                except sre_constants.error as regex_error:
+                except sre_constants.error:
                     pass
             else:
                 matched_line_dict = self.search_line_by_line_for_term_wrapper(
@@ -130,7 +129,7 @@ class Searcher(object):
                 try:
                     matched_line_dict = self.match_f_for_pattern_wrapper(
                         file_path)
-                except sre_constants.error as regex_error:
+                except sre_constants.error:
                     pass
             else:
                 matched_line_dict = self.match_f_for_str_wrapper(file_path)
@@ -190,9 +189,8 @@ class Searcher(object):
 
             assert type(file_path) == str
 
-            entire_file = ''
             f.seek(0)
-            entire_file = ""
+            entire_file = ''
             for line in f.readlines():
                 entire_file += line
 
