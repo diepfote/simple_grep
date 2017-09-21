@@ -55,6 +55,6 @@ def is_binary_file(file_path, block_size=512):
 def with_read(file_path):
     def wrapper(func):
         with open(file_path, 'r') as f:
-            return func(self, f)
+            return func(f)
 
     return wrapper

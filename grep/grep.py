@@ -6,6 +6,7 @@ import sys
 
 from . import print_helper
 from . import file_helper
+from .file_helper import with_read
 
 
 class Searcher(object):
@@ -52,7 +53,7 @@ class Searcher(object):
         """Starts a search (using a file when specified)"""
 
         all_matched = []
-        if self.specific_file == '':
+        if not self.specific_file:
             for f in file_helper.get_next_file(self.caller_dir,
                                                self.is_recursive):
                 matched_file = self.search_wrapper(f)
@@ -98,14 +99,6 @@ class Searcher(object):
 
         return matched_file
 
-    def with_read(self, file_path):
-        def wrapper(func):
-            with open(file_path, 'r') as f:
-                matched = func(self, f)
-            return matched
-
-        return wrapper
-
     def search_f(self, file_path):
         """Starts a search."""
 
@@ -140,8 +133,8 @@ class Searcher(object):
             return None
 
     def match_f_for_str_wrapper(self, file_path):
-        @self.with_read(file_path)
-        def match_f_for_str(self, f):
+        @with_read(file_path)
+        def match_f_for_str(f):
             """Searches a file for the occurrence of a string."""
 
             assert type(file_path) == str
@@ -183,8 +176,8 @@ class Searcher(object):
         return match_f_for_str
 
     def match_f_for_pattern_wrapper(self, file_path):
-        @self.with_read(file_path)
-        def match_f_for_pattern(self, f):
+        @with_read(file_path)
+        def match_f_for_pattern(f):
             """Searches a file using a pattern."""
 
             assert type(file_path) == str
@@ -225,8 +218,8 @@ class Searcher(object):
         return match_f_for_pattern
 
     def search_line_by_line_for_term_wrapper(self, file_path):
-        @self.with_read(file_path)
-        def search_line_by_line_for_term(self, f):
+        @with_read(file_path)
+        def search_line_by_line_for_term(f):
             """
                     Searches a single file for occurrences of a string.
                     Each line is searched separately.
@@ -256,8 +249,8 @@ class Searcher(object):
         return search_line_by_line_for_term
 
     def search_line_by_line_for_regex_wrapper(self, file_path):
-        @self.with_read(file_path)
-        def search_line_by_line_for_regex(self, f):
+        @with_read(file_path)
+        def search_line_by_line_for_regex(f):
             """
                     Searches a file using a regex pattern.
                     Each line is searched separately.

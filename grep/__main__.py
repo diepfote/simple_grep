@@ -57,7 +57,7 @@ def main():
         if len(args) < 1:
             args = ['', '']
         elif len(args) == 1:
-            args.insert(0, '')
+            args.insert(1, '')
 
         for o, a in optlist:
             if o in ('-h', '--help'):
@@ -73,11 +73,11 @@ def main():
                 display_line_numbers = True
 
         if platform.system() == 'Windows':
-            f = args[0]
+            f = args[1]
             if f:
                 if os.path.isdir(os.path.abspath(f)):
                     directory = f
-                    args[0] = ''
+                    args[1] = ''
 
             else:
                 directory = os.path.abspath(os.path.curdir)
@@ -96,11 +96,11 @@ def main():
                     assert type(directory) == str
 
             else:
-                f = args[0]
+                f = args[1]
                 if f:  # Verify that the specified path is a directory
                     if os.path.isdir(os.path.abspath(f)):
                         directory = f
-                        args[0] = ''
+                        args[1] = ''
 
                     else:
                         directory = ''
@@ -108,8 +108,8 @@ def main():
                 else:
                     directory = os.path.abspath(os.path.curdir)
 
-        search_term = args[1] if args[1] else ''
-        specific_file = args[0] if args[0] else ''
+        search_term = args[0] if args[0] else ''
+        specific_file = args[1]
 
         searcher = grep_.Searcher(
             caller_dir=directory,
