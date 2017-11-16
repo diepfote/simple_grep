@@ -15,6 +15,11 @@ test-report2: clean
 
 clean:
 	rm -f */**.pyc */*/**.pyc
+	rm -f *.tar.xz
+	rm -rf src/
+	rm -rf simple_grep/
+	rm -rf pkg/	
+	rm -rf */**__pycache__
 
 clean_virtualenv:
 	rm -rf venv3/
