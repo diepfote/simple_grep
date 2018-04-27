@@ -19,13 +19,14 @@ display_line_numbers_key = 'display_line_numbers'
 def usage():
     import subprocess
 
-    version_string = subprocess.Popen(
-        ("grep", "version", "setup.py"), stdout=subprocess.PIPE)
-    version = subprocess.check_output(
-        (["grep", "-Eo", "[0-9].[0-9]{1,}"]), stdin=version_string.stdout)
-    version_string.wait()
+    # version_string = subprocess.Popen(
+        # ("grep", "version", "setup.py"), stdout=subprocess.PIPE)
+    # version = subprocess.check_output(
+        # (["grep", "-Eo", "[0-9].[0-9]{1,}"]), stdin=version_string.stdout)
+    # version_string.wait()
 
-    print('simple_grep, version ' + version.decode('utf-8'))
+    print('simple_grep')
+    # print('simple_grep, version ' + version.decode('utf-8'))
     print('')
     print('usage: simple_grep [-rnpe] [SEARCH_TERM] [FILE_TO_SEARCH]')
     print('')
@@ -64,7 +65,7 @@ def parse_command_line_options():
     for o, a in optlist:
         if o in ('-h', '--help'):
             usage()
-            raise KeyboardInterrupt
+            sys.exit(0)
         elif o in ('-r'):
             search_recursively = True
         elif o in ('--full'):
