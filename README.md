@@ -11,7 +11,7 @@ Missing features:
 * stdin support for Windows
 
 Simple grep is tested on:  
-* CPython 2.7 and 3.6  
+* CPython 2.7 and 3.4-7  
 (Tests might fail on Windows)
 
 
