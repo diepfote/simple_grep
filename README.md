@@ -1,5 +1,5 @@
+[![travis-ci.com](https://api.travis-ci.com/florianbegusch/simple_grep.svg)](https://travis-ci.com/florianbegusch/simple_grep)
 # Simple grep
-
 
 Simple grep is a minimal implementation of grep entirely written in Python.
 
