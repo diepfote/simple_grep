@@ -33,24 +33,12 @@ def test_generate_output_for_matched_files_full_path():
 
 
 def test_generate_output_for_matched_files_relative_path():
-    if platform.system() == 'Windows':
-        matched_items = {
-            './../../../../Untitled Document': {
-                1: 'aware\n',
-                2: 'aware werwer\n'
-            }
+    matched_items = {
+        './../../../../Untitled Document': {
+            1: 'aware\n',
+            2: 'aware werwer\n'
         }
-
-    elif platform.system() == 'Linux':
-        matched_items = {
-            '/home/flo/Untitled Document': {
-                1: 'aware\n',
-                2: 'aware werwer\n'
-            }
-        }
-
-    else:
-        raise ValueError('No system information found.')
+    }
 
     test_output = [
         '\x1b[0;35m../../../../Untitled Document\x1b[0m\x1b[0;34m:\x1b[0m\x1b[0;32m1\x1b[0m\x1b[0;34m:\x1b[0maware',
