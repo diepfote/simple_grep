@@ -139,11 +139,7 @@ class Searcher(object):
 
             assert type(file_path) == str
 
-            entire_file = ''
-            f.seek(0)
-            for line in f.readlines():
-                entire_file += line
-
+            entire_file = f.read()
             # Match literal str not regex pattern
             regexp = re.compile(re.escape(self.search_term))
             matches = regexp.findall(entire_file)
@@ -182,10 +178,7 @@ class Searcher(object):
 
             assert type(file_path) == str
 
-            f.seek(0)
-            entire_file = ''
-            for line in f.readlines():
-                entire_file += line
+            entire_file = f.read()
 
             regexp = re.compile(self.search_term)
             matches = regexp.findall(entire_file)
